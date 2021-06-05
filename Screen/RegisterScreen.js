@@ -18,7 +18,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-
+import  { Auth } from 'aws-amplify';
 import Loader from '../Screen/Componentone/Loader';
 
 const RegisterScreen = (props) => {
@@ -26,6 +26,7 @@ const RegisterScreen = (props) => {
   const [userEmail, setUserEmail] = useState('');
   const [userAge, setUserAge] = useState('');
   const [userAddress, setUserAddress] = useState('');
+  const [mob, setMob] = useState('');
   const [loading, setLoading] = useState(false);
   const [errortext, setErrortext] = useState('');
   const [
@@ -38,7 +39,7 @@ const RegisterScreen = (props) => {
   const ageInputRef = createRef();
   const addressInputRef = createRef();
 
-  const handleSubmitButton = () => {
+  const handleSubmitButton =async () => {
 
     setErrortext('');
     if (!userName) {
@@ -59,50 +60,48 @@ const RegisterScreen = (props) => {
     }
     //Show Loader
     setLoading(true);
+    var mailFormat = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    var phoneRegex = /^(\+91-|\+91|0)?\d{10}$/;
+    let phone_number = ''
+    let email = ''
+   const { username,input, password,family_name,name,gender } = this.state;
     var dataToSend = {
       user_name: userName,
       user_email: userEmail,
       user_age: userAge,
       user_address: userAddress,
     };
-    var formBody = [];
-    for (var key in dataToSend) {
-      var encodedKey = encodeURIComponent(key);
-      var encodedValue = encodeURIComponent(dataToSend[key]);
-      formBody.push(encodedKey + '=' + encodedValue);
-    }
-    formBody = formBody.join('&');
-
-    fetch('https://aboutreact.herokuapp.com/register.php', {
-      method: 'POST',
-      body: formBody,
-      headers: {
-        //Header Defination
-        'Content-Type':
-          'application/x-www-form-urlencoded;charset=UTF-8',
-      },
-    })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        //Hide Loader
-        setLoading(false);
-        console.log(responseJson);
-        // If server response message same as Data Matched
-        if (responseJson.status == 1) {
-          setIsRegistraionSuccess(true);
-          console.log(
-            'Registration Successful. Please Login to proceed'
-          );
-        } else {
-          setErrortext('Registration Unsuccessful');
+    try {
+      const { user } = await Auth.signUp({
+        username,
+        password,
+        attributes: {
+          email,          // optional
+          phone_number,
+          family_name,
+          // middle_name,
+          name,
+          gender,
+      
         }
-      })
-      .catch((error) => {
-        //Hide Loader
-        setLoading(false);
-        console.error(error);
       });
+      console.log("user successfully signed Up!", user);
+        
+      } catch (error) {
+        setLoading(false);
+        alert("Error");
+        console.log('error signing in', error);
+      }
   };
+
+  const onTextChanged=(e)=>{
+    console.log(e)
+    return;
+    if (/^\d+$/.test(e.toString())) { 
+      setUserAge(e)
+    }
+  }
+
   if (isRegistraionSuccess) {
     return (
       <View
@@ -157,7 +156,7 @@ const RegisterScreen = (props) => {
               style={styles.inputStyle}
               onChangeText={(UserName) => setUserName(UserName)}
               underlineColorAndroid="#f000"
-              placeholder="Enter Name"
+              placeholder="Enter Full Name"
               placeholderTextColor="#8b9cb5"
               autoCapitalize="sentences"
               returnKeyType="next"
@@ -191,7 +190,26 @@ const RegisterScreen = (props) => {
             <TextInput
               style={styles.inputStyle}
               onChangeText={
-                (UserAge) => setUserAge(UserAge)
+                (mob) => setMob(mob)
+              }
+              underlineColorAndroid="#f000"
+              placeholder="Enter Mobile Number"
+              placeholderTextColor="#8b9cb5"
+              keyboardType="numeric"
+              ref={emailInputRef}
+              returnKeyType="next"
+              onSubmitEditing={() =>
+                ageInputRef.current &&
+                ageInputRef.current.focus()
+              }
+              blurOnSubmit={false}
+            />
+          </View>
+          <View style={styles.SectionStyle}>
+            <TextInput
+              style={styles.inputStyle}
+              onChangeText={
+                (UserAge) => onTextChanged(UserAge)
               }
               underlineColorAndroid="#f000"
               placeholder="Enter Age"
@@ -230,7 +248,7 @@ const RegisterScreen = (props) => {
           <TouchableOpacity
             style={styles.buttonStyle}
             activeOpacity={0.5}
-            onPress={()=>props.navigation.navigate('TabNavigation')}>
+            onPress={()=>handleSubmitButton}>
             <Text style={styles.buttonTextStyle}>
               REGISTER
             </Text>

@@ -121,7 +121,8 @@ const ProfileDeshbord = props => {
                                         renderItem={({item})=>
                                         <View style={{marginRight:10,borderWidth:1,width:180}}>
                                             <ImageBackground style={{width:180,height:140,justifyContent:'flex-end'}}
-                                                source={require('../../Imagess/HeroImage.jpeg')}  >
+                                                source={require('../../Imagess/HeroImage.jpeg')} 
+                                                 >
                                                 <Text style={{marginBottom:5,marginLeft:5,color:'white',opacity:10}} blurRadius={50}>Prashant Nando</Text>
                                             </ImageBackground>
                                             <View style={{marginTop:5,marginLeft:10}}>

@@ -8,23 +8,17 @@
 
 import React, { Component } from 'react';
 import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
   View,
   Text,
-  StatusBar,
+
   Image,
 
 } from 'react-native';
+import Amplify, { Auth, Hub } from 'aws-amplify';
+import { ApolloProvider as Provider } from 'react-apollo';
+import Client from 'aws-appsync';
+import awsConfig from './aws-export';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import SplashScreen from './Screen/SplashScreen';
@@ -68,6 +62,36 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
+
+Amplify.configure({
+  Auth: {
+    identityPoolId: awsConfig.aws_cognito_identity_pool_id,
+    region: awsConfig.aws_cognito_region, // REQUIRED - Amazon Cognito Region
+    userPoolId: awsConfig.aws_user_pools_id, //OPTIONAL - Amazon Cognito User Pool ID
+    userPoolWebClientId: awsConfig.aws_user_pools_web_client_id,
+  },
+  Storage: {
+    AWSS3: {
+      bucket: awsConfig.bucket, //REQUIRED -  Amazon S3 bucket
+      region: awsConfig.aws_cognito_region, //OPTIONAL -  Amazon service region
+    },
+  },
+});
+
+
+const client = new Client({
+  url: awsConfig.graphqlEndpoint,
+  region: awsConfig.aws_project_region,
+  auth: {
+    type: awsConfig.aws_appsync_authenticationType,
+    apiKey: awsConfig.graphql_api_key,
+    jwtToken: async () =>
+      (await Auth.currentSession()).getIdToken().getJwtToken(),
+  },
+  disableOffline: true,
+});
+
+
 
 function MyTabBar({ state, descriptors, navigation }) {
   return (
@@ -121,13 +145,12 @@ export default class app extends Component {
         <Tab.Screen name="MainTab" component={MainTab} />
         <Tab.Screen name="ProfileDeshbord" component={ProfileDeshbord} />
         <Tab.Screen name='InboxMainTab' component={InboxMainTab} />
-        
-
       </Tab.Navigator>
     );
   }
   render() {
     return (
+      <Provider client={client}>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}  >
           <Stack.Screen name="SplashScreen" component={SplashScreen} />
@@ -150,18 +173,14 @@ export default class app extends Component {
           <Stack.Screen name='FamilyScreen' component={FamilyScreen}/>
           <Stack.Screen name='Astro' component={Astro}/>
           <Stack.Screen name='Location' component={Location}/>
-          
-          
-
           <Stack.Screen name='ChatTab' component={ChatTab}/>
           <Stack.Screen name='Feed' component={Feed}/>
           <Stack.Screen name='MessageScreen' component={MessageScreen}/>
           <Stack.Screen name='Meet' component={Meet}/>
           <Stack.Screen name='Recent' component={Recent}/>
-          
-          
         </Stack.Navigator>
       </NavigationContainer>
+      </Provider>
     )
   }
 }
