@@ -10,10 +10,10 @@ import {
     StyleSheet,
     TouchableOpacity,
     Image,
-    Picker,
+  
     Button, Platform
 } from 'react-native';
-
+import {Picker} from '@react-native-community/picker';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Location = (props) => {

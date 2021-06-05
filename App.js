@@ -62,7 +62,10 @@ import Notification from './Screen/Notification/Notification'
 import InboxMainTab from './Screen/Inbox/InboxMainTab'
 
 // ============ Partner Preferences =============
-import Partner_Preferences from './Screen/Options_Settings/Partner_Preferences'
+import Partner_Preferences from './Screen/Options_Settings/Partner_Preferences';
+
+// ============Account Settings =============
+import AccountSettings from './Screen/ShadiScreen/AccountSettings';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -143,6 +146,8 @@ export default class app extends Component {
           <Stack.Screen name='RatingStar' component={RatingStar}/>
           <Stack.Screen name='Notification' component={Notification}/>
           <Stack.Screen name='Partner_Preferences' component={Partner_Preferences}/>
+          <Stack.Screen name='AccountSettings' component={AccountSettings}/>
+          
           <Stack.Screen name='BasicInfoScreen' component={BasicInfoScreen}/>
           <Stack.Screen name='EditProfileScreen' component={EditProfileScreen}/>
           <Stack.Screen name='ReligiousScreen' component={ReligiousScreen}/>
