@@ -226,6 +226,7 @@ const ProfileDeshbord = props => {
                             </TouchableOpacity>
 
                             <TouchableOpacity style={{flexDirection:'row',height:40,marginBottom:5,alignItems:'center',justifyContent:'center',width:'90%',borderBottomWidth:0.5,alignSelf:'center'}}>
+                               
                                 <Image style={{width:20,height:20}}
                                     source={require('../../Imagess/FilterImage.png')} />
                                <View style={{flexDirection:'row',alignItems:'center',marginLeft:15,width:'90%',justifyContent:'space-between'}}>
@@ -235,7 +236,8 @@ const ProfileDeshbord = props => {
                                </View>
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={{flexDirection:'row',height:40,marginBottom:5,alignItems:'center',justifyContent:'center',width:'90%',borderBottomWidth:0.5,alignSelf:'center'}}>
+                            <TouchableOpacity style={{flexDirection:'row',height:40,marginBottom:5,alignItems:'center',justifyContent:'center',width:'90%',borderBottomWidth:0.5,alignSelf:'center'}}
+                               onPress={()=>props.navigation.navigate('AccountSettings')}>
                                 <Image style={{width:20,height:20}}
                                     source={require('../../Imagess/SettingVector.png')} />
                                <View style={{flexDirection:'row',alignItems:'center',marginLeft:15,width:'90%',justifyContent:'space-between'}}>

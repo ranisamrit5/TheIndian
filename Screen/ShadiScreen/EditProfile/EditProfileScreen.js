@@ -69,7 +69,8 @@ const EditProfileScreen = (props) => {
 
 
                     <TouchableOpacity onPress={() => props.navigation.navigate('BasicInfoScreen')}>
-                    <MaterialCommunityIcons name="pencil-outline" color="black" size={25} />
+                    <Image style={{width:20,height:20,tintColor:"#000"}}
+                                        source={require('../../../Imagess/pencil.png')} />
                     </TouchableOpacity>
                 </View>
                 <View style={{ flexDirection: "column", padding: 10, }}>
@@ -221,7 +222,8 @@ const EditProfileScreen = (props) => {
 
 
                     <TouchableOpacity onPress={() => alert('Log out')}>
-                    <MaterialCommunityIcons name="pencil-outline" color="black" size={25} />
+                    <Image style={{width:20,height:20,tintColor:"#000"}}
+                                        source={require('../../../Imagess/pencil.png')} />
                     </TouchableOpacity>
                 </View>
                 <View style={{ flexDirection: "column", padding: 10, }}>
@@ -259,7 +261,8 @@ const EditProfileScreen = (props) => {
 
 
                     <TouchableOpacity onPress={() => props.navigation.navigate('ReligiousScreen')}>
-                    <MaterialCommunityIcons name="pencil-outline" color="black" size={25} />
+                    <Image style={{width:20,height:20,tintColor:"#000"}}
+                                        source={require('../../../Imagess/pencil.png')} />
                     </TouchableOpacity>
                 </View>
                 <View style={{ flexDirection: "column", padding: 10, }}>
@@ -411,7 +414,8 @@ const EditProfileScreen = (props) => {
 
 
                     <TouchableOpacity onPress={() => props.navigation.navigate('FamilyScreen')}>
-                    <MaterialCommunityIcons name="pencil-outline" color="black" size={25} />
+                    <Image style={{width:20,height:20,tintColor:"#000"}}
+                                        source={require('../../../Imagess/pencil.png')} />
                     </TouchableOpacity>
                 </View>
                 <View style={{ flexDirection: "column", padding: 10, }}>
@@ -563,7 +567,8 @@ const EditProfileScreen = (props) => {
 
 
                  <TouchableOpacity onPress={() => props.navigation.navigate('Astro')}>
-                 <MaterialCommunityIcons name="pencil-outline" color="black" size={25} />
+                 <Image style={{width:20,height:20,tintColor:"#000"}}
+                                        source={require('../../../Imagess/pencil.png')} />
                     </TouchableOpacity>
                 </View>
                 <View style={{ flexDirection: "column", padding: 10, }}>
@@ -640,7 +645,8 @@ const EditProfileScreen = (props) => {
 
 
              <TouchableOpacity onPress={() => props.navigation.navigate('Location')}>
-                    <MaterialCommunityIcons name="pencil-outline" color="black" size={25} />
+             <Image style={{width:20,height:20,tintColor:"#000"}}
+                                        source={require('../../../Imagess/pencil.png')} />
                     </TouchableOpacity>
                 </View>
                 <View style={{ flexDirection: "column", padding: 10, }}>
@@ -888,7 +894,8 @@ const EditProfileScreen = (props) => {
 
 
                     <TouchableOpacity onPress={() => alert('Log out')}>
-                    <MaterialCommunityIcons name="pencil-outline" color="black" size={25} />
+                    <Image style={{width:20,height:20,tintColor:"#000"}}
+                                        source={require('../../../Imagess/pencil.png')} />
                     </TouchableOpacity>
                 </View>
                 <View style={{ flexDirection: "column", padding: 10, }}>
@@ -925,7 +932,8 @@ const EditProfileScreen = (props) => {
 
 
                     <TouchableOpacity onPress={() => alert('Log out')}>
-                    <MaterialCommunityIcons name="pencil-outline" color="black" size={25} />
+                    <Image style={{width:20,height:20,tintColor:"#000"}}
+                                        source={require('../../../Imagess/pencil.png')} />
                     </TouchableOpacity>
                 </View>
                 <View style={{ flexDirection: "column", padding: 10, }}>
@@ -1046,7 +1054,8 @@ const EditProfileScreen = (props) => {
 
 
                     <TouchableOpacity onPress={() => alert('Log out')}>
-                    <MaterialCommunityIcons name="pencil-outline" color="black" size={25} />
+                    <Image style={{width:20,height:20,tintColor:"#000"}}
+                                        source={require('../../../Imagess/pencil.png')} />
                     </TouchableOpacity>
                 </View>
                 <View style={{ flexDirection: "column", padding: 10, }}>
@@ -1126,7 +1135,8 @@ const EditProfileScreen = (props) => {
 
 
                     <TouchableOpacity onPress={() => alert('Log out')}>
-                    <MaterialCommunityIcons name="pencil-outline" color="black" size={25} />
+                    <Image style={{width:20,height:20,tintColor:"#000"}}
+                                        source={require('../../../Imagess/pencil.png')} />
                     </TouchableOpacity>
                 </View>
                 <View style={{ flexDirection: "column", padding: 10, }}>
@@ -1372,7 +1382,8 @@ const EditProfileScreen = (props) => {
 
 
                     <TouchableOpacity onPress={() => alert('Log out')}>
-                    <MaterialCommunityIcons name="pencil-outline" color="black" size={25} />
+                    <Image style={{width:20,height:20,tintColor:"#000"}}
+                                        source={require('../../../Imagess/pencil.png')} />
                     </TouchableOpacity>
                 </View>
                 <View style={{ flexDirection: "column", padding: 10, }}>

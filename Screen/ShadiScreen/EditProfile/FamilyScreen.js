@@ -10,10 +10,10 @@ import {
     StyleSheet,
     TouchableOpacity,
     Image,
-    Picker,
+ 
     Button, Platform
 } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import {Picker} from 'native-base';
 // import HeaderComponent from "../../../components/HeaderComponent";
 // import { BACKGROUNDCOLOR, BLACK, RED, WHITE } from "../../../themes/colors";
 import { RadioButton, Card } from 'react-native-paper';

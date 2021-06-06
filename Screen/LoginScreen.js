@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 
 //Import all required component
 import {
@@ -24,6 +24,18 @@ const LoginScreen = props => {
   let [userPassword, setUserPassword] = useState('');
   let [loading, setLoading] = useState(false);
   let [errortext, setErrortext] = useState('');
+
+  useEffect(() => {
+    Auth.currentAuthenticatedUser().then((data) => {
+      console.log('user----::',data.username)
+      props.navigation.navigate('TabNavigation');
+      // PlanList();
+      // setId(data.username);
+      // getData(data.username);
+    });
+  }, []); 
+
+
 
   const handleSubmitPress = async() => {
     setErrortext('');
