@@ -156,6 +156,7 @@ export default class app extends Component {
       <Provider client={client}>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}  >
+        <Stack.Screen name='EditProfileScreen' component={EditProfileScreen}/>
           <Stack.Screen name="SplashScreen" component={SplashScreen} />
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
           <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
@@ -172,7 +173,7 @@ export default class app extends Component {
           <Stack.Screen name='AccountSettings' component={AccountSettings}/>
           
           <Stack.Screen name='BasicInfoScreen' component={BasicInfoScreen}/>
-          <Stack.Screen name='EditProfileScreen' component={EditProfileScreen}/>
+          {/* <Stack.Screen name='EditProfileScreen' component={EditProfileScreen}/> */}
           <Stack.Screen name='ReligiousScreen' component={ReligiousScreen}/>
           <Stack.Screen name='GenderScreen' component={GenderScreen}/>
           <Stack.Screen name='FamilyScreen' component={FamilyScreen}/>
