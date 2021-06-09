@@ -17,11 +17,49 @@ import {
   Keyboard,
   TouchableOpacity,
   ScrollView,
+  TouchableHighlight
 } from 'react-native';
-
+import { RadioButton } from 'react-native-paper';
 import Loader from '../Screen/Componentone/Loader';
 
 const RegisterScreen = (props) => {
+
+  const TopTabFunction = (Value) => {
+    console.log('valuess', Value)
+    switch (Value.title) {
+        case 'Recent': {
+           setState({ Male: true })
+           setState({ Female: false })
+            setState({ Other: false })
+          
+         
+        }
+       
+        case 'Active': {
+          setState({ Male: false })
+          setState({ Female: true })
+           setState({ Other: false })
+          
+        }
+        case 'Meet': {
+           setState({ Male: false })
+           setState({ Female: false })
+           
+           setState({ Other: true })
+          
+        }
+       
+    }
+}
+const [state, setState] = useState(false);
+
+const setSelected  = () => {
+  setState({ selected: selected });
+}
+
+
+
+
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
   const [userAge, setUserAge] = useState('');
@@ -105,6 +143,7 @@ const RegisterScreen = (props) => {
   };
   if (isRegistraionSuccess) {
     return (
+      
       <View
         style={{
           flex: 1,
@@ -133,6 +172,15 @@ const RegisterScreen = (props) => {
   }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+      <View style={{flexDirection:'row',width:'100%',alignItems:'center',backgroundColor:'#FF5733',height:50}}>
+                        <TouchableOpacity style={{marginLeft:20}} onPress={()=>props.navigation.pop()}>
+                            <Image style={{width:20,height:20,tintColor:'white',transform: [{ rotate: '180deg'}]}}
+                                source={require('../Imagess/ErrorVector.png')} />
+                        </TouchableOpacity>
+                       <View style={{width:'20%'}}>
+                            <Text style={{alignSelf:'center',fontSize:18,fontWeight:"bold",color:'white'}}>Back</Text>
+                       </View>
+                       </View>
       <Loader loading={loading} />
       <ScrollView
         keyboardShouldPersistTaps="handled"
@@ -157,7 +205,7 @@ const RegisterScreen = (props) => {
               style={styles.inputStyle}
               onChangeText={(UserName) => setUserName(UserName)}
               underlineColorAndroid="#f000"
-              placeholder="Enter Name"
+              placeholder="First Name"
               placeholderTextColor="#8b9cb5"
               autoCapitalize="sentences"
               returnKeyType="next"
@@ -175,7 +223,7 @@ const RegisterScreen = (props) => {
                 (UserEmail) => setUserEmail(UserEmail)
               }
               underlineColorAndroid="#f000"
-              placeholder="Enter Email"
+              placeholder="Last Name"
               placeholderTextColor="#8b9cb5"
               keyboardType="email-address"
               ref={emailInputRef}
@@ -194,9 +242,9 @@ const RegisterScreen = (props) => {
                 (UserAge) => setUserAge(UserAge)
               }
               underlineColorAndroid="#f000"
-              placeholder="Enter Age"
+              placeholder="Enter Email"
               placeholderTextColor="#8b9cb5"
-              keyboardType="numeric"
+            
               ref={ageInputRef}
               returnKeyType="next"
               onSubmitEditing={() =>
@@ -206,6 +254,7 @@ const RegisterScreen = (props) => {
               blurOnSubmit={false}
             />
           </View>
+          
           <View style={styles.SectionStyle}>
             <TextInput
               style={styles.inputStyle}
@@ -213,7 +262,7 @@ const RegisterScreen = (props) => {
                 (UserAddress) => setUserAddress(UserAddress)
               }
               underlineColorAndroid="#f000"
-              placeholder="Enter Address"
+              placeholder="Enter Mobile"
               placeholderTextColor="#8b9cb5"
               autoCapitalize="sentences"
               ref={addressInputRef}
@@ -227,6 +276,40 @@ const RegisterScreen = (props) => {
               {errortext}
             </Text>
           ) : null}
+
+<View style={{flexDirection:"row",justifyContent:"space-between",width:"65%"}}>
+<Text style={styles.text1}>Gender</Text>
+<View style={{flexDirection:"row",justifyContent:"space-between",width:"70%",alignSelf:"center",padding:20,}}>
+<TouchableHighlight style={{ borderWidth: 0.5, alignItems: 'center',justifyContent: 'center', width: 70, height:35, marginLeft: 5, marginRight: 5, borderRadius: 5 }} 
+underlayColor="lightgray"  onPress={(Value) => TopTabFunction(Value)} >
+   <Text>Male</Text>
+     
+ 
+</TouchableHighlight>
+
+<TouchableHighlight style={{ borderWidth: 0.5, alignItems: 'center',justifyContent: 'center', width: 70, height:35, marginLeft: 5, marginRight: 5, borderRadius: 5 }} 
+underlayColor="lightgray" 
+onShowUnderlay={() => setSelected(true)}
+onHideUnderlay={() => setSelected(false)}
+ onPress={(Value) => TopTabFunction(Value)} >
+     
+   <Text>Female</Text>
+      
+
+    </TouchableHighlight>
+
+    <TouchableHighlight style={{ borderWidth: 0.5, alignItems: 'center',justifyContent: 'center', width: 70, height:35, marginLeft: 5, marginRight: 5, borderRadius: 5 }} 
+    underlayColor="lightgray"  onPress={(Value) => TopTabFunction(Value)} >
+   <Text>Other</Text>
+     
+
+    </TouchableHighlight>
+</View>
+
+</View>
+
+
+
           <TouchableOpacity
             style={styles.buttonStyle}
             activeOpacity={0.5}
@@ -258,7 +341,7 @@ const styles = StyleSheet.create({
     borderColor: '#7DE24E',
     height: 40,
     alignItems: 'center',
-    borderRadius: 30,
+    borderRadius: 10,
     marginLeft: 35,
     marginRight: 35,
     marginTop: 20,
@@ -275,7 +358,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 15,
     borderWidth: 1,
-    borderRadius: 30,
+    borderRadius: 10,
     borderColor: '#a9a9a9',
   },
   errorTextStyle: {
@@ -289,4 +372,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     padding: 30,
   },
+  text1: {
+    fontSize: 16,
+    // fontWeight: "bold",
+    color: "#666666",
+    left:35,
+    // marginTop:10,
+    alignSelf:"center"
+},
 });
