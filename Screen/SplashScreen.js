@@ -3,7 +3,7 @@
 
 //Import React and Hooks we needed
 import React, { useState, useEffect } from 'react';
-
+import  { Auth } from 'aws-amplify';
 //Import all required component
 import { ActivityIndicator, View, StyleSheet, Image, TouchableOpacity, Text, StatusBar } from 'react-native';
 // import AsyncStorage from '@react-native-community/async-storage';
@@ -16,6 +16,13 @@ const SplashScreen = (props) => {
   let [animating, setAnimating] = useState(true);
   const { colors } = useTheme();
   useEffect(() => {
+    Auth.currentAuthenticatedUser().then((data) => {
+      console.log('user----::',data.username)
+      props.navigation.navigate('TabNavigation');
+      // PlanList();
+      // setId(data.username);
+      // getData(data.username);
+    })
     setTimeout(() => {
       props.navigation.navigate('LoginScreen');
     }, 900);

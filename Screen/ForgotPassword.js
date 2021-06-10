@@ -1,228 +1,253 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { Content, Item, Input } from 'native-base';
+import { Grid, Col } from 'react-native-easy-grid';
+import { Icon, Button, SocialIcon } from 'react-native-elements';
+import { SafeAreaView } from 'react-native';
+import { Auth } from 'aws-amplify';
+class ForgotPassword extends React.Component {
+  state = { otp: [], username: '', pass: '', repass: '', sent: false };
+  otpTextInput = [];
 
-
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  Platform,
-  TouchableOpacity,
-  Alert,
-  Linking,
-  Image as Img,
-  Switch,
-  Image,
-  ImageBackground,
-  Slider,
-  slides,
-  SafeAreaView,
-  ScrollView
-} from 'react-native';
-
-import { useTheme } from 'react-native-paper';
-
-
-
-const ForgotPassword = ({ navigation }) => {
-  const { colors } = useTheme();
-
-  const [data, setData] = React.useState({
-    username: '',
-    password: '',
-    check_textInputChange: false,
-    secureTextEntry: true,
-    isValidUser: true,
-    isValidPassword: true,
-  });
-  const textInputChange = (val) => {
-    if (val.trim().length >= 4) {
-      setData({
-        ...data,
-        username: val,
-        check_textInputChange: true,
-        isValidUser: true
-      });
-    } else {
-      setData({
-        ...data,
-        username: val,
-        check_textInputChange: false,
-        isValidUser: false
-      });
-    }
+  componentDidMount() {
+    if (this.state.sent)
+      this.otpTextInput[0]._root.focus();
   }
-  const handleValidUser = (val) => {
-    if (val.trim().length >= 4) {
-      setData({
-        ...data,
-        isValidUser: true
-      });
-    } else {
-      setData({
-        ...data,
-        isValidUser: false
-      });
+
+  async resendConfirmationCode() {
+    if (!this.state.username) {
+      // alert('Please fill Email');
+      return;
+    }
+    try {
+      await Auth.resendSignUp(this.state.username);
+      console.log('code resent successfully');
+    } catch (err) {
+      console.log('error resending code: ', err);
     }
   }
 
-  const handlePasswordChange = (val) => {
-    if (val.trim().length >= 8) {
-      setData({
-        ...data,
-        password: val,
-        isValidPassword: true
-      });
-    } else {
-      setData({
-        ...data,
-        password: val,
-        isValidPassword: false
-      });
+  renderInputs() {
+    const inputs = Array(6).fill(0);
+    const txt = inputs.map(
+      (i, j) => <Col key={j} style={styles.txtMargin}><Item regular>
+        <Input
+          style={[styles.inputRadius, { borderRadius: 10, fontWeight: 'bold', fontSize: 25 }]}
+          keyboardType="numeric"
+          onChangeText={v => this.focusNext(j, v)}
+          onKeyPress={e => this.focusPrevious(e.nativeEvent.key, j)}
+          ref={ref => this.otpTextInput[j] = ref}
+        />
+      </Item></Col>
+    );
+    return txt;
+  }
+
+  focusPrevious(key, index) {
+    if (key === 'Backspace' && index !== 0)
+      this.otpTextInput[index - 1]._root.focus();
+  }
+
+  focusNext(index, value) {
+    if (index < this.otpTextInput.length - 1 && value) {
+      this.otpTextInput[index + 1]._root.focus();
     }
+    if (index === this.otpTextInput.length - 1) {
+      this.otpTextInput[index]._root.blur();
+    }
+    const otp = this.state.otp;
+    otp[index] = value;
+    this.setState({ otp });
+    // this.props.getOtp(otp.join(''));
   }
-  const updateSecureTextEntry = () => {
-    setData({
-      ...data,
-      secureTextEntry: !data.secureTextEntry
-    });
+  async verifyOtp() {
+    const { otp, username, pass, repass ,sent} = this.state
+    let code = `${otp[0]}${otp[1]}${otp[2]}${otp[3]}${otp[4]}${otp[5]}`
+    if (pass !== repass)
+      alert('Password did not matched')
+    console.log(code, username, pass, repass)
+    console.log(this.state.username)
+    if (!sent){
+      await Auth.forgotPassword(username)
+    .then(data => {
+      console.log(data)
+      this.setState({ sent: true })
+    })
+    .catch(err => console.log(err));
+
+    }else{
+      Auth.forgotPasswordSubmit(username, code, pass)
+      .then(data => {
+        this.props.navigation.navigate('LoginScreen')
+      })
+      .catch(err => console.log(err));
+    }
+    
+    // console.log(otpTextInput)
+  
   }
 
-  return (
+  render() {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.btnTxt}>Forget Password?</Text>
 
-    <SafeAreaView style={style.container}>
-      <ScrollView>
-        <View style={{ justifyContent: "center", flexDirection: "row", marginTop: 30 }}>
-          <Text style={{ fontSize: 18, fontWeight: "bold", }}>Reset Passowrd!</Text>
-        </View>
-        <View style={{ justifyContent: "center", flexDirection: "row", marginTop: 30 }}>
-          <Text style={{ fontSize: 18, }}>Enter a new password.</Text>
-        </View>
 
-        <View style={{ justifyContent: "center", flexDirection: "row", marginTop: 30,width:130 }}>
-        <Text style={{ fontSize: 18, paddingTop: 10, marginBottom: 10, }}>OTP</Text>
+        <View style={{ justifyContent: "center", flexDirection: "row", marginTop: 30, width: 130 }}>
+          {this.state.sent == false ? (
+            <Text style={{ fontSize: 18, paddingTop: 10, marginBottom: 10, }}>USERNAME</Text>
+          ) : null}
         </View>
-        <View style={style.SectionStyle}>
-          <TextInput
-            style={style.inputStyle}
-            // onChangeText={UserPassword => setUserPassword(UserPassword)}
-            // underlineColorAndroid="#FFFFFF"
-            placeholder="Enter OTP" //12345
-            placeholderTextColor="#000"
-            keyboardType="default"
-            // ref={ref => {
-            //   this._passwordinput = ref;
-            // }}
-            // onSubmitEditing={Keyboard.dismiss}
-            blurOnSubmit={false}
-            secureTextEntry={true}
-          />
-        </View>
-        <View style={{ justifyContent: "center", flexDirection: "row", width:160 }}>
-        <Text style={{ fontSize: 18, paddingTop: 10, marginBottom: 10,}}>Password</Text>
-        </View>
-        <View style={style.SectionStyle}>
-          <TextInput
-            style={style.inputStyle}
-            // onChangeText={UserPassword => setUserPassword(UserPassword)}
-            // underlineColorAndroid="#FFFFFF"
-            placeholder="Enter Password" //12345
-            placeholderTextColor="#000"
-            keyboardType="default"
-            // ref={ref => {
-            //   this._passwordinput = ref;
-            // }}
-            // onSubmitEditing={Keyboard.dismiss}
-            blurOnSubmit={false}
-            secureTextEntry={true}
-          />
-        </View>
+        {this.state.sent == false ? (
 
-        <View style={{ justifyContent: "center", flexDirection: "row",width:220  }}>
-        <Text style={{ fontSize: 18, paddingTop: 10, marginBottom: 10,}}>Confirm Password</Text>
+          <View style={styles.SectionStyle}>
+
+            <TextInput
+              style={styles.inputStyle}
+              onChangeText={username => this.setState({ username: username })}
+              underlineColorAndroid="#FFFFFF"
+              placeholder="Enter Username" //12345
+              placeholderTextColor="#000"
+              keyboardType="default"
+              // ref={ref => {
+              //   this.setState({username:ref})
+              //   // this._passwordinput = ref;
+              // }}
+              // onSubmitEditing={this.Keyboard.dismiss}
+              blurOnSubmit={false}
+            // secureTextEntry={true}
+            />
+
+
+          </View>
+        ) : null}
+          <View style={{ justifyContent: "center", flexDirection: "row", width: 130 }}>
+          {this.state.sent == true ? (
+            <Text style={{ fontSize: 18, paddingTop: 10, marginBottom: 10, }}>ENTER PASSWORD</Text>
+          ) : null}
         </View>
-        <View style={style.SectionStyle}>
-          <TextInput
-            style={style.inputStyle}
-            // onChangeText={UserPassword => setUserPassword(UserPassword)}
-            // underlineColorAndroid="#FFFFFF"
-            placeholder="Enter Password" //12345
-            placeholderTextColor="#000"
-            keyboardType="default"
-            // ref={ref => {
-            //   this._passwordinput = ref;
-            // }}
-            // onSubmitEditing={Keyboard.dismiss}
-            blurOnSubmit={false}
-            secureTextEntry={true}
+        <View style={styles.SectionStyle}>
+          {this.state.sent == true ? (
+            <TextInput
+              style={styles.inputStyle}
+              onChangeText={pass => this.setState({ pass: pass })}
+              underlineColorAndroid="#FFFFFF"
+              placeholder="Enter Password" //12345
+              placeholderTextColor="#000"
+              keyboardType="default"
+              ref={ref => {
+                this._passwordinput = ref;
+              }}
+              // onSubmitEditing={this.Keyboard.dismiss}
+              blurOnSubmit={false}
+              secureTextEntry={true}
+            />) : null}
+        </View>
+        <View style={{ justifyContent: "center", flexDirection: "row", width: 130 }}>
+          {this.state.sent == true ? (
+            <Text style={{ fontSize: 18, paddingTop: 10, marginBottom: 10, }}>RE ENTER PASSWORD</Text>
+          ) : null}
+        </View>
+        <View style={styles.SectionStyle}>
+          {this.state.sent == true ? (
+            <TextInput
+              style={styles.inputStyle}
+              onChangeText={repass => this.setState({ repass: repass })}
+              underlineColorAndroid="#FFFFFF"
+              placeholder="Re-Enter Password" //12345
+              placeholderTextColor="#000"
+              keyboardType="default"
+
+              // onSubmitEditing={this.Keyboard.dismiss}
+              blurOnSubmit={false}
+              secureTextEntry={true}
+            />
+          ) : null}
+        </View>
+        <View style={{ justifyContent: "center", flexDirection: "row", width: '100%' }}>
+          {this.state.sent == true ? (
+            <Text style={{ marginBottom: 10, }}>ENTER OTP</Text>
+          ) : null}
+        </View>
+        <Content padder>
+          {this.state.sent == true ? (
+            <Grid style={styles.gridPad}>
+              {this.renderInputs()}
+            </Grid>
+          ) : null}
+          <Button
+            title="Verify"
+            loading={false}
+            loadingProps={{ size: 'small', color: 'white' }}
+            buttonStyle={{
+              backgroundColor: '#ffa07a',
+              borderRadius: 10,
+
+            }}
+            titleStyle={{ fontWeight: 'bold', fontSize: 15, color: '#000' }}
+            containerStyle={{
+              height: 50, width: "70%", marginTop: 20,
+              alignSelf: "center", marginTop: 100
+            }}
+            onPress={() => this.verifyOtp()}
+            underlayColor="transparent"
           />
-        </View>
-        <TouchableOpacity
-          style={style.buttonStyle}
-          activeOpacity={0.5}
-        // onPress={() => props.navigation.navigate('RegisterScreen')}
-        >
-          <Text style={style.buttonTextStyle}>CHANGE PASSWORD</Text>
+        </Content>
+
+        <TouchableOpacity onPress={() => this.resendConfirmationCode()}>
+          <Text
+            style={styles.registerTextStyle}>
+
+            Resend OTP
+            </Text>
         </TouchableOpacity>
-      </ScrollView>
-    </SafeAreaView>
 
+      </SafeAreaView>
+    );
+  }
+}
 
+const styles = StyleSheet.create({
+  gridPad: { padding: 30, marginTop: 10, },
 
+  txtMargin: { margin: 3, },
+  inputRadius: { textAlign: 'center' },
 
-  );
-
-};
-
-export default ForgotPassword;
-const style = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
-    height: "100%",
-    marginBottom: 10,
-
+    // height: "100%",
+    flex: 1
   },
 
-  action: {
-    flexDirection: 'row',
-
-    marginTop: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f2f2f2',
-    paddingBottom: 5,
-    backgroundColor: "#f2f2f2",
-    width: "80%",
-    alignSelf: "center",
-    borderRadius: 5,
+  btnTxt: {
+    color: "#000000",
+    marginLeft: 26,
+    padding: "4%",
+    fontSize: 26,
+    fontWeight: "bold",
   },
-  textInput: {
-    flex: 1,
+  btnTxt1: {
 
-
-    marginTop: Platform.OS === 'ios' ? 0 : -5,
-    // paddingLeft: 10,
-    color: '#05375a',
-
+    fontSize: 15,
+    paddingLeft: 30,
+    marginLeft: 10,
+    color: "#c0c0c0",
   },
-  buttonStyle: {
-    backgroundColor: '#ffa07a',
-    borderWidth: 0,
-    color: '#FFFFFF',
-    borderColor: '#87cefa',
-
-    height: 40,
-    alignItems: 'center',
-    borderRadius: 30,
-    marginLeft: 50,
-    marginRight: 50,
-    marginTop: 50,
-    marginBottom: 20,
-    // bottom:10
+  btnTxt2: {
+    fontSize: 12,
+    paddingLeft: 30,
+    marginLeft: 10,
+    color: "#000",
+    fontWeight: "bold"
   },
-  buttonTextStyle: {
+
+  OtpInputs: {
+    borderRadius: 100
+  }, registerTextStyle: {
     color: '#000',
-    paddingVertical: 10,
-    fontSize: 16,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 14,
+
   },
   SectionStyle: {
     flexDirection: 'row',
@@ -242,10 +267,8 @@ const style = StyleSheet.create({
     borderRadius: 30,
     borderColor: '#a9a9a9',
   },
+
+
 });
 
-
-
-
-
-
+export default ForgotPassword;

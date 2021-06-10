@@ -29,9 +29,6 @@ const LoginScreen = props => {
     Auth.currentAuthenticatedUser().then((data) => {
       console.log('user----::',data.username)
       props.navigation.navigate('TabNavigation');
-      // PlanList();
-      // setId(data.username);
-      // getData(data.username);
     });
   }, []); 
 
