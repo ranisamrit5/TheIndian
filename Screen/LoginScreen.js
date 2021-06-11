@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
     borderColor: '#7DE24E',
     height: 40,
     alignItems: 'center',
-    borderRadius: 30,
+    borderRadius: 10,
     marginLeft: 50,
     marginRight: 50,
     marginTop: 20,
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 15,
     borderWidth: 1,
-    borderRadius: 30,
+    borderRadius: 10,
     borderColor: '#a9a9a9',
   },
   registerTextStyle: {

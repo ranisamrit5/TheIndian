@@ -92,7 +92,16 @@ const ForgotPassword = ({ navigation }) => {
 
     <SafeAreaView style={style.container}>
       <ScrollView>
-        <View style={{ justifyContent: "center", flexDirection: "row", marginTop: 30 }}>
+      <View style={{flexDirection:'row',width:'100%',alignItems:'center',backgroundColor:'#FF5733',height:50}}>
+                        <TouchableOpacity style={{marginLeft:20}} onPress={()=>props.navigation.pop()}>
+                            <Image style={{width:20,height:20,tintColor:'white',transform: [{ rotate: '180deg'}]}}
+                                source={require('../Imagess/ErrorVector.png')} />
+                        </TouchableOpacity>
+                       <View style={{width:'20%'}}>
+                            <Text style={{alignSelf:'center',fontSize:18,fontWeight:"bold",color:'white'}}>Back</Text>
+                       </View>
+                       </View>
+        <View style={{ justifyContent: "center", flexDirection: "row", marginTop: 30    }}>
           <Text style={{ fontSize: 18, fontWeight: "bold", }}>Reset Passowrd!</Text>
         </View>
         <View style={{ justifyContent: "center", flexDirection: "row", marginTop: 30 }}>
@@ -212,7 +221,7 @@ const style = StyleSheet.create({
 
     height: 40,
     alignItems: 'center',
-    borderRadius: 30,
+    borderRadius: 10,
     marginLeft: 50,
     marginRight: 50,
     marginTop: 50,
@@ -239,7 +248,7 @@ const style = StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 15,
     borderWidth: 1,
-    borderRadius: 30,
+    borderRadius: 10,
     borderColor: '#a9a9a9',
   },
 });

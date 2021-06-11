@@ -17,7 +17,7 @@ const SplashScreen = (props) => {
   const { colors } = useTheme();
   useEffect(() => {
     setTimeout(() => {
-      props.navigation.navigate('LoginScreen');
+      props.navigation.navigate('SignInScreen');
     }, 900);
   }, []);
   // useEffect(() => {

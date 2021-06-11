@@ -28,6 +28,7 @@ import {
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import SplashScreen from './Screen/SplashScreen';
+import SignInScreen from './Screen/SignInScreen';
 import LoginScreen from './Screen/LoginScreen';
 import RegisterScreen from './Screen/RegisterScreen';
 import ForgotPassword from './Screen/ForgotPassword';
@@ -49,7 +50,6 @@ import Meet from './Screen/ChatScreen/Meet';
 import Recent from './Screen/ChatScreen/Recent';
 import Astro from './Screen/ShadiScreen/EditProfile/Astro';
 import Location from './Screen/ShadiScreen/EditProfile/Location';
-
 
 
 //============ Rating Star =====================
@@ -134,6 +134,8 @@ export default class app extends Component {
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}  >
           <Stack.Screen name="SplashScreen" component={SplashScreen} />
+          <Stack.Screen name="SignInScreen" component={SignInScreen} />
+          
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
           <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
           <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
