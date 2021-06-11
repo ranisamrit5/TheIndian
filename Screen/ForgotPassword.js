@@ -19,12 +19,12 @@ class ForgotPassword extends React.Component {
       // alert('Please fill Email');
       return;
     }
-    try {
-      await Auth.resendSignUp(this.state.username);
-      console.log('code resent successfully');
-    } catch (err) {
-      console.log('error resending code: ', err);
-    }
+    await Auth.forgotPassword(this.state.username)
+    .then(data => {
+      console.log(data)
+      // this.setState({ sent: true })
+    })
+    .catch(err => console.log(err));
   }
 
   renderInputs() {
@@ -193,7 +193,7 @@ class ForgotPassword extends React.Component {
             underlayColor="transparent"
           />
         </Content>
-
+        {this.state.sent == true ? (
         <TouchableOpacity onPress={() => this.resendConfirmationCode()}>
           <Text
             style={styles.registerTextStyle}>
@@ -201,7 +201,7 @@ class ForgotPassword extends React.Component {
             Resend OTP
             </Text>
         </TouchableOpacity>
-
+) : null}
       </SafeAreaView>
     );
   }
