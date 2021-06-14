@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 
 //Import all required component
 import {
@@ -16,7 +16,7 @@ import {
 // import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../Screen/Componentone/Loader';
 import Logo from '../Imagess/shadi.png'
-
+import  { Auth } from 'aws-amplify';
 
 
 const LoginScreen = props => {
@@ -25,7 +25,16 @@ const LoginScreen = props => {
   let [loading, setLoading] = useState(false);
   let [errortext, setErrortext] = useState('');
 
-  const handleSubmitPress = () => {
+  useEffect(() => {
+    Auth.currentAuthenticatedUser().then((data) => {
+      console.log('user----::',data.username)
+      props.navigation.navigate('TabNavigation');
+    });
+  }, []); 
+
+
+
+  const handleSubmitPress = async() => {
     setErrortext('');
     if (!userEmail) {
       alert('Please fill Email');
@@ -36,42 +45,64 @@ const LoginScreen = props => {
       return;
     }
     setLoading(true);
-    var dataToSend = { user_email: userEmail, user_password: userPassword };
-    var formBody = [];
-    for (var key in dataToSend) {
-      var encodedKey = encodeURIComponent(key);
-      var encodedValue = encodeURIComponent(dataToSend[key]);
-      formBody.push(encodedKey + '=' + encodedValue);
+    try {
+    const user = await Auth.signIn(userEmail, userPassword)
+    .then((res) => {
+      console.log("SignIn======>",res.username)
+      setLoading(false);
+      props.navigation.navigate('TabNavigation');
+    })
+    // console.log("SignIn======>",user)
+    //     if (user) {
+    //       alert("Login In Success");
+    //       // this.getdata(user.username);
+    //     } else {
+    //       setLoading(false);
+    //       alert("Please Enter valid Username & Password");
+    //     }
+      
+    } catch (error) {
+      setLoading(false);
+      alert("Error");
+      console.log('error signing in', error);
     }
-    formBody = formBody.join('&');
 
-    fetch('https://aboutreact.herokuapp.com/login.php', {
-      method: 'POST',
-      body: formBody,
-      headers: {
-        //Header Defination
-        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-      },
-    }).then(response => response.json())
-      .then(responseJson => {
-        //Hide Loader
-        setLoading(false);
-        console.log(responseJson);
-        // If server response message same as Data Matched
-        if (responseJson.status == 1) {
-          // AsyncStorage.setItem('user_id', responseJson.data[0].user_id);
-          console.log(responseJson.data[0].user_id);
-          props.navigation.navigate('DrawerNavigationRoutes');
-        } else {
-          setErrortext('Please check your email id or password');
-          console.log('Please check your email id or password');
-        }
-      })
-      .catch(error => {
-        //Hide Loader
-        setLoading(false);
-        console.error(error);
-      });
+    // var dataToSend = { user_email: userEmail, user_password: userPassword };
+    // var formBody = [];
+    // for (var key in dataToSend) {
+    //   var encodedKey = encodeURIComponent(key);
+    //   var encodedValue = encodeURIComponent(dataToSend[key]);
+    //   formBody.push(encodedKey + '=' + encodedValue);
+    // }
+    // formBody = formBody.join('&');
+
+    // fetch('https://aboutreact.herokuapp.com/login.php', {
+    //   method: 'POST',
+    //   body: formBody,
+    //   headers: {
+    //     //Header Defination
+    //     'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+    //   },
+    // }).then(response => response.json())
+    //   .then(responseJson => {
+    //     //Hide Loader
+    //     setLoading(false);
+    //     console.log(responseJson);
+    //     // If server response message same as Data Matched
+    //     if (responseJson.status == 1) {
+    //       // AsyncStorage.setItem('user_id', responseJson.data[0].user_id);
+    //       console.log(responseJson.data[0].user_id);
+    //       props.navigation.navigate('DrawerNavigationRoutes');
+    //     } else {
+    //       setErrortext('Please check your email id or password');
+    //       console.log('Please check your email id or password');
+    //     }
+    //   })
+    //   .catch(error => {
+    //     //Hide Loader
+    //     setLoading(false);
+    //     console.error(error);
+    //   });
   };
 
   return (

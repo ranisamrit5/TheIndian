@@ -13,7 +13,7 @@ import {
   
     Button, Platform
 } from 'react-native';
-import {Picker} from '@react-native-community/picker';
+import {Picker} from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Location = (props) => {

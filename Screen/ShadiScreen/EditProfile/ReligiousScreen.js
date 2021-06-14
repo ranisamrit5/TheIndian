@@ -13,7 +13,7 @@ import {
  
     Button, Platform
 } from 'react-native';
-import {Picker} from '@react-native-community/picker';
+import {Picker} from 'native-base';
 // import HeaderComponent from "../../../components/HeaderComponent";
 // import { BACKGROUNDCOLOR, BLACK, RED, WHITE } from "../../../themes/colors";
 import { RadioButton, } from 'react-native-paper';

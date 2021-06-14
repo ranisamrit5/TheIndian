@@ -10,45 +10,107 @@ import {
     StyleSheet,
     TouchableOpacity,
     Image,
- 
+
     Button, Platform
 } from 'react-native';
-import {Picker} from '@react-native-community/picker';
+import { Auth } from "aws-amplify";
+import { Picker } from 'native-base';
 // import HeaderComponent from "../../../components/HeaderComponent";
 // import { BACKGROUNDCOLOR, BLACK, RED, WHITE } from "../../../themes/colors";
 import { RadioButton, Card } from 'react-native-paper';
-
+// import MyProvider from './MyProvider';
+import { graphql, withApollo } from "react-apollo";
+import compose from "lodash.flowright";
+import Getdata from "../../../AppSync/query/Auth/getData";
 
 const BasicInfoScreen = (props) => {
     const [text, setText] = useState('');
     const [selectedValue, setSelectedValue] = useState("Self");
     const [value, setValue] = React.useState('Kgs');
+    const [id,setId]=useState()
+    let [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        setLoading(true)
+        Auth.currentAuthenticatedUser()
+            .then((data) => {
+                // console.log('user----::',data)
+                  setId(data.username)
+                // props.id=data.username
+                   getData(data.username)
+            });
+    }, []
+    )
+
+    const getData=async(user)=>{
+        console.log('user----::',user)
+        const data=await  props.client.query({
+          query: Getdata,
+          fetchPolicy: "network-only",
+          variables: {
+             id: `${user}`,
+          },
+        });
+        if(data){
+            let userData=data.data.getUser
+        //let no=userData.noOfChildren
+       
+    //     const{noOfChildren,maritalStatus,eatingHabit,smokingHabit,drinkingHabit,manglik,physicalStatus,
+    //     religion,caste,star,height,motherTongue,dob,aboutMe,fname,profileCreatedFor
+    //     }=userData
+    //     setBasicInfo({
+    //       ...basicInfo,
+    //       id: user,
+    //       profileCreatedFor:profileCreatedFor === null ? "Self" : profileCreatedFor,
+    //       maritalStatus: maritalStatus === null ? "SINGLE" : maritalStatus,
+    //       // maritalStatus: maritalStatus !== null ? maritalStatus : 0,
+    //       noOfChildren:noOfChildren !== null ? 0 : noOfChildren,
+    //       eatingHabit:eatingHabit,
+    //       smokingHabit:smokingHabit,
+    //       drinkingHabit:drinkingHabit,
+    //       manglik:manglik,
+    //       physicalStatus:physicalStatus,
+    //       religion:religion,
+    //       caste:caste,
+    //       star:star,
+    //       height:height === null ? 0 : height,
+    //       motherTongue:motherTongue,
+    //       dob:dob,
+    //       aboutMe:aboutMe,fname:fname
+      
+    //     });
+    //    // setNoOfChildren(no)
+    //       setLoading(false)
+        }
+        setLoading(false)
+       }
+
     return (
+     
+            <ScrollView>
 
-        <ScrollView>
+            <View style={{ flexDirection: 'row', width: '100%', alignItems: 'center', backgroundColor: '#FF5733', height: 50 }}>
+                <TouchableOpacity style={{ marginLeft: 20 }} onPress={() => props.navigation.pop()}>
+                    <Image style={{ width: 20, height: 20, tintColor: 'white', transform: [{ rotate: '180deg' }] }}
+                        source={require('../../../Imagess/ErrorVector.png')} />
+                </TouchableOpacity>
+                <View style={{ width: '80%' }}>
+                    <Text style={{ alignSelf: 'center', fontSize: 18, fontWeight: "bold", color: 'white' }}>My Profile</Text>
+                </View>
+            </View>
+            <Text style={{ alignSelf: 'center', fontSize: 18, fontWeight: "600", color: 'gray', marginTop: 10 }}>Basic Info</Text>
 
-<View style={{flexDirection:'row',width:'100%',alignItems:'center',backgroundColor:'#FF5733',height:50}}>
-                        <TouchableOpacity style={{marginLeft:20}} onPress={()=>props.navigation.pop()}>
-                            <Image style={{width:20,height:20,tintColor:'white',transform: [{ rotate: '180deg'}]}}
-                                source={require('../../../Imagess/ErrorVector.png')} />
-                        </TouchableOpacity>
-                       <View style={{width:'80%'}}>
-                            <Text style={{alignSelf:'center',fontSize:18,fontWeight:"bold",color:'white'}}>My Profile</Text>
-                       </View>
-                       </View>
-                       <Text style={{alignSelf:'center',fontSize:18,fontWeight:"600",color:'gray',marginTop:10}}>Basic Info</Text>
-
-                                   <View style={{ backgroundColor:"#fff" ,marginTop:10}}>
+            <View style={{ backgroundColor: "#fff", marginTop: 10 }}>
                 <SafeAreaView style={styles.mainBody}>
 
-                   
+
                     <View style={{
                         justifyContent: "space-between",
                         flexDirection: "row", padding: 10,
                     }}>
                         <View style={{
                             justifyContent: "space-between",
-                            flexDirection: "row", 
+                            flexDirection: "row",
                         }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
@@ -76,7 +138,7 @@ const BasicInfoScreen = (props) => {
                             <View style={{ height: 10 }}></View>
                         </View>
                     </View>
-                    
+
                     <View style={{
                         justifyContent: "space-between",
                         flexDirection: "row", padding: 10,
@@ -84,7 +146,7 @@ const BasicInfoScreen = (props) => {
                     }}>
                         <View style={{
                             justifyContent: "space-between",
-                            flexDirection: "row",width:"100%"
+                            flexDirection: "row", width: "100%"
                         }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
@@ -92,21 +154,21 @@ const BasicInfoScreen = (props) => {
                             }}>Gender</Text>
 
 
-                     
 
-                        <View style={{
-                            borderColor: "gray", borderWidth: 1,
-                            borderRadius: 5, height: 40,
-                        }}>
-                            <TextInput
-                                style={{ height: 40, width: 200, }}
-                                // placeholder="Type here to translate!"
-                                onChangeText={text => setText(text)}
-                                defaultValue={text}
-                            />
 
-                        </View> 
-                          </View>
+                            <View style={{
+                                borderColor: "gray", borderWidth: 1,
+                                borderRadius: 5, height: 40,
+                            }}>
+                                <TextInput
+                                    style={{ height: 40, width: 200, }}
+                                    // placeholder="Type here to translate!"
+                                    onChangeText={text => setText(text)}
+                                    defaultValue={text}
+                                />
+
+                            </View>
+                        </View>
                         <View style={{ height: 10 }}></View>
                     </View>
                     <View style={{
@@ -116,7 +178,7 @@ const BasicInfoScreen = (props) => {
                     }}>
                         <View style={{
                             justifyContent: "space-between",
-                            flexDirection: "row", 
+                            flexDirection: "row",
                         }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
@@ -146,7 +208,7 @@ const BasicInfoScreen = (props) => {
                     }}>
                         <View style={{
                             justifyContent: "space-between",
-                            flexDirection: "row", 
+                            flexDirection: "row",
                         }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
@@ -180,7 +242,7 @@ const BasicInfoScreen = (props) => {
                     }}>
                         <View style={{
                             justifyContent: "space-between",
-                            flexDirection: "row", 
+                            flexDirection: "row",
                         }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
@@ -211,7 +273,7 @@ const BasicInfoScreen = (props) => {
                     }}>
                         <View style={{
                             justifyContent: "space-between",
-                            flexDirection: "row", 
+                            flexDirection: "row",
                         }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
@@ -244,7 +306,7 @@ const BasicInfoScreen = (props) => {
                     }}>
                         <View style={{
                             justifyContent: "space-between",
-                            flexDirection: "row", 
+                            flexDirection: "row",
                         }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
@@ -256,7 +318,7 @@ const BasicInfoScreen = (props) => {
 
                         <View style={{
                             justifyContent: "space-between",
-                            flexDirection: "row", 
+                            flexDirection: "row",
                         }}>
                             <RadioButton.Group onValueChange={newValue => setValue(newValue)} value={value}>
                                 <View style={{
@@ -276,12 +338,12 @@ const BasicInfoScreen = (props) => {
                     </View>
                     <View style={{
                         justifyContent: "space-between",
-                        flexDirection: "row", 
+                        flexDirection: "row",
 
                     }}>
                         <View style={{
                             justifyContent: "space-between",
-                            flexDirection: "row", padding: 13,width:"100%"
+                            flexDirection: "row", padding: 13, width: "100%"
                         }}>
                             <Text style={{
                                 color: "gray", fontSize: 14,
@@ -289,26 +351,26 @@ const BasicInfoScreen = (props) => {
                             }}>Health Information</Text>
 
 
-                       
 
-                        <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
-                            <Picker
-                                selectedValue={selectedValue}
-                                style={{ height: 40,width: 200, }}
-                                onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
-                            >
-                                <Picker.Item label="Select" value="Select" />
-                                <Picker.Item label="No Health Problems" value="No Health Problems" />
-                                <Picker.Item label="HIV positive" value="HIV positive" />
-                                <Picker.Item label="Diabetes" value="Diabetes" />
-                                <Picker.Item label="Low BP" value="Low BP" />
-                                <Picker.Item label="High BP" value="High BP" />
-                                <Picker.Item label="Herat Ailments" value="Herat Ailments" />
-                                <Picker.Item label="Other" value="Other" />
-                            </Picker>
-                            <View style={{ height: 10 }}></View>
+
+                            <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
+                                <Picker
+                                    selectedValue={selectedValue}
+                                    style={{ height: 40, width: 200, }}
+                                    onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                                >
+                                    <Picker.Item label="Select" value="Select" />
+                                    <Picker.Item label="No Health Problems" value="No Health Problems" />
+                                    <Picker.Item label="HIV positive" value="HIV positive" />
+                                    <Picker.Item label="Diabetes" value="Diabetes" />
+                                    <Picker.Item label="Low BP" value="Low BP" />
+                                    <Picker.Item label="High BP" value="High BP" />
+                                    <Picker.Item label="Herat Ailments" value="Herat Ailments" />
+                                    <Picker.Item label="Other" value="Other" />
+                                </Picker>
+                                <View style={{ height: 10 }}></View>
+                            </View>
                         </View>
- </View>
                     </View>
                     <View style={{
                         justifyContent: "space-between",
@@ -369,6 +431,8 @@ const BasicInfoScreen = (props) => {
             </View>
         </ScrollView >
 
+        
+     
     );
 }
 

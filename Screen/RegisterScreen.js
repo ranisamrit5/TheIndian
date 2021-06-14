@@ -19,53 +19,41 @@ import {
   ScrollView,
   TouchableHighlight
 } from 'react-native';
+import { Auth } from 'aws-amplify';
 import { RadioButton } from 'react-native-paper';
 import Loader from '../Screen/Componentone/Loader';
 
 const RegisterScreen = (props) => {
-
-  const TopTabFunction = (Value) => {
-    console.log('valuess', Value)
-    switch (Value.title) {
-        case 'Recent': {
-           setState({ Male: true })
-           setState({ Female: false })
-            setState({ Other: false })
-          
-         
-        }
-       
-        case 'Active': {
-          setState({ Male: false })
-          setState({ Female: true })
-           setState({ Other: false })
-          
-        }
-        case 'Meet': {
-           setState({ Male: false })
-           setState({ Female: false })
-           
-           setState({ Other: true })
-          
-        }
-       
-    }
-}
-const [state, setState] = useState(false);
-
-const setSelected  = () => {
-  setState({ selected: selected });
-}
-
-
-
-
+  var [ colorId, setColorId ] = React.useState(0);
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
-  const [userAge, setUserAge] = useState('');
+  const [mob, setMob] = useState('');
   const [userAddress, setUserAddress] = useState('');
+  const [pass, setPass] = useState('');
+  const [rePass, setRePass] = useState('');
   const [loading, setLoading] = useState(false);
   const [errortext, setErrortext] = useState('');
+  const [gender, setGender] = useState();
+
+  const onPress = (id) => {
+
+    setColorId(id);
+    switch (id) {
+      case 1: {
+        console.log(id)
+        setGender('MALE')
+      }
+      case 2: {
+        console.log(id)
+        setGender('FEMALE')
+      }
+      case 3: {
+        console.log(id)
+        setGender('OTHER')
+      }
+    }
+  }; 
+
   const [
     isRegistraionSuccess,
     setIsRegistraionSuccess
@@ -76,8 +64,8 @@ const setSelected  = () => {
   const ageInputRef = createRef();
   const addressInputRef = createRef();
 
-  const handleSubmitButton = () => {
-
+  const handleSubmitButton = async () => {
+    // console.log('gender',gender)
     setErrortext('');
     if (!userName) {
       alert('Please fill Name');
@@ -87,63 +75,63 @@ const setSelected  = () => {
       alert('Please fill Email');
       return;
     }
-    if (!userAge) {
-      alert('Please fill Age');
+    if (!mob) {
+      alert('Please fill Mobile No.');
       return;
     }
-    if (!userAddress) {
-      alert('Please fill Address');
+    if (!pass && !rePass && (pass != rePass)) {
+      alert('Please fill password correctly');
       return;
     }
     //Show Loader
-    setLoading(true);
-    var dataToSend = {
-      user_name: userName,
-      user_email: userEmail,
-      user_age: userAge,
-      user_address: userAddress,
-    };
-    var formBody = [];
-    for (var key in dataToSend) {
-      var encodedKey = encodeURIComponent(key);
-      var encodedValue = encodeURIComponent(dataToSend[key]);
-      formBody.push(encodedKey + '=' + encodedValue);
-    }
-    formBody = formBody.join('&');
+    // setLoading(true);
+    var mailFormat = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    var phoneRegex = /^(\+91-|\+91|0)?\d{10}$/;
+    let phone_number = ''
+    let email = ''
+console.log(userName,userEmail,mob,pass,rePass,gender)
+// return;
 
-    fetch('https://aboutreact.herokuapp.com/register.php', {
-      method: 'POST',
-      body: formBody,
-      headers: {
-        //Header Defination
-        'Content-Type':
-          'application/x-www-form-urlencoded;charset=UTF-8',
-      },
-    })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        //Hide Loader
-        setLoading(false);
-        console.log(responseJson);
-        // If server response message same as Data Matched
-        if (responseJson.status == 1) {
-          setIsRegistraionSuccess(true);
-          console.log(
-            'Registration Successful. Please Login to proceed'
-          );
-        } else {
-          setErrortext('Registration Unsuccessful');
+    try {
+      await Auth.signUp({
+        username:userEmail,
+        password:pass,
+        attributes: {
+          email:userEmail,          // optional
+          phone_number:mob,
+          family_name:'',
+          // middle_name,
+          name:userName,
+          gender:gender,
+
         }
+      }).then((user)=>{
+        console.log("user successfully signed Up!", user);
+        props.navigation.navigate('OTP',{params:user});
       })
-      .catch((error) => {
-        //Hide Loader
-        setLoading(false);
-        console.error(error);
-      });
+      
+
+    } catch (error) {
+      setLoading(false);
+      if(error.code == 'UsernameExistsException'){
+         alert("User Name Already Exist");
+      }
+     
+      console.log('error signing in', error);
+    }
   };
+
+  const onTextChanged = (e) => {
+    console.log(e)
+    return;
+    if (/^\d+$/.test(e.toString())) {
+      setUserAge(e)
+    }
+  }
+
   if (isRegistraionSuccess) {
     return (
-      
+
       <View
         style={{
           flex: 1,
@@ -170,17 +158,18 @@ const setSelected  = () => {
       </View>
     );
   }
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-      <View style={{flexDirection:'row',width:'100%',alignItems:'center',backgroundColor:'#FF5733',height:50}}>
-                        <TouchableOpacity style={{marginLeft:20}} onPress={()=>props.navigation.pop()}>
-                            <Image style={{width:20,height:20,tintColor:'white',transform: [{ rotate: '180deg'}]}}
-                                source={require('../Imagess/ErrorVector.png')} />
-                        </TouchableOpacity>
-                       <View style={{width:'20%'}}>
-                            <Text style={{alignSelf:'center',fontSize:18,fontWeight:"bold",color:'white'}}>Back</Text>
-                       </View>
-                       </View>
+      <View style={{ flexDirection: 'row', width: '100%', alignItems: 'center', backgroundColor: '#FF5733', height: 50 }}>
+        <TouchableOpacity style={{ marginLeft: 20 }} onPress={() => props.navigation.pop()}>
+          <Image style={{ width: 20, height: 20, tintColor: 'white', transform: [{ rotate: '180deg' }] }}
+            source={require('../Imagess/ErrorVector.png')} />
+        </TouchableOpacity>
+        <View style={{ width: '20%' }}>
+          <Text style={{ alignSelf: 'center', fontSize: 18, fontWeight: "bold", color: 'white' }}>Back</Text>
+        </View>
+      </View>
       <Loader loading={loading} />
       <ScrollView
         keyboardShouldPersistTaps="handled"
@@ -195,7 +184,7 @@ const setSelected  = () => {
               width: '60%',
               height: 100,
               resizeMode: 'contain',
-              margin: 30,
+              margin: 10,
             }}
           />
         </View>
@@ -205,7 +194,7 @@ const setSelected  = () => {
               style={styles.inputStyle}
               onChangeText={(UserName) => setUserName(UserName)}
               underlineColorAndroid="#f000"
-              placeholder="First Name"
+              placeholder="Enter Full Name"
               placeholderTextColor="#8b9cb5"
               autoCapitalize="sentences"
               returnKeyType="next"
@@ -223,7 +212,7 @@ const setSelected  = () => {
                 (UserEmail) => setUserEmail(UserEmail)
               }
               underlineColorAndroid="#f000"
-              placeholder="Last Name"
+              placeholder="Enter Email"
               placeholderTextColor="#8b9cb5"
               keyboardType="email-address"
               ref={emailInputRef}
@@ -239,12 +228,31 @@ const setSelected  = () => {
             <TextInput
               style={styles.inputStyle}
               onChangeText={
-                (UserAge) => setUserAge(UserAge)
+                (mob) => setMob(mob)
               }
               underlineColorAndroid="#f000"
-              placeholder="Enter Email"
+              placeholder="Enter Mobile Number"
               placeholderTextColor="#8b9cb5"
-            
+              keyboardType="numeric"
+              ref={emailInputRef}
+              returnKeyType="next"
+              onSubmitEditing={() =>
+                ageInputRef.current &&
+                ageInputRef.current.focus()
+              }
+              blurOnSubmit={false}
+            />
+          </View>
+          <View style={styles.SectionStyle}>
+            <TextInput
+              style={styles.inputStyle}
+              onChangeText={
+                (data) => setPass(data)
+              }
+              underlineColorAndroid="#f000"
+              placeholder="Enter Password"
+              placeholderTextColor="#8b9cb5"
+
               ref={ageInputRef}
               returnKeyType="next"
               onSubmitEditing={() =>
@@ -254,15 +262,15 @@ const setSelected  = () => {
               blurOnSubmit={false}
             />
           </View>
-          
+
           <View style={styles.SectionStyle}>
             <TextInput
               style={styles.inputStyle}
               onChangeText={
-                (UserAddress) => setUserAddress(UserAddress)
+                (data) => setRePass(data)
               }
               underlineColorAndroid="#f000"
-              placeholder="Enter Mobile"
+              placeholder="Re-enter Password"
               placeholderTextColor="#8b9cb5"
               autoCapitalize="sentences"
               ref={addressInputRef}
@@ -277,43 +285,51 @@ const setSelected  = () => {
             </Text>
           ) : null}
 
-<View style={{flexDirection:"row",justifyContent:"space-between",width:"65%"}}>
-<Text style={styles.text1}>Gender</Text>
-<View style={{flexDirection:"row",justifyContent:"space-between",width:"70%",alignSelf:"center",padding:20,}}>
-<TouchableHighlight style={{ borderWidth: 0.5, alignItems: 'center',justifyContent: 'center', width: 70, height:35, marginLeft: 5, marginRight: 5, borderRadius: 5 }} 
-underlayColor="lightgray"  onPress={(Value) => TopTabFunction(Value)} >
-   <Text>Male</Text>
-     
- 
-</TouchableHighlight>
+          <View style={{ flexDirection: "row", justifyContent: "space-between", width: "65%" }}>
+            <Text style={styles.text1}>Gender</Text>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", width: "70%", alignSelf: "center", padding: 20, }}>
+              <TouchableHighlight
+                style={colorId === 1 ? styles.red : styles.button}
+                onPress={() => {
+                  onPress(1)
+                  setGender('MALE')
+                }}>
+                <Text>Male</Text>
 
-<TouchableHighlight style={{ borderWidth: 0.5, alignItems: 'center',justifyContent: 'center', width: 70, height:35, marginLeft: 5, marginRight: 5, borderRadius: 5 }} 
-underlayColor="lightgray" 
-onShowUnderlay={() => setSelected(true)}
-onHideUnderlay={() => setSelected(false)}
- onPress={(Value) => TopTabFunction(Value)} >
-     
-   <Text>Female</Text>
-      
 
-    </TouchableHighlight>
+              </TouchableHighlight>
 
-    <TouchableHighlight style={{ borderWidth: 0.5, alignItems: 'center',justifyContent: 'center', width: 70, height:35, marginLeft: 5, marginRight: 5, borderRadius: 5 }} 
-    underlayColor="lightgray"  onPress={(Value) => TopTabFunction(Value)} >
-   <Text>Other</Text>
-     
+              <TouchableHighlight
+                style={colorId === 2 ? styles.red : styles.button}
+                onPress={() => {
+                  onPress(2)
+                  setGender('FEMALE')
+                }}>
 
-    </TouchableHighlight>
-</View>
+                <Text>Female</Text>
 
-</View>
+
+              </TouchableHighlight>
+
+              <TouchableHighlight style={colorId === 3 ? styles.red : styles.button}
+                onPress={() => {
+                  onPress(3)
+                  setGender('OTHER')
+                }} >
+                <Text>Other</Text>
+
+
+              </TouchableHighlight>
+            </View>
+
+          </View>
 
 
 
           <TouchableOpacity
             style={styles.buttonStyle}
             activeOpacity={0.5}
-            onPress={()=>props.navigation.navigate('TabNavigation')}>
+            onPress={() => handleSubmitButton()}>
             <Text style={styles.buttonTextStyle}>
               REGISTER
             </Text>
@@ -376,8 +392,32 @@ const styles = StyleSheet.create({
     fontSize: 16,
     // fontWeight: "bold",
     color: "#666666",
-    left:35,
+    left: 35,
     // marginTop:10,
-    alignSelf:"center"
-},
+    alignSelf: "center"
+  },
+  red: {
+    backgroundColor: '#ffa07a',
+    alignItems: 'center',
+    borderColor: '#7DE24E',
+    padding: 10,
+    borderWidth: 0.5,
+    justifyContent: 'center',
+    width: 70,
+   
+    marginLeft: 5,
+    marginRight: 5,
+    borderRadius: 5
+  },
+  button: {
+    alignItems: 'center',
+    padding: 10,
+    borderWidth: 0.5,
+    justifyContent: 'center',
+    width: 70,
+   
+    marginLeft: 5,
+    marginRight: 5,
+    borderRadius: 5
+  },
 });

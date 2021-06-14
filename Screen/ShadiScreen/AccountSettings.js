@@ -13,10 +13,22 @@ import {
 
     Button, Platform
 } from 'react-native';
-
+import { Auth } from 'aws-amplify';
 
 
 const AccountSettings = (props) => {
+
+
+    async function signOut() {
+        try {
+            await Auth.signOut().then(()=>{
+                console.log('==========')
+                props.navigation.navigate('LoginScreen');
+            })
+        } catch (error) {
+            console.log('error signing out: ', error);
+        }
+    }
 
     return (
         <SafeAreaView>
@@ -186,10 +198,10 @@ const AccountSettings = (props) => {
 
                     </View>
                 </View>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={signOut}>
                     <View style={styles.view8}>
                         <View style={styles.text}>
-                            <Text style={styles.text1}>Logout</Text>
+                            <Text style={styles.text1} >Logout</Text>
                         </View>
                     </View></TouchableOpacity>
             </ScrollView >
