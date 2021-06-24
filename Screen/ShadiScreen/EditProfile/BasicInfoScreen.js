@@ -22,72 +22,120 @@ import { RadioButton, Card } from 'react-native-paper';
 import { graphql, withApollo } from "react-apollo";
 import compose from "lodash.flowright";
 import Getdata from "../../../AppSync/query/Auth/getData";
+import updateUser from "../../../AppSync/mutation/User/updateData";
+import {profileoption,religionoption,chidoption,languageoption,statusoption,annualoption,familyVal,heightoption,countryoption,
+    stateoption,cityoption,rassioption,castoption,degreeoption,employoption,employeeption
+  } from "../../Const/const";
 
 const BasicInfoScreen = (props) => {
     const [text, setText] = useState('');
     const [selectedValue, setSelectedValue] = useState("Self");
-    const [value, setValue] = React.useState('Kgs');
-    const [id,setId]=useState()
+    const [gender, setGender] = useState("");
+    const [marital, setMaterial] = useState("");
+    const [height, setHeight] = useState("");
+    const [value, setValue] = useState('Kgs');
+    let [data, setData] = useState([]);
+    const [id, setId] = useState()
     let [loading, setLoading] = useState(false);
+    const [basicInfo,setBasicInfo]=useState({
+        id:'',
+        fname:'',
+        lname:'',
+        dob:'',
+        maritalStatus:'SINGLE',
+        noOfChildren:0,
+        height:'',
+        physicalStatus:'',
+        religion:'Hindu',
+        caste:'',
+        subcaste:'',
+        profileCreatedFor:'Self',
+        motherTongue:'',
+        languagesKnown:'',
+        gotram:'',
+        star:'',
+        manglik:'',
+        eatingHabit:'',
+        smokingHabit:'',
+        drinkingHabit:'',
+        aboutMe:''})
 
     useEffect(() => {
         setLoading(true)
         Auth.currentAuthenticatedUser()
             .then((data) => {
                 // console.log('user----::',data)
-                  setId(data.username)
+                setId(data.username)
                 // props.id=data.username
-                   getData(data.username)
+                getData(data.username)
             });
     }, []
     )
 
-    const getData=async(user)=>{
-        console.log('user----::',user)
-        const data=await  props.client.query({
-          query: Getdata,
-          fetchPolicy: "network-only",
-          variables: {
-             id: `${user}`,
-          },
+    const handleSubmit = async (e) => {
+        try {
+            
+            let data_=data
+            console.log('Table', data_.tablename,marital,height,gender)
+            console.log('ID', data_.id)
+            setBasicInfo({...basicInfo,
+                height:height,
+                gender:gender,
+                maritalStatus:marital
+            })
+            const savedData= await props.updateUser({variables: {input: basicInfo}})
+            console.log(savedData)
+     
+        } catch (err) {
+            console.log('error creating todo:', err)
+        }
+    }
+
+    const getData = async (user) => {
+        console.log('user----::', user)
+        const { data } = await props.client.query({
+            query: Getdata,
+            fetchPolicy: "network-only",
+            variables: {
+                id: `${user}`,
+            },
         });
-        if(data){
-            let userData=data.data.getUser
-        //let no=userData.noOfChildren
-       
-    //     const{noOfChildren,maritalStatus,eatingHabit,smokingHabit,drinkingHabit,manglik,physicalStatus,
-    //     religion,caste,star,height,motherTongue,dob,aboutMe,fname,profileCreatedFor
-    //     }=userData
-    //     setBasicInfo({
-    //       ...basicInfo,
-    //       id: user,
-    //       profileCreatedFor:profileCreatedFor === null ? "Self" : profileCreatedFor,
-    //       maritalStatus: maritalStatus === null ? "SINGLE" : maritalStatus,
-    //       // maritalStatus: maritalStatus !== null ? maritalStatus : 0,
-    //       noOfChildren:noOfChildren !== null ? 0 : noOfChildren,
-    //       eatingHabit:eatingHabit,
-    //       smokingHabit:smokingHabit,
-    //       drinkingHabit:drinkingHabit,
-    //       manglik:manglik,
-    //       physicalStatus:physicalStatus,
-    //       religion:religion,
-    //       caste:caste,
-    //       star:star,
-    //       height:height === null ? 0 : height,
-    //       motherTongue:motherTongue,
-    //       dob:dob,
-    //       aboutMe:aboutMe,fname:fname
-      
-    //     });
-    //    // setNoOfChildren(no)
-    //       setLoading(false)
+        if (data) {
+            let userData = data.getUser
+            setData(userData)
+            console.log(userData);
+            const { noOfChildren, maritalStatus, eatingHabit, smokingHabit, drinkingHabit, manglik, physicalStatus,
+                religion, caste, star, height, motherTongue, dob, aboutMe, fname, profileCreatedFor
+            } = userData
+            setBasicInfo({
+                ...basicInfo,
+                id: user,
+                profileCreatedFor: !profileCreatedFor ? "Self" : profileCreatedFor,
+                maritalStatus: !maritalStatus ? "SINGLE" : maritalStatus,
+                // maritalStatus: maritalStatus !== null ? maritalStatus : 0,
+                noOfChildren: !noOfChildren ? 0 : noOfChildren,
+                eatingHabit: eatingHabit,
+                smokingHabit: smokingHabit,
+                drinkingHabit: drinkingHabit,
+                manglik: manglik,
+                physicalStatus: physicalStatus,
+                religion: religion,
+                caste: caste,
+                star: star,
+                height: !height ? 0 : height,
+                motherTongue: motherTongue,
+                dob: dob,
+                aboutMe: aboutMe,
+                fname: fname
+
+            });
         }
         setLoading(false)
-       }
+    }
 
     return (
-     
-            <ScrollView>
+
+        <ScrollView>
 
             <View style={{ flexDirection: 'row', width: '100%', alignItems: 'center', backgroundColor: '#FF5733', height: 50 }}>
                 <TouchableOpacity style={{ marginLeft: 20 }} onPress={() => props.navigation.pop()}>
@@ -129,24 +177,21 @@ const BasicInfoScreen = (props) => {
                                 style={{ height: 40, width: 200, }}
                                 onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
                             >
-                                <Picker.Item label="Self" value="Self" />
-                                <Picker.Item label="Parent/Guardian" value="Parent/Guardian" />
-                                <Picker.Item label="Sibling" value="Sibling" />
-                                <Picker.Item label="Friend" value="Friend" />
-                                <Picker.Item label="Other" value="Other" />
+                                {profileoption.map((item, index) => {
+                                    return (< Picker.Item label={item.title} value={item.title} key={index} />);
+                                })}
                             </Picker>
                             <View style={{ height: 10 }}></View>
                         </View>
                     </View>
-
                     <View style={{
                         justifyContent: "space-between",
-                        flexDirection: "row", padding: 10,
+                        flexDirection: "row", padding: 13,
 
                     }}>
                         <View style={{
                             justifyContent: "space-between",
-                            flexDirection: "row", width: "100%"
+                            flexDirection: "row",
                         }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
@@ -154,22 +199,22 @@ const BasicInfoScreen = (props) => {
                             }}>Gender</Text>
 
 
-
-
-                            <View style={{
-                                borderColor: "gray", borderWidth: 1,
-                                borderRadius: 5, height: 40,
-                            }}>
-                                <TextInput
-                                    style={{ height: 40, width: 200, }}
-                                    // placeholder="Type here to translate!"
-                                    onChangeText={text => setText(text)}
-                                    defaultValue={text}
-                                />
-
-                            </View>
                         </View>
-                        <View style={{ height: 10 }}></View>
+
+                        <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
+                            <Picker
+                                selectedValue={gender}
+                                style={{ height: 40, width: 200, }}
+                                onValueChange={(itemValue, itemIndex) => {
+                                    setGender(itemValue)
+                                    setBasicInfo({ ...basicInfo, gender:itemValue })}}
+                            >
+                                <Picker.Item label="Male" value="MALE" />
+                                <Picker.Item label="Female" value="FEMALE" />
+                            </Picker>
+                            <View style={{ height: 10 }}></View>
+                        </View>
+
                     </View>
                     <View style={{
                         justifyContent: "space-between",
@@ -190,12 +235,12 @@ const BasicInfoScreen = (props) => {
 
                         <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
                             <Picker
-                                selectedValue={selectedValue}
+                                selectedValue={gender}
                                 style={{ height: 40, width: 200, }}
-                                onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                                onValueChange={(itemValue, itemIndex) => setGender(itemValue)}
                             >
-                                <Picker.Item label="Male" value="Male" />
-                                <Picker.Item label="Female" value="Female" />
+                                <Picker.Item label="Male" value="MALE" />
+                                <Picker.Item label="Female" value="FEMALE" />
                             </Picker>
                             <View style={{ height: 10 }}></View>
                         </View>
@@ -223,13 +268,17 @@ const BasicInfoScreen = (props) => {
 
                         <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
                             <Picker
-                                selectedValue={selectedValue}
+                                selectedValue={marital}
                                 style={{ height: 40, width: 200, }}
-                                onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                                onValueChange={(itemValue, itemIndex) => {
+                                    setMaterial(itemValue)
+                                    setBasicInfo({ ...basicInfo, maritalStatus: itemValue })
+                                }}
+
                             >
-                                <Picker.Item label="Never Married" value="Never Married" />
-                                <Picker.Item label="Divorced" value="Divorced" />
-                                <Picker.Item label="Awaiting Divorce" value="Awaiting Divorce" />
+                                {statusoption.map((item, index) => {
+                                    return (< Picker.Item label={item.title} value={item.value} key={index} />);
+                                })}
                             </Picker>
                             <View style={{ height: 10 }}></View>
                         </View>
@@ -254,13 +303,16 @@ const BasicInfoScreen = (props) => {
 
                         <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
                             <Picker
-                                selectedValue={selectedValue}
+                                selectedValue={height}
                                 style={{ height: 40, width: 200, }}
-                                onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                                onValueChange={(itemValue, itemIndex) => {
+                                    setBasicInfo({ ...basicInfo, height: itemValue })
+                                    setHeight(itemValue)
+                                }}
                             >
-                                <Picker.Item label="5" value="5" />
-                                <Picker.Item label="6" value="6" />
-                                <Picker.Item label="7" value="7" />
+                                {heightoption.map((item, index) => {
+                                    return (< Picker.Item label={item.title} value={item.value} key={index} />);
+                                })}
                             </Picker>
                             <View style={{ height: 10 }}></View>
                         </View>
@@ -278,7 +330,7 @@ const BasicInfoScreen = (props) => {
                             <Text style={{
                                 color: "gray", fontSize: 15,
                                 fontWeight: "bold"
-                            }}>Marital status</Text>
+                            }}>Physical Status</Text>
                             <Text style={{
                                 color: "red", fontSize: 15,
                                 fontWeight: "bold"
@@ -292,19 +344,19 @@ const BasicInfoScreen = (props) => {
                                 style={{ height: 40, width: 200, }}
                                 onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
                             >
-                                <Picker.Item label="None" value="None" />
-                                <Picker.Item label="Physical Disability" value="Physical Disability" />
+                                <Picker.Item label="Normal" value="NORMAL" />
+                                <Picker.Item label="Physical Disability" value="PHYSICALLY_CHALLENGED" />
 
                             </Picker>
                             <View style={{ height: 10 }}></View>
                         </View>
                     </View>
-                    <View style={{
+                    {/*    <View style={{
                         justifyContent: "space-between",
                         flexDirection: "row", padding: 13,
 
                     }}>
-                        <View style={{
+                       <View style={{
                             justifyContent: "space-between",
                             flexDirection: "row",
                         }}>
@@ -333,9 +385,9 @@ const BasicInfoScreen = (props) => {
                                     <RadioButton value="Ibs" />
                                 </View>
                             </RadioButton.Group>
-                        </View>
+                        </View> 
 
-                    </View>
+                    </View>*/}
                     <View style={{
                         justifyContent: "space-between",
                         flexDirection: "row",
@@ -415,10 +467,7 @@ const BasicInfoScreen = (props) => {
                         <TouchableOpacity
                             style={styles.SubmitButtonStyle1}
                             activeOpacity={.10}
-                        //   onPress={() =>
-
-                        // this.props.navigation.navigate('Customerlogin')
-                        // navigation.navigate('Customerlogin')}
+                          onPress={() =>{handleSubmit()}}
 
 
                         >
@@ -431,13 +480,18 @@ const BasicInfoScreen = (props) => {
             </View>
         </ScrollView >
 
-        
-     
+
+
     );
 }
 
 
-export default BasicInfoScreen;
+const profile = compose(
+    withApollo,
+     graphql(updateUser, { name: "updateUser" })
+  )(BasicInfoScreen);
+  export default profile;
+
 
 export const styles = StyleSheet.create({
     mainBody: {
