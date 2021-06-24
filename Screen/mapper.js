@@ -31,212 +31,213 @@ export const userDataMapper = JM.makeConverter({
         if (i && i.data && i.data.id !== 'undefined') {
             return i.data.id;
         }
-        return;
+        return 'Not Specified';
     },
     height: function (i) {
         if (i && i.data && i.data.height !== 'undefined') {
             return heightoption.find((x) => x.value === parseInt(i.data.height)).title;
         }
-        return;
+        return 'Not Specified';
     },
     fname: function (i) {
         if (i && i.data && i.data.fname !== 'undefined') {
             return i.data.fname;
         }
-        return;
+        return 'Not Specified';
     },
     lname: function (i) {
         if (i && i.data && i.data.lname !== 'undefined') {
             return i.data.lname;
         }
-        return;
+        return 'Not Specified';
     },
     city: function (i) {
         if (i && i.data && i.data.location && i.data.location.city !== 'undefined') {
             return i.data.location.city;
         }
-        return;
+        return 'Not Specified';
     },
     state: function (i) {
         if (i && i.data && i.data.location && i.data.location.state !== 'undefined') {
             return i.data.location.state;
         }
-        return;
+        return 'Not Specified';
     },
     country: function (i) {
         if (i && i.data && i.data.location && i.data.location.country !== 'undefined') {
             return i.data.location.country;
         }
-        return;
+        return 'Not Specified';
     },
     aboutMyFamily: function (i) {
         if (i && i.data && i.data.familyDetails && i.data.familyDetails.aboutMyFamily !== 'undefined') {
             return i.data.familyDetails.aboutMyFamily;
         }
-        return;
+        return 'Not Specified';
     },
     familyStatus: function (i) {
         if (i && i.data && i.data.familyDetails && i.data.familyDetails.familyStatus !== 'undefined') {
             return familyStatus.find((x) => x.value === i.data.familyDetails.familyStatus).title;
         }
-        return;
+        return 'Not Specified';
     },
     familyType: function (i) {
         if (i && i.data && i.data.familyDetails && i.data.familyDetails.familyType !== 'undefined') {
             return familyType.find((x) => x.value === i.data.familyDetails.familyType).title;
         }
-        return;
+        return 'Not Specified';
 
     },
     fathersOccupation: function (i) {
         if (i && i.data && i.data.familyDetails && i.data.familyDetails.fathersOccupation !== 'undefined') {
             return i.data.familyDetails.fathersOccupation;
         }
-        return;
+        return 'Not Specified';
     },
     mothersOccupation: function (i) {
         if (i && i.data && i.data.familyDetails && i.data.familyDetails.mothersOccupation !== 'undefined') {
             return i.data.familyDetails.mothersOccupation;
         }
-        return;
+        return 'Not Specified';
     },
     nativePlace: function (i) {
         if (i && i.data && i.data.familyDetails && i.data.familyDetails.nativePlace !== 'undefined') {
+            console.log('=========>',i.data.familyDetails.nativePlace)
             return i.data.familyDetails.nativePlace;
         }
-        return;
+        return 'Not Specified';
     }, noOfBrothers: function (i) {
         if (i && i.data && i.data.familyDetails && i.data.familyDetails.noOfBrothers !== 'undefined') {
             return i.data.familyDetails.noOfBrothers;
         }
-        return;
+        return 'Not Specified';
     },
     noOfSisters: function (i) {
         if (i && i.data && i.data.familyDetails && i.data.familyDetails.noOfSisters !== 'undefined') {
             return i.data.familyDetails.noOfSisters;
         }
-        return;
+        return 'Not Specified';
     }, nativePlace: function (i) {
         if (i && i.data && i.data.familyDetails && i.data.familyDetails.nativePlace !== 'undefined') {
             return i.data.familyDetails.nativePlace;
         }
-        return;
+        return 'Not Specified';
     },
     parentContact: function (i) {
         if (i && i.data && i.data.familyDetails && i.data.familyDetails.parentContact !== 'undefined') {
             return i.data.familyDetails.parentContact;
         }
-        return;
+        return 'Not Specified';
     },
     // religion: function (i) {
     //     if (i && i.data && i.data.religion !== 'undefined') {
     //         return i.data.religion;
     //     }
-    //     return;
+    //     return 'Not Specified';
     // },
     // religion: function (i) {
     //     if (i && i.data && i.data.religion !== 'undefined') {
     //         return i.data.religion;
     //     }
-    //     return;
+    //     return 'Not Specified';
     // },
     religion: function (i) {
         if (i && i.data && i.data.religion !== 'undefined') {
             return i.data.religion;
         }
-        return;
+        return 'Not Specified';
     },
     annualIncome: function (i) {
         if (i && i.data && i.data.education && i.data.education.annualIncome !== 'undefined') {
 
             return annualoption.find((x) => x.value === parseInt(i.data.education.annualIncome)).title;
         }
-        return;
+        return 'Not Specified';
     },
     maritalStatus: function (i) {
         if (i && i.data && i.data.maritalStatus !== 'undefined') {
             return statusoption.find((x) => x.value === i.data.maritalStatus).title;
         }
-        return;
+        return 'Not Specified';
     },
     colg_institute: function (i) {
         if (i && i.data && i.data.education && i.data.education.colg_institute !== 'undefined') {
             return i.data.education.colg_institute;
         }
-        return;
+        return 'Not Specified';
     },
     eduDetails: function (i) {
         if (i && i.data && i.data.education && i.data.education.eduDetails !== 'undefined') {
             return i.data.education.eduDetails;
         }
-        return;
+        return 'Not Specified';
     },
     employedIn: function (i) {
         if (i && i.data && i.data.education && i.data.education.employedIn !== 'undefined') {
             return employoption.find((x) => x.value === i.data.education.employedIn).title;
         }
-        return;
+        return 'Not Specified';
     },
     highestEducation: function (i) {
         if (i && i.data && i.data.education && i.data.education.highestEducation !== 'undefined') {
             return i.data.education.highestEducation;
         }
-        return;
+        return 'Not Specified';
     },
     occuDetails: function (i) {
         if (i && i.data && i.data.education && i.data.education.occuDetails !== 'undefined') {
             return i.data.education.occuDetails;
         }
-        return;
+        return 'Not Specified';
     },
     occupation: function (i) {
         if (i && i.data && i.data.education && i.data.education.occupation !== 'undefined') {
             return i.data.education.occupation;
         }
-        return;
+        return 'Not Specified';
     },
     gender: function (i) {
         if (i && i.data && i.data.gender !== 'undefined') {
             return i.data.gender === "MALE" ? 'Male' : 'Female';;
         }
-        return;
+        return 'Not Specified';
     },
     him_her: function (i) {
         if (i && i.data && i.data.gender !== 'undefined') {
             return i.data.gender === "MALE" ? 'He' : 'She';
         }
-        return;
+        return 'Not Specified';
     },
     age: function (i) {
         if (i && i.data && i.data.dob !== 'undefined') {
             return getAge(i.data.dob);
         }
-        return;
+        return 'Not Specified';
     },
     //moment(data_.dob).utc().format('YYYY-MM-DD')
     dob: function (i) {
         if (i && i.data && i.data.dob !== 'undefined') {
             return moment(i.data.dob).utc().format('YYYY-MM-DD');
         }
-        return;
+        return 'Not Specified';
     },
     active: function (i) {
         if (i && i.data && i.data.lastActive !== 'undefined') {
             return timeago.format(parseInt(i.data.lastActive));
         }
-        return;
+        return 'Not Specified';
     },
     gallery: function (i) {
         if (i && i.data && i.data.gallery && i.data.gallery !== 'undefined') {
             return i.data.gallery;
         }
-        return;
+        return 'Not Specified';
     },
     username: function (i) {
         if (i && i.data && i.data.username !== 'undefined') {
             return i.data.username;
         }
-        return;
+        return 'Not Specified';
     },
     profileCreatedFor: function (i) {
         if (i && i.data && i.data.profileCreatedFor && i.data.profileCreatedFor !== 'undefined') {
@@ -244,7 +245,7 @@ export const userDataMapper = JM.makeConverter({
             return i.data.profileCreatedFor;
         }
       
-        return;
+        return 'Not Specified';
     },
     profilePic: function (i) {
         if (i && i.data && i.data.profilePic && i.data.profilePic !== 'undefined') {
@@ -255,56 +256,56 @@ export const userDataMapper = JM.makeConverter({
         //     return i.data.profileCreatedFor = i.data.gender
         // }
         // else 
-            return;
+            return 'Not Specified';
             // return i.data.profileCreatedFor = female;
     },
     motherTongue: function (i) {
         if (i && i.data && i.data.motherTongue &&i.data.motherTongue !== 'undefined') {
             return capitalizeFirstLetter(i.data.motherTongue);
         }
-        return;
+        return 'Not Specified';
     },
     caste: function (i) {
         if (i && i.data && i.data.caste !== 'undefined') {
             return i.data.caste;
         }
-        return;
+        return 'Not Specified';
     },
     interest: function (i) {
         if (i && i.data && i.data.interest !== 'undefined') {
             return i.data.interest;
         }
-        return;
+        return 'Not Specified';
     },
     request: function (i) {
         if (i && i.data && i.data.request !== 'undefined') {
             return i.data.request;
         }
-        return;
+        return 'Not Specified';
     },
     aboutMe: function (i) {
         if (i && i.data && i.data.aboutMe !== 'undefined') {
             return i.data.aboutMe;
         }
-        return;
+        return 'Not Specified';
     },
     partnerConnectStatus: function (i) {
         if (i && i.data && i.data.partnerConnectStatus !== 'undefined') {
             return i.data.partnerConnectStatus;
         }
-        return;
+        return 'Not Specified';
     },
     partnerPreference: function (i) {
         if (i && i.data && i.data.partnerPreference !== 'undefined') {
             return i.data.partnerPreference;
         }
-        return;
+        return 'Not Specified';
     },
     connectStatusForMe: function (i) {
         if (i && i.data && i.data.connectStatusForMe !== 'undefined') {
             return i.data.connectStatusForMe;
         }
-        return;
+        return 'Not Specified';
     },
     physicalStatus: function (i) {
         if (i && i.data && i.data.physicalStatus !== 'undefined') {
