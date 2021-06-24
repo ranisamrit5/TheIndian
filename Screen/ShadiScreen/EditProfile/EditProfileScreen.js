@@ -40,7 +40,7 @@ const EditProfileScreen = (props) => {
         religion: 'Hindu',
         caste: '',
         subcaste: '',
-        profileCreatedFor: 'Self',
+        profileCreatedFor: 'Self',      
         motherTongue: '',
         languagesKnown: '',
         gotram: '',
