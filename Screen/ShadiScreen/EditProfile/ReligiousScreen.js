@@ -28,7 +28,7 @@ const ReligiousScreen = (props) => {
         <ScrollView>
 
 
-<View style={{flexDirection:'row',width:'100%',alignItems:'center',backgroundColor:'#FF5733',height:50}}>
+                        <View style={{flexDirection:'row',width:'100%',alignItems:'center',backgroundColor:'#FF5733',height:50}}>
                         <TouchableOpacity style={{marginLeft:20}} onPress={()=>props.navigation.pop()}>
                             <Image style={{width:20,height:20,tintColor:'white',transform: [{ rotate: '180deg'}]}}
                                 source={require('../../../Imagess/ErrorVector.png')} />
@@ -55,7 +55,7 @@ const ReligiousScreen = (props) => {
                         color: "red", fontSize: 15,
                         fontWeight: "bold", marginRight: 70
                     }}>*</Text>
-                    <View style={{ borderColor: "red", borderWidth: 1, borderRadius: 5, height: 40 }}>
+                    <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
                         <Picker
                             selectedValue={selectedValue}
                             style={{ height: 40, width: 180, }}
@@ -88,7 +88,7 @@ const ReligiousScreen = (props) => {
                         color: "red", fontSize: 15,
                         fontWeight: "bold", marginRight: 20
                     }}>*</Text>
-                    <View style={{ borderColor: "red", borderWidth: 1, borderRadius: 5, height: 40 }}>
+                    <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
                         <Picker
                             selectedValue={selectedValue}
                             style={{ height: 40, width: 180, }}
@@ -121,7 +121,7 @@ const ReligiousScreen = (props) => {
                         color: "red", fontSize: 15,
                         fontWeight: "bold", marginRight: 40
                     }}>*</Text>
-                    <View style={{ borderColor: "red", borderWidth: 1, borderRadius: 5, height: 40 }}>
+                    <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
                         <Picker
                             selectedValue={selectedValue}
                             style={{ height: 40, width: 180, }}
@@ -155,8 +155,8 @@ const ReligiousScreen = (props) => {
                         fontWeight: "bold", marginRight: 10
                     }}>*</Text>
                     <View style={{
-                        borderColor: "red",
-                        borderWidth: 1, borderRadius: 5, height: 40, width: 180
+                        borderColor: "gray",
+                        borderWidth: 1, borderRadius: 5, height: 40, width: 179
                     }}>
                         <TextInput></TextInput>
                         <View style={{ height: 10 }}></View>
@@ -183,7 +183,7 @@ const ReligiousScreen = (props) => {
                         fontWeight: "bold"
                     }}>Gothra/Gothram</Text>
 
-                    <View style={{ borderColor: "red", borderWidth: 1, borderRadius: 5, height: 40 }}>
+                    <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
                         <Picker
                             selectedValue={selectedValue}
                             style={{ height: 40, width: 180, }}
@@ -227,9 +227,7 @@ const ReligiousScreen = (props) => {
                     </View>
 
                 </View>
-
-
-            </SafeAreaView>
+             </SafeAreaView>
             </View>
         </ScrollView >
 

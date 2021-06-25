@@ -86,7 +86,7 @@ const EditProfileScreen = (props) => {
 
 
         <SafeAreaView style={styles.mainBody} >
-            {!loading ?
+            {/* {!loading ? */}
 
 
                 <ScrollView>
@@ -144,15 +144,18 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Posted by</Text>
+
+
+                            
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold",
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: {basicInfo.profileCreatedFor}</Text>
 
 
-                            <View style={{ height: 10, }}></View>
+                           
 
                         </View>
 
@@ -165,11 +168,11 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Age</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginLeft: 10
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: {details.age}</Text>
 
                             <View style={{ height: 10 }}></View>
@@ -184,14 +187,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Marital Status</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginLeft: 20
+                                fontWeight: "bold", flex:1,flexWrap:"wrap"
                             }}>: {details.maritalStatus}</Text>
 
-                            <View style={{ height: 10 }}></View>
+                          
 
                         </View>
                         <View
@@ -203,14 +206,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Height</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginLeft: 55
+                                fontWeight: "bold", flex:1,flexWrap:"wrap"
                             }}>: {details.height}</Text>
 
-                            <View style={{ height: 10 }}></View>
+                            
 
                         </View>
                         <View
@@ -222,14 +225,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Any Disability?</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginRight: 44
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: {details.physicalStatus}</Text>
 
-                            <View style={{ height: 5 }}></View>
+                           
 
                         </View>
                         <View
@@ -241,14 +244,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Body Weight</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginLeft: 30
+                                fontWeight: "bold", flex:1,flexWrap:"wrap"
                             }}>: Not Specified</Text>
 
-                            <View style={{ height: 10 }}></View>
+                          
 
                         </View>
                         <View
@@ -260,14 +263,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Health Information</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginRight: 10
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: Not Specified</Text>
 
-                            <View style={{ height: 10 }}></View>
+                          
 
                         </View>
                     </View>
@@ -336,15 +339,15 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Religion</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold",
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: {details.religion}</Text>
 
 
-                            <View style={{ height: 10, }}></View>
+                         
 
                         </View>
 
@@ -357,14 +360,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Mother Tongue</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginRight: 30
+                                fontWeight: "bold", flex:1,flexWrap:"wrap"
                             }}>: {details.motherTongue}</Text>
 
-                            <View style={{ height: 10 }}></View>
+                           
 
                         </View>
                         <View
@@ -376,14 +379,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Community</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginRight: 28
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: {details.caste}</Text>
 
-                            <View style={{ height: 10 }}></View>
+                          
 
                         </View>
                         <View
@@ -395,14 +398,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Sub Community</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginLeft: 10
+                                fontWeight: "bold", flex:1,flexWrap:"wrap"
                             }}>: {details.subcaste}</Text>
 
-                            <View style={{ height: 10 }}></View>
+                            
 
                         </View>
                         <View
@@ -414,14 +417,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Cast No Bar</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginLeft: 35,
+                                fontWeight: "bold", flex:1,flexWrap:"wrap"
                             }}>: Not Specified</Text>
 
-                            <View style={{ height: 5 }}></View>
+                          
 
                         </View>
                         <View
@@ -433,14 +436,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Gothra/Gothram</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", flexDirection: "row",
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: Not Specified</Text>
 
-                            <View style={{ height: 10 }}></View>
+                           
 
                         </View>
                         <View
@@ -452,14 +455,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Health Information</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginRight: 10, flexDirection: "row",
+                                fontWeight: "bold", flex:1,flexWrap:"wrap"
                             }}>: Not Specified</Text>
 
-                            <View style={{ height: 10 }}></View>
+                        
 
                         </View>
                     </View>
@@ -489,15 +492,15 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Father's Status</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold",
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: {details.fathersOccupation}</Text>
 
 
-                            <View style={{ height: 10, }}></View>
+                       
 
                         </View>
 
@@ -510,11 +513,11 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Mother's Status</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginRight: 10
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: {details.mothersOccupation}</Text>
 
                             <View style={{ height: 10 }}></View>
@@ -529,14 +532,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Native Place</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginLeft: 30
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: {details.nativePlace}</Text>
 
-                            <View style={{ height: 10 }}></View>
+                         
 
                         </View>
                         <View
@@ -548,14 +551,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>No. of Brothers</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginRight: 70
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: {details.noOfBrothers}</Text>
 
-                            <View style={{ height: 10 }}></View>
+                           
 
                         </View>
                         <View
@@ -567,14 +570,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>No. fo Sisters</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginRight: 60
+                                fontWeight: "bold", flex:1,flexWrap:"wrap"
                             }}>: {details.noOfSisters}</Text>
 
-                            <View style={{ height: 5 }}></View>
+                            
 
                         </View>
                         <View
@@ -586,14 +589,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Family Values</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", flexDirection: "row", marginLeft: 20
+                                fontWeight: "bold", flex:1,flexWrap:"wrap"
                             }}>: { }</Text>
 
-                            <View style={{ height: 10 }}></View>
+                           
 
                         </View>
                         <View
@@ -605,14 +608,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Family Affluence</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginRight: 20, flexDirection: "row",
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: Enter Now</Text>
 
-                            <View style={{ height: 10 }}></View>
+                           
 
                         </View>
                     </View>
@@ -643,15 +646,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Manglik/Chevvai dosham</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginRight: 30
+                                fontWeight: "bold", flex:1,flexWrap:"wrap"
                             }}>: {details.manglik}</Text>
 
 
-                            <View style={{ height: 10, }}></View>
 
                         </View>
 
@@ -664,14 +666,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold",
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Nakshatra</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginLeft: 90
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: Not Specified</Text>
 
-                            <View style={{ height: 10 }}></View>
+                          
 
                         </View>
                         <View
@@ -683,14 +685,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Rashi/Moon Sign</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginLeft: 40
+                                fontWeight: "bold", flex:1,flexWrap:"wrap"
                             }}>: Not Specified</Text>
 
-                            <View style={{ height: 10 }}></View>
+                            
 
                         </View>
                     </View>
@@ -720,15 +722,15 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Country Living in</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginRight: 40
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: {details.country}</Text>
 
 
-                            <View style={{ height: 10, }}></View>
+                          
 
                         </View>
 
@@ -741,14 +743,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>State Living in</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginLeft: 30
+                                fontWeight: "bold", flex:1,flexWrap:"wrap"
                             }}>: {details.state}</Text>
 
-                            <View style={{ height: 10 }}></View>
+                         
 
                         </View>
                         <View
@@ -760,14 +762,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>City Living in</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginLeft: 10
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: {details.city}</Text>
 
-                            <View style={{ height: 10 }}></View>
+                           
 
                         </View>
                         <View
@@ -779,14 +781,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Residency Status</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginRight: 30
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: {details.citizenship}</Text>
 
-                            <View style={{ height: 10 }}></View>
+                          
 
                         </View>
                         <View
@@ -798,15 +800,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Zip/Pin code</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginLeft: 45
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: Not Specified</Text>
 
-                            <View style={{ height: 5 }}></View>
-
+                    
                         </View>
                         <View
                             style={{
@@ -817,14 +818,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Grew Up in</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", flexDirection: "row", marginLeft: 5
+                                fontWeight: "bold", flex:1,flexWrap:"wrap"
                             }}>: India</Text>
 
-                            <View style={{ height: 10 }}></View>
+                          
 
                         </View>
                         <View
@@ -836,14 +837,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Highest Qualification</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginRight: 100, flexDirection: "row",
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: {details.highestEducation}</Text>
 
-                            <View style={{ height: 10 }}></View>
+                       
 
                         </View>
                         <View
@@ -855,14 +856,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>College(s) Attended</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginRight: 1, flexDirection: "row",
+                                fontWeight: "bold", flex:1,flexWrap:"wrap"
                             }}>: {details.colg_institute}</Text>
 
-                            <View style={{ height: 10 }}></View>
+                        
 
                         </View>
                         <View
@@ -874,14 +875,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Working With</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginLeft: 60, flexDirection: "row",
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: {details.employedIn}</Text>
 
-                            <View style={{ height: 10 }}></View>
+                            
 
                         </View>
                         <View
@@ -893,14 +894,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Working As</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginLeft: 95, flexDirection: "row",
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: {}</Text>
 
-                            <View style={{ height: 10 }}></View>
+                            
 
                         </View>
                         <View
@@ -912,14 +913,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Annual Income</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginLeft: 70, flexDirection: "row",
+                                fontWeight: "bold", flex:1,flexWrap:"wrap"
                             }}>: {details.annualIncome}</Text>
 
-                            <View style={{ height: 10 }}></View>
+                     
 
                         </View>
                         <View
@@ -927,18 +928,18 @@ const EditProfileScreen = (props) => {
                                 justifyContent: "space-between",
                                 flexDirection: "row",
                                 backgroundColor: '#ffffff',
-                                padding: 16,
+                                padding: 10,
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Employer Name</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginLeft: 65, flexDirection: "row",
-                            }}>: Rect Native Developer</Text>
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
+                            }}>: React Native Developer</Text>
 
-                            <View style={{ height: 10 }}></View>
+                       
                         </View>
                     </View>
 
@@ -969,15 +970,15 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Diet</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginLeft: 50
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: {details.eatingHabit}</Text>
 
 
-                            <View style={{ height: 10, }}></View>
+                           
 
                         </View>
                     </View>
@@ -1007,15 +1008,15 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Age</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginLeft: 70
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: 20 to 25</Text>
 
 
-                            <View style={{ height: 10, }}></View>
+                          
 
                         </View>
                         <View
@@ -1028,15 +1029,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Height</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginLeft: 120
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: 5'3"(160cm) to 6'0"</Text>
 
 
-                            <View style={{ height: 10, }}></View>
 
                         </View>
                         <View
@@ -1049,15 +1049,15 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Marital Status</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginLeft: 40
+                                fontWeight: "bold", flex:1,flexWrap:"wrap"
                             }}>: Naver Married</Text>
 
 
-                            <View style={{ height: 10, }}></View>
+                         
 
                         </View>
                         <View
@@ -1070,15 +1070,15 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Religion/Community</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginRight: 30
+                                fontWeight: "bold", flex:1,flexWrap:"wrap"
                             }}>: Hindu:Teli</Text>
 
 
-                            <View style={{ height: 10, }}></View>
+                          
 
                         </View>
                         <View
@@ -1091,15 +1091,15 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Mother Tongue</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold",
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: Marathi</Text>
 
 
-                            <View style={{ height: 10, }}></View>
+                         
 
                         </View>
                     </View>
@@ -1129,15 +1129,15 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Country living in</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold",
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: India</Text>
 
 
-                            <View style={{ height: 10, }}></View>
+                            
 
                         </View>
                         <View
@@ -1150,15 +1150,15 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>State living in</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginRight: 15
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: </Text>
 
 
-                            <View style={{ height: 10, }}></View>
+                            
 
                         </View>
                         <View
@@ -1171,15 +1171,15 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>City/District</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold",
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: </Text>
 
 
-                            <View style={{ height: 10, }}></View>
+                           
 
                         </View>
 
@@ -1210,15 +1210,15 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Country Living in</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginRight: 40
+                                fontWeight: "bold", flex:1,flexWrap:"wrap"
                             }}>: India</Text>
 
 
-                            <View style={{ height: 10, }}></View>
+                          
 
                         </View>
 
@@ -1231,14 +1231,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>State Living in</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginLeft: 30
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: Maharashtra</Text>
 
-                            <View style={{ height: 10 }}></View>
+                         
 
                         </View>
                         <View
@@ -1250,14 +1250,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>City Living in</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginLeft: 10
+                                fontWeight: "bold", flex:1,flexWrap:"wrap"
                             }}>: Nagpur</Text>
 
-                            <View style={{ height: 10 }}></View>
+                       
 
                         </View>
                         <View
@@ -1269,14 +1269,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Residency Status</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginRight: 30
+                                fontWeight: "bold", flex:1,flexWrap:"wrap"
                             }}>: Citizen</Text>
 
-                            <View style={{ height: 10 }}></View>
+                    
 
                         </View>
                         <View
@@ -1288,14 +1288,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Zip/Pin code</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginLeft: 45
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: Not Specified</Text>
 
-                            <View style={{ height: 5 }}></View>
+                            
 
                         </View>
                         <View
@@ -1307,14 +1307,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Grew Up in</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", flexDirection: "row", marginLeft: 5
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: India</Text>
 
-                            <View style={{ height: 10 }}></View>
+                          
 
                         </View>
                         <View
@@ -1326,14 +1326,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Highest Qualification</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginRight: 100, flexDirection: "row",
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: </Text>
 
-                            <View style={{ height: 10 }}></View>
+                         
 
                         </View>
                         <View
@@ -1345,14 +1345,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>College(s) Attended</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginRight: 1, flexDirection: "row",
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: College Name</Text>
 
-                            <View style={{ height: 10 }}></View>
+                           
 
                         </View>
                         <View
@@ -1364,14 +1364,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Working With</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginLeft: 60, flexDirection: "row",
+                                fontWeight: "bold", flex:1,flexWrap:"wrap"
                             }}>: Private company</Text>
 
-                            <View style={{ height: 10 }}></View>
+                           
 
                         </View>
                         <View
@@ -1383,11 +1383,11 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Working As</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginLeft: 95, flexDirection: "row",
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: Software Developer/Programmer</Text>
 
                             <View style={{ height: 10 }}></View>
@@ -1402,14 +1402,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Annual Income</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginLeft: 70, flexDirection: "row",
+                                fontWeight: "bold", flex:1,flexWrap:"wrap"
                             }}>: INR 2 Lakh to 4 Lakh</Text>
 
-                            <View style={{ height: 10 }}></View>
+                         
 
                         </View>
                         <View
@@ -1421,14 +1421,14 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Employer Name</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginLeft: 65, flexDirection: "row",
-                            }}>: Rect Native Developer</Text>
+                                fontWeight: "bold", flex:1,flexWrap:"wrap"
+                            }}>:React Native Developer</Text>
 
-                            <View style={{ height: 10 }}></View>
+                            
                         </View>
                     </View>
                     <View style={{
@@ -1457,15 +1457,15 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Profile created by</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginRight: 60
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: </Text>
 
 
-                            <View style={{ height: 10, }}></View>
+                          
 
                         </View>
                         <View
@@ -1478,21 +1478,20 @@ const EditProfileScreen = (props) => {
                             }}>
                             <Text style={{
                                 color: "gray", fontSize: 15,
-                                fontWeight: "bold"
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>Diet</Text>
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
-                                fontWeight: "bold", marginLeft: 30
+                                fontWeight: "bold",flex:1,flexWrap:"wrap"
                             }}>: </Text>
 
 
-                            <View style={{ height: 10, }}></View>
-
+                            
                         </View>
 
                     </View>
                 </ScrollView>
-                : null}
+                {/* : null} */}
         </SafeAreaView>
 
 
