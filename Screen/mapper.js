@@ -33,6 +33,12 @@ export const userDataMapper = JM.makeConverter({
         }
         return 'Not Specified';
     },
+    height_: function (i) {
+        if (i && i.data && i.data.height !== 'undefined') {
+            return i.data.height
+        }
+        return 'Not Specified';
+    },
     height: function (i) {
         if (i && i.data && i.data.height !== 'undefined') {
             return heightoption.find((x) => x.value === parseInt(i.data.height)).title;
@@ -198,7 +204,7 @@ export const userDataMapper = JM.makeConverter({
     },
     gender: function (i) {
         if (i && i.data && i.data.gender !== 'undefined') {
-            return i.data.gender === "MALE" ? 'Male' : 'Female';;
+            return i.data.gender === "MALE" ? 'Male' : 'Female';
         }
         return 'Not Specified';
     },
@@ -310,6 +316,12 @@ export const userDataMapper = JM.makeConverter({
     physicalStatus: function (i) {
         if (i && i.data && i.data.physicalStatus !== 'undefined') {
             return i.data.physicalStatus == 'NORMAL' ? 'Normal' : 'Physically Challenged' ;
+        }
+        return 'Not Specified';
+    },
+    physicalStatus_: function (i) {
+        if (i && i.data && i.data.physicalStatus !== 'undefined') {
+            return i.data.physicalStatus; ;
         }
         return 'Not Specified';
     },
