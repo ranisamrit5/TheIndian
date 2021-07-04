@@ -10,7 +10,7 @@ import {
     Image,
     ImageBackground
 } from 'react-native';
-
+import Loader from '../../../Screen/Componentone/Loader';
 import { Auth } from "aws-amplify";
 import {  withApollo } from "react-apollo";
 import compose from "lodash.flowright";
@@ -60,6 +60,7 @@ const EditProfileScreen = (props) => {
 
     const getData = async (user) => {
         // console.log('user---->>',props)
+        setLoading(true)
         await props.client.query({
             query: Getdata,
             fetchPolicy: "network-only",
@@ -86,6 +87,7 @@ const EditProfileScreen = (props) => {
 
 
         <SafeAreaView style={styles.mainBody} >
+             <Loader loading={loading} />
             {/* {!loading ? */}
 
 
@@ -284,7 +286,7 @@ const EditProfileScreen = (props) => {
                         }}>More about Myself,Partner and Family</Text>
 
 
-                        <TouchableOpacity onPress={() => alert('Log out')}>
+                        <TouchableOpacity onPress={() => {}}>
                             <Image style={{ width: 20, height: 20, tintColor: "#000" }}
                                 source={require('../../../Imagess/pencil.png')} />
                         </TouchableOpacity>

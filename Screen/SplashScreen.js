@@ -19,27 +19,9 @@ const SplashScreen = (props) => {
     Auth.currentAuthenticatedUser().then((data) => {
       console.log('user----::',data.username)
       props.navigation.navigate('TabNavigation');
-      // PlanList();
-      // setId(data.username);
-      // getData(data.username);
     })
-    setTimeout(() => {
-      props.navigation.navigate('LoginScreen');
-    }, 900);
   }, []);
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setAnimating(false);
-  //     //Check if user_id is set or not
-  //     //If not then send for Authentication
-  //     //else send to Home Screen
-  //     // AsyncStorage.getItem('user_id').then(value =>
-  //     //   props.navigation.navigate(
-  //     //     value === null ? 'Auth' : 'DrawerNavigationRoutes'
-  //     //   )
-  //     // );
-  //   }, 5000);
-  // }, []);
+
 
   return (
 

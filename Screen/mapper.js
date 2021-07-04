@@ -57,6 +57,12 @@ export const userDataMapper = JM.makeConverter({
         }
         return 'Not Specified';
     },
+    gotram: function (i) {
+        if (i && i.data && i.data.gotram !== 'undefined') {
+            return i.data.gotram;
+        }
+        return 'Not Specified';
+    },
     city: function (i) {
         if (i && i.data && i.data.location && i.data.location.city !== 'undefined') {
             return i.data.location.city;
@@ -78,6 +84,12 @@ export const userDataMapper = JM.makeConverter({
     aboutMyFamily: function (i) {
         if (i && i.data && i.data.familyDetails && i.data.familyDetails.aboutMyFamily !== 'undefined') {
             return i.data.familyDetails.aboutMyFamily;
+        }
+        return 'Not Specified';
+    },
+    familyDetails: function (i) {
+        if (i && i.data && i.data.familyDetails && i.data.familyDetails !== 'undefined') {
+            return  i.data.familyDetails;
         }
         return 'Not Specified';
     },
@@ -166,6 +178,12 @@ export const userDataMapper = JM.makeConverter({
         }
         return 'Not Specified';
     },
+    maritalStatus_: function (i) {
+        if (i && i.data && i.data.maritalStatus !== 'undefined') {
+            return i.data.maritalStatus
+        }
+        return 'Not Specified';
+    },
     colg_institute: function (i) {
         if (i && i.data && i.data.education && i.data.education.colg_institute !== 'undefined') {
             return i.data.education.colg_institute;
@@ -199,6 +217,12 @@ export const userDataMapper = JM.makeConverter({
     occupation: function (i) {
         if (i && i.data && i.data.education && i.data.education.occupation !== 'undefined') {
             return i.data.education.occupation;
+        }
+        return 'Not Specified';
+    },
+    gender_: function (i) {
+        if (i && i.data && i.data.gender !== 'undefined') {
+            return i.data.gender;
         }
         return 'Not Specified';
     },

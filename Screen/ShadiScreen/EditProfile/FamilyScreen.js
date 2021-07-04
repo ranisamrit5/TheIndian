@@ -17,14 +17,117 @@ import {Picker} from 'native-base';
 // import HeaderComponent from "../../../components/HeaderComponent";
 // import { BACKGROUNDCOLOR, BLACK, RED, WHITE } from "../../../themes/colors";
 import { RadioButton, Card } from 'react-native-paper';
-
+import { Auth } from "aws-amplify";
+import { graphql, withApollo } from "react-apollo";
+import compose from "lodash.flowright";
+import Getdata from "../../../AppSync/query/Auth/getData";
+import updateUser from "../../../AppSync/mutation/User/updateData";
+import Loader from '../../../Screen/Componentone/Loader';
+import { userDataMapper } from '../../mapper'
 
 const FamilyScreen = (props) => {
-    const [text, setText] = useState('');
-    const [selectedValue, setSelectedValue] = useState("Self");
     const [value, setValue] = React.useState('Kgs');
     const [number, onChangeNumber] = React.useState(null);
+    const [text, setText] = useState('');
+    const [selectedValue, setSelectedValue] = useState("Self");
+    const [id, setId] = useState()
+    const [fathersOccupation, setFathersOccupation] = useState('')
+    let [data, setData] = useState({
+        parentContact:'',
+        familyValue:'',
+        familyType:'',
+        familyStatus:'',
+        nativePlace:'',
+        fathersOccupation:'',
+        mothersOccupation:'',
+        noOfBrothers:'',
+        noOfSisters:'',
+        aboutMyFamily:'',
+});
+    let [loading, setLoading] = useState(true);
+    const [basicInfo, setBasicInfo] = useState({
+        id: '',
+        familyDetails:{}
+    })
+    useEffect(() => {
+        setLoading(true)
+        Auth.currentAuthenticatedUser()
+            .then((data) => {
+                console.log('user----::',data)
+                setId(data.username)
+                // props.id=data.username
+                getData(data.username)
+            });
+    }, []
+    )
+    const handleSubmit = async (e) => {
+        setLoading(true)
+        try {
 
+            // let data_ = data
+            // console.log('Table', data_.tablename, marital, height, gender)
+            // console.log('ID', data_.id)
+            const savedData = await props.updateUser({ variables: { input: basicInfo } })
+            console.log(savedData)
+
+        } catch (err) {
+            console.log('error creating todo:', err)
+        }
+        setLoading(false)
+    }
+    const getData = async (user) => {
+       
+        const { data } = await props.client.query({
+            query: Getdata,
+            fetchPolicy: "network-only",
+            variables: {
+                id: `${user}`,
+            },
+        });
+         
+        if (data) {
+            let userData = data.getUser
+            console.log('user----::', data)
+            let all = {}
+            all.data = data.getUser
+            let pDetails = userDataMapper(all)
+            
+            const { noOfChildren, maritalStatus_, eatingHabit, smokingHabit, drinkingHabit, manglik, subcaste,
+                religion, caste, familyDetails, gotram, motherTongue, dob, aboutMe, fname, profileCreatedFor,gender_,height_,physicalStatus_
+            } = pDetails
+            setData(familyDetails)
+            console.log('IN===>',familyDetails);
+            // setMaterial()
+            // setGender(gender)
+            setFathersOccupation(familyDetails.fathersOccupation)
+            setBasicInfo({
+                ...basicInfo,
+                id: user,
+                profileCreatedFor: profileCreatedFor,
+                maritalStatus:  maritalStatus_,
+                noOfChildren:  noOfChildren,
+                eatingHabit: eatingHabit,
+                smokingHabit: smokingHabit,
+                drinkingHabit: drinkingHabit,
+                manglik: manglik,
+                physicalStatus: physicalStatus_,
+                religion: religion,
+                caste: caste,
+                subcaste: subcaste,
+                gotram:gotram,
+                height: height_,
+                motherTongue: motherTongue,
+                dob: dob,
+                aboutMe: aboutMe,
+                fname: fname,
+                gender:gender_,
+                familyDetails:familyDetails
+
+            });
+        }
+        setLoading(false)
+    }
+    console.log('=====>======',data)
     return (
 
         <ScrollView>
@@ -62,15 +165,17 @@ const FamilyScreen = (props) => {
 
                         <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
                             <Picker
-                                selectedValue={selectedValue}
+                                selectedValue={data.fathersOccupation}
                                 style={{ height: 40, width: 200, }}
-                                onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                                onValueChange={(itemValue, itemIndex) => {
+                                    setData({ ...data, fathersOccupation : itemValue })
+                                }}
                             >
-                                <Picker.Item label="Self" value="Self" />
-                                <Picker.Item label="Parent/Guardian" value="Parent/Guardian" />
-                                <Picker.Item label="Sibling" value="Sibling" />
-                                <Picker.Item label="Friend" value="Friend" />
-                                <Picker.Item label="Other" value="Other" />
+                                <Picker.Item label="Employed" value="Employed" />
+                                <Picker.Item label="Business" value="Business" />
+                                <Picker.Item label="Retired" value="Retired" />
+                                <Picker.Item label="Not Employed" value="Not Employed" />
+                                <Picker.Item label="Passed Away" value="Passed Away" />
                             </Picker>
                         </View>
                     </View>
@@ -92,15 +197,15 @@ const FamilyScreen = (props) => {
 
                         <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
                             <Picker
-                                selectedValue={selectedValue}
+                                selectedValue={data.mothersOccupation}
                                 style={{ height: 40, width: 200, }}
-                                onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                                onValueChange={(itemValue, itemIndex) =>  setData({ ...data, mothersOccupation : itemValue })}
                             >
-                                <Picker.Item label="Self" value="Self" />
-                                <Picker.Item label="Parent/Guardian" value="Parent/Guardian" />
-                                <Picker.Item label="Sibling" value="Sibling" />
-                                <Picker.Item label="Friend" value="Friend" />
-                                <Picker.Item label="Other" value="Other" />
+                                <Picker.Item label="Employed" value="Employed" />
+                                <Picker.Item label="Business" value="Business" />
+                                <Picker.Item label="Retired" value="Retired" />
+                                <Picker.Item label="Not Employed" value="Not Employed" />
+                                <Picker.Item label="Passed Away" value="Passed Away" />
                             </Picker>
                         </View>
                     </View>
@@ -127,9 +232,10 @@ const FamilyScreen = (props) => {
                         }}>
                             <TextInput
                                 style={{ height: 40, width: 200, }}
+                                value={data.familyLocation}
                                 // placeholder="Type here to translate!"
-                                onChangeText={text => setText(text)}
-                                defaultValue={text}
+                                onChangeText={text => setData({ ...data, familyLocation : text })}
+                                // defaultValue={text}
                             />
 
                         </View>
@@ -158,10 +264,11 @@ const FamilyScreen = (props) => {
                             borderRadius: 5, height: 40,
                         }}>
                             <TextInput
+                                value={data.nativePlace}
                                 style={{ height: 40, width: 200, }}
                                 // placeholder="Type here to translate!"
-                                onChangeText={text => setText(text)}
-                                defaultValue={text}
+                                onChangeText={text => setData({ ...data, nativePlace : text })}
+                                // defaultValue={text}
                             />
 
                         </View>
@@ -197,7 +304,7 @@ const FamilyScreen = (props) => {
                                     style={{ height: 40, width: 40, borderColor: "gray", borderWidth: 1, borderRadius: 5, }}
                                     // placeholder="Type here to translate!"
                                     onChangeText={text => setText(text)}
-                                    // value={number}
+                                    value={data.noOfBrothers == "0"?"0":data.noOfBrothers.split('_')[0]}
                                     keyboardType="number-pad"
 
                                     
@@ -394,8 +501,11 @@ const FamilyScreen = (props) => {
     );
 }
 
-
-export default FamilyScreen;
+const profile = compose(
+    withApollo,
+    graphql(updateUser, { name: "updateUser" })
+)(FamilyScreen);
+export default profile;
 
 export const styles = StyleSheet.create({
     mainBody: {
