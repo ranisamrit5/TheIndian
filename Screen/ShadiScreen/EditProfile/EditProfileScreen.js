@@ -954,7 +954,7 @@ const EditProfileScreen = (props) => {
                         }}>Lifestyle</Text>
 
 
-                        <TouchableOpacity onPress={() => alert('Log out')}>
+                        <TouchableOpacity onPress={() => props.navigation.navigate('Lifestyles')}>
                             <Image style={{ width: 20, height: 20, tintColor: "#000" }}
                                 source={require('../../../Imagess/pencil.png')} />
                         </TouchableOpacity>
@@ -992,7 +992,7 @@ const EditProfileScreen = (props) => {
                         }}>Partner Basic Info</Text>
 
 
-                        <TouchableOpacity onPress={() => alert('Log out')}>
+                        <TouchableOpacity onPress={() => props.navigation.navigate('PartnerBasicinfo')}>
                             <Image style={{ width: 20, height: 20, tintColor: "#000" }}
                                 source={require('../../../Imagess/pencil.png')} />
                         </TouchableOpacity>

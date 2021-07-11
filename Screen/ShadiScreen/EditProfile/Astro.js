@@ -35,11 +35,12 @@ const Astro = (props) => {
                     <Text style={{ alignSelf: 'center', fontSize: 18, fontWeight: "bold", color: 'white' }}>Add Horoscope Details</Text>
                 </View>
             </View>
-            <Text style={{ fontSize: 17, fontWeight: "600", color: '#FF5733', marginTop: 10,marginLeft:20,marginTop:20 }}>Update details for better Matches</Text>
-
-            <View style={{  marginTop: 10 }}>
+           
+         
+                
                 <SafeAreaView style={styles.mainBody}>
 
+ <Text style={{ fontSize: 17, fontWeight: "600", color: '#FF5733', marginTop: 10,marginLeft:20,marginTop:20 }}>Update details for better Matches</Text>
 
                     <View style={{
                         justifyContent: "space-between",
@@ -51,7 +52,7 @@ const Astro = (props) => {
                         }}>
                             <Text style={{
                                 color: "gray", fontSize: 17,
-                                fontWeight: "500",
+                                fontWeight: "500",  
                             }}>Country of Birth</Text>
 
 
@@ -162,7 +163,7 @@ const Astro = (props) => {
                         </View>
                     </View>
 
-                    <Text style={{ fontSize: 17, fontWeight: "600", color: '#FF5733',  padding:20}}>Horoscope Privacy Setting</Text>
+                    {/* <Text style={{ fontSize: 17, fontWeight: "600", color: '#FF5733',  padding:15}}>Horoscope Privacy Setting</Text>
 
 
                     <View style={{
@@ -171,7 +172,7 @@ const Astro = (props) => {
                 }}>
                     <Text style={{
                         color: "gray", fontSize: 15,
-                      alignSelf: "center",marginLeft:20
+                      alignSelf: "center",marginLeft:15
                     }}>Visible to all Members</Text>
 
 
@@ -179,8 +180,9 @@ const Astro = (props) => {
                     <MaterialCommunityIcons name="pencil-outline" color="black" size={15}  />
                     </TouchableOpacity>
                 </View>
-                    
-                    <View style={{ alignSelf: "center",width:"100%",marginTop:60 }}>
+                     */}
+                     <View style={{height:150}}></View>
+                    <View style={{ alignSelf: "center",width:"100%"}}>
                         <TouchableOpacity
                             style={styles.SubmitButtonStyle1}
                             activeOpacity={.10}
@@ -197,7 +199,7 @@ const Astro = (props) => {
                         </TouchableOpacity>
                     </View>
                 </SafeAreaView>
-            </View>
+          
         </ScrollView >
 
     );
@@ -209,7 +211,7 @@ export default Astro;
 export const styles = StyleSheet.create({
     mainBody: {
         flex: 1,
-        // backgroundColor: "#fff",
+        backgroundColor: "#fff",
     },
     SubmitButtonStyle1: {
         width:"100%",

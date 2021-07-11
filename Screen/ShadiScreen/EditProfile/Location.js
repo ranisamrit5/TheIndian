@@ -24,7 +24,7 @@ const Location = (props) => {
 
     return (
 
-        <ScrollView>
+        <ScrollView style={{ backgroundColor: "#fff" }}>
 
         <View style={{ flexDirection: 'row', width: '100%', alignItems: 'center', backgroundColor: '#FF5733', height: 50 }}>
             <TouchableOpacity style={{ marginLeft: 20 }} onPress={() => props.navigation.pop()}>
@@ -35,23 +35,23 @@ const Location = (props) => {
                 <Text style={{ alignSelf: 'center', fontSize: 18, fontWeight: "bold", color: 'white' }}>My Profile</Text>
             </View>
         </View>
-        <Text style={{ alignSelf: 'center', fontSize: 18, fontWeight: "600", color: 'gray', marginTop: 10 }}>Location,Education & Career</Text>
-
-        <View style={{ backgroundColor: "#fff", marginTop: 10, }}>
+    
+  <Text style={{ alignSelf: 'center', fontSize: 18, fontWeight: "600", color: 'gray', marginTop: 20 }}>Location,Education & Career</Text>
+        <View style={{ backgroundColor: "#fff", marginTop: 20 }}>
             <SafeAreaView style={styles.mainBody}>
-
+  
 
                 <View style={{
                     justifyContent: "space-between",
-                    flexDirection: "row", padding: 13,
+                    flexDirection: "row", padding: 10,
                 }}>
                     <View style={{
                         justifyContent: "space-between",
-                        flexDirection: "row", padding: 13,
+                        flexDirection: "row", padding: 13,flex:1,flexWrap:"wrap"
                     }}>
                         <Text style={{
                             color: "gray", fontSize: 15,
-                            fontWeight: "bold"
+                            fontWeight: "bold",flex:1,flexWrap:"wrap"
                         }}>Country Living In </Text>
 
 
@@ -60,7 +60,7 @@ const Location = (props) => {
                     <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40, }}>
                         <Picker
                             selectedValue={selectedValue}
-                            style={{ height: 40, width: 190, }}
+                            style={{ height: 40, width: 200, }}
                             onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
                         >
                             <Picker.Item label="Self" value="Self" />
@@ -73,14 +73,14 @@ const Location = (props) => {
                 </View>
                 <View style={{
                     justifyContent: "space-between",
-                    flexDirection: "row", padding: 13,
+                    flexDirection: "row", padding: 10,
                 }}>
                     <View style={{
                         justifyContent: "space-between",
-                        flexDirection: "row", padding: 13,
+                        flexDirection: "row", padding: 13,flex:1,flexWrap:"wrap"
                     }}>
                         <Text style={{
-                            color: "gray", fontSize: 15,
+                            color: "gray", fontSize: 15,flex:1,flexWrap:"wrap",
                             fontWeight: "bold"
                         }}>State Living In</Text>
 
@@ -107,10 +107,10 @@ const Location = (props) => {
                 }}>
                     <View style={{
                         justifyContent: "space-between",
-                        flexDirection: "row", padding: 13,
+                        flexDirection: "row", padding: 13,flex:1,flexWrap:"wrap"
                     }}>
                         <Text style={{
-                            color: "gray", fontSize: 15,
+                            color: "gray", fontSize: 15,flex:1,flexWrap:"wrap",
                             fontWeight: "bold"
                         }}>City Living In</Text>
 
@@ -139,10 +139,10 @@ const Location = (props) => {
                 }}>
                     <View style={{
                         justifyContent: "space-between",
-                        flexDirection: "row", padding: 13,
+                        flexDirection: "row", padding: 13,flex:1,flexWrap:"wrap"
                     }}>
                         <Text style={{
-                            color: "gray", fontSize: 15,
+                            color: "gray", fontSize: 15,flex:1,flexWrap:"wrap",
                             fontWeight: "bold"
                         }}>Zip/Pin Code</Text>
 
@@ -169,10 +169,10 @@ const Location = (props) => {
                 }}>
                     <View style={{
                         justifyContent: "space-between",
-                        flexDirection: "row", padding: 13,
+                        flexDirection: "row", padding: 13,flex:1,flexWrap:"wrap"
                     }}>
                         <Text style={{
-                            color: "gray", fontSize: 15,
+                            color: "gray", fontSize: 15,flex:1,flexWrap:"wrap",
                             fontWeight: "bold"
                         }}>Grew up in</Text>
 
@@ -200,10 +200,10 @@ const Location = (props) => {
                 }}>
                     <View style={{
                         justifyContent: "space-between",
-                        flexDirection: "row", padding: 13,
+                        flexDirection: "row", padding: 13,flex:1,flexWrap:"wrap"
                     }}>
                         <Text style={{
-                            color: "gray", fontSize: 15,
+                            color: "gray", fontSize: 15,flex:1,flexWrap:"wrap",
                             fontWeight: "bold"
                         }}>Ethnic Origin</Text>
 
@@ -231,10 +231,10 @@ const Location = (props) => {
                 }}>
                     <View style={{
                         justifyContent: "space-between",
-                        flexDirection: "row", padding: 13,
+                        flexDirection: "row", padding: 13,flex:1,flexWrap:"wrap"
                     }}>
                         <Text style={{
-                            color: "gray", fontSize: 15,
+                            color: "gray", fontSize: 15,flex:1,flexWrap:"wrap",
                             fontWeight: "bold",
                         }}>Highest Qualification</Text>
                        
@@ -244,7 +244,7 @@ const Location = (props) => {
                     <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40,}}>
                         <Picker
                             selectedValue={selectedValue}
-                            style={{ height: 40, width: 150, }}
+                            style={{ height: 40, width: 200, }}
                             onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
                         >
                             <Picker.Item label="Select" value="Select" />
@@ -263,10 +263,10 @@ const Location = (props) => {
                 }}>
                     <View style={{
                         justifyContent: "space-between",
-                        flexDirection: "row", padding: 13,
+                        flexDirection: "row", padding: 13,flex:1,flexWrap:"wrap"
                     }}>
                         <Text style={{
-                            color: "gray", fontSize: 15,
+                            color: "gray", fontSize: 15,flex:1,flexWrap:"wrap",
                             fontWeight: "bold"
                         }}>College Attended</Text>
                        
@@ -296,10 +296,10 @@ const Location = (props) => {
                 }}>
                     <View style={{
                         justifyContent: "space-between",
-                        flexDirection: "row", padding: 13,
+                        flexDirection: "row", padding: 13,flex:1,flexWrap:"wrap"
                     }}>
                         <Text style={{
-                            color: "gray", fontSize: 15,
+                            color: "gray", fontSize: 15,flex:1,flexWrap:"wrap",
                             fontWeight: "bold"
                         }}>Working With</Text>
                        
@@ -329,11 +329,11 @@ const Location = (props) => {
                 }}>
                     <View style={{
                         justifyContent: "space-between",
-                        flexDirection: "row", padding: 13,
+                        flexDirection: "row", padding: 13,flex:1,flexWrap:"wrap"
                     }}>
                         <Text style={{
                             color: "gray", fontSize: 15,
-                            fontWeight: "bold"
+                            fontWeight: "bold",flex:1,flexWrap:"wrap"
                         }}>Working As</Text>
                        
 
@@ -363,10 +363,10 @@ const Location = (props) => {
                 }}>
                     <View style={{
                         justifyContent: "space-between",
-                        flexDirection: "row", padding: 13,
+                        flexDirection: "row", padding: 13,flex:1,flexWrap:"wrap"
                     }}>
                         <Text style={{
-                            color: "gray", fontSize: 15,
+                            color: "gray", fontSize: 15,flex:1,flexWrap:"wrap",
                             fontWeight: "bold"
                         }}>Employer Name</Text>
                        
@@ -397,10 +397,10 @@ const Location = (props) => {
                 }}>
                     <View style={{
                         justifyContent: "space-between",
-                        flexDirection: "row", padding: 13,
+                        flexDirection: "row", padding: 13,flex:1,flexWrap:"wrap"
                     }}>
                         <Text style={{
-                            color: "gray", fontSize: 15,
+                            color: "gray", fontSize: 15,flex:1,flexWrap:"wrap", 
                             fontWeight: "bold"
                         }}>Annual Income</Text>
                        
@@ -422,37 +422,31 @@ const Location = (props) => {
                         <View style={{ height: 10 }}></View>
                     </View>
                 </View>
+                <View style={{
+                        justifyContent: "space-between",
+                        padding: 13,
+                    }}>
+                        <View style={{ alignSelf: "center", }}>
+                            <TouchableOpacity
+                                style={styles.SubmitButtonStyle1}
+                                activeOpacity={.10}
+                            //   onPress={() =>
+
+                            // this.props.navigation.navigate('Customerlogin')
+                            // navigation.navigate('Customerlogin')}
 
 
+                            >
 
+                                <Text style={styles.TextStyle1}>Update</Text>
 
+                            </TouchableOpacity>
+                        </View>
 
-
-
-
-
-
-
-
-                <View style={{ alignSelf: "center", }}>
-                    <TouchableOpacity
-                        style={styles.SubmitButtonStyle1}
-                        activeOpacity={.10}
-                    //   onPress={() =>
-
-                    // this.props.navigation.navigate('Customerlogin')
-                    // navigation.navigate('Customerlogin')}
-
-
-                    >
-
-                        <Text style={styles.TextStyle1}>Update</Text>
-
-                    </TouchableOpacity>
-                </View>
+                    </View>
             </SafeAreaView>
-        </View>
-    </ScrollView >
+            </View>
+      </ScrollView>
     );
 }
 
@@ -462,27 +456,26 @@ export default Location;
 export const styles = StyleSheet.create({
     mainBody: {
         flex: 1,
-        // backgroundColor: "#fff",
+        backgroundColor: "#fff",
     },
     SubmitButtonStyle1: {
-        width:"100%",
-        height: 50,
+        width: 150,
+        height: 40,
         alignSelf: "center",
 
         // paddingTop: 10,
         // paddingBottom: 15,
         // marginLeft: 100,
         // marginRight: 100,
-        backgroundColor: 'skyblue',
-     
+        backgroundColor: '#FF5733',
+        borderRadius: 5,
         borderWidth: 1,
-        borderColor: 'skyblue',
-        // bottom: 60,
-
+        borderColor: '#FF5733',
+        // bottom: 60
     },
 
     TextStyle1: {
-        color: '#fff',
+        color: 'black',
         textAlign: 'center',
         fontWeight: "bold",
         fontSize: 14,
