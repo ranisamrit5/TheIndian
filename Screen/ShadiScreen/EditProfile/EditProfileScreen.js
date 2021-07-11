@@ -17,7 +17,7 @@ import compose from "lodash.flowright";
 import Getdata from "../../../AppSync/query/Auth/getData";
 import { userDataMapper } from '../../mapper'
 const EditProfileScreen = (props) => {
-    const [text, setText] = useState('dcdsdsvdvdgvkjjnvdndvjnjvjnjknmvkvmdkvmdvkmvkdmvkdmckvmvkmvkdvmkvmkmkmv')
+    const [text, setText] = useState('')
     const [height, setHeight] = useState(100)
     const [id, setId] = useState()
     const [details, setDetails] = useState([])
@@ -443,7 +443,7 @@ const EditProfileScreen = (props) => {
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
                                 fontWeight: "bold",flex:1,flexWrap:"wrap"
-                            }}>: Not Specified</Text>
+                            }}>: {details.gotram?details.gotram:'Not Specified'}</Text>
 
                            
 
@@ -558,7 +558,7 @@ const EditProfileScreen = (props) => {
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
                                 fontWeight: "bold",flex:1,flexWrap:"wrap"
-                            }}>: {details.noOfBrothers}</Text>
+                            }}>: {details.noOfBrothers_}</Text>
 
                            
 
@@ -577,7 +577,7 @@ const EditProfileScreen = (props) => {
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
                                 fontWeight: "bold", flex:1,flexWrap:"wrap"
-                            }}>: {details.noOfSisters}</Text>
+                            }}>: {details.noOfSisters_}</Text>
 
                             
 
@@ -596,7 +596,7 @@ const EditProfileScreen = (props) => {
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
                                 fontWeight: "bold", flex:1,flexWrap:"wrap"
-                            }}>: { }</Text>
+                            }}>: { details.familyValue }</Text>
 
                            
 
@@ -615,7 +615,7 @@ const EditProfileScreen = (props) => {
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
                                 fontWeight: "bold",flex:1,flexWrap:"wrap"
-                            }}>: Enter Now</Text>
+                            }}>: {details.familyStatus}</Text>
 
                            
 

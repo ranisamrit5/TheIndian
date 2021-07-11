@@ -17,7 +17,7 @@ const SplashScreen = (props) => {
   const { colors } = useTheme();
   useEffect(() => {
     Auth.currentAuthenticatedUser().then((data) => {
-      console.log('user----::',data.username)
+      // console.log('user----::',data.username)
       props.navigation.navigate('TabNavigation');
     })
   }, []);

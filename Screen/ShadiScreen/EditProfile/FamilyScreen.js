@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+
 import {
     View,
     ScrollView,
@@ -13,6 +14,8 @@ import {
  
     Button, Platform
 } from 'react-native';
+import GetLocation from 'react-native-get-location'
+// var NodeGeocoder = require('node-geocoder');
 import {Picker} from 'native-base';
 // import HeaderComponent from "../../../components/HeaderComponent";
 // import { BACKGROUNDCOLOR, BLACK, RED, WHITE } from "../../../themes/colors";
@@ -24,7 +27,8 @@ import Getdata from "../../../AppSync/query/Auth/getData";
 import updateUser from "../../../AppSync/mutation/User/updateData";
 import Loader from '../../../Screen/Componentone/Loader';
 import { userDataMapper } from '../../mapper'
-
+import awsConfig from '../../../aws-export';
+import {familyType,  familyStatus, familyVal} from "../../Const/const";
 const FamilyScreen = (props) => {
     const [value, setValue] = React.useState('Kgs');
     const [number, onChangeNumber] = React.useState(null);
@@ -38,10 +42,11 @@ const FamilyScreen = (props) => {
         familyType:'',
         familyStatus:'',
         nativePlace:'',
+        familyLocation:"",
         fathersOccupation:'',
         mothersOccupation:'',
-        noOfBrothers:'',
-        noOfSisters:'',
+        noOfBrothers:'0_0',
+        noOfSisters:'0_0',
         aboutMyFamily:'',
 });
     let [loading, setLoading] = useState(true);
@@ -60,23 +65,7 @@ const FamilyScreen = (props) => {
             });
     }, []
     )
-    const handleSubmit = async (e) => {
-        setLoading(true)
-        try {
-
-            // let data_ = data
-            // console.log('Table', data_.tablename, marital, height, gender)
-            // console.log('ID', data_.id)
-            const savedData = await props.updateUser({ variables: { input: basicInfo } })
-            console.log(savedData)
-
-        } catch (err) {
-            console.log('error creating todo:', err)
-        }
-        setLoading(false)
-    }
     const getData = async (user) => {
-       
         const { data } = await props.client.query({
             query: Getdata,
             fetchPolicy: "network-only",
@@ -84,19 +73,27 @@ const FamilyScreen = (props) => {
                 id: `${user}`,
             },
         });
-         
         if (data) {
             let userData = data.getUser
-            console.log('user----::', data)
+            console.log('userPD', data)
             let all = {}
             all.data = data.getUser
             let pDetails = userDataMapper(all)
-            
+            // console.log('IN===>',pDetails.familyDetails.noOfBrothers);
             const { noOfChildren, maritalStatus_, eatingHabit, smokingHabit, drinkingHabit, manglik, subcaste,
                 religion, caste, familyDetails, gotram, motherTongue, dob, aboutMe, fname, profileCreatedFor,gender_,height_,physicalStatus_
             } = pDetails
-            setData(familyDetails)
-            console.log('IN===>',familyDetails);
+
+
+
+                setData(familyDetails)
+
+                if (familyDetails==null){
+                    setData({ ...data, noOfBrothers: '0_0' })
+                    setData({ ...data, noOfSisters: '0_0' })
+                }
+
+            // console.log('IN===>',familyDetails);
             // setMaterial()
             // setGender(gender)
             setFathersOccupation(familyDetails.fathersOccupation)
@@ -127,11 +124,68 @@ const FamilyScreen = (props) => {
         }
         setLoading(false)
     }
-    console.log('=====>======',data)
+    const handleSubmit = async (e) => {
+        setLoading(true)
+        let familyDetails={}
+        familyDetails.parentContact=data.parentContact;
+        familyDetails.familyValue=data.familyValue;
+        familyDetails.familyType=data.familyType;
+        familyDetails.familyStatus=data.familyStatus;
+        familyDetails.nativePlace=data.nativePlace;
+        familyDetails.fathersOccupation=data.fathersOccupation;
+        familyDetails.mothersOccupation=data.mothersOccupation;
+        familyDetails.noOfBrothers=data.noOfBrothers;
+        familyDetails.noOfSisters=data.noOfSisters;
+        familyDetails.aboutMyFamily=data.aboutMyFamily;
+        familyDetails.familyLocation=data.familyLocation;
+        
+        let data_ =basicInfo;
+        data_.familyDetails=familyDetails
+        delete data_.familyDetails.__typename;
+
+
+        console.log(data_.familyDetails)
+        try {
+            const savedData = await props.updateUser({ variables: { input: data_ } })
+            console.log(savedData)
+
+        } catch (err) {
+            console.log('error creating todo:', err)
+        }
+        setLoading(false)
+    }
+const getLocation=async()=>{
+   await GetLocation.getCurrentPosition({
+        enableHighAccuracy: true,
+        timeout: 15000,
+    })
+    .then(location => {
+        console.log(location);
+        // displayLocation(location.latitude,location.longitude)
+    })
+    .catch(error => {
+        const { code, message } = error;
+        console.warn(code, message);
+    })
+}
+
+// const displayLocation= async (latitude,longitude)=>{
+//     var options = {
+//         provider: 'google',
+//         httpAdapter: 'https', // Default
+//         apiKey: awsConfig.googleApiKey, // for Mapquest, OpenCage, Google Premier
+//         formatter: 'json' // 'gpx', 'string', ...
+//       };
+//       let geocoder = await NodeGeocoder(options);
+//       await geocoder.reverse({lat:latitude, lon:longitude}, function(err, res) {
+//         console.log(JSON.stringify(res));
+//       });
+//   };
+    console.log('data=====>======',data)
     return (
 
         <ScrollView>
-
+<Loader loading={loading} />
             <View style={{ flexDirection: 'row', width: '100%', alignItems: 'center', backgroundColor: '#FF5733', height: 50 }}>
                 <TouchableOpacity style={{ marginLeft: 20 }} onPress={() => props.navigation.pop()}>
                     <Image style={{ width: 20, height: 20, tintColor: 'white', transform: [{ rotate: '180deg' }] }}
@@ -303,20 +357,32 @@ const FamilyScreen = (props) => {
                                 <TextInput
                                     style={{ height: 40, width: 40, borderColor: "gray", borderWidth: 1, borderRadius: 5, }}
                                     // placeholder="Type here to translate!"
-                                    onChangeText={text => setText(text)}
-                                    value={data.noOfBrothers == "0"?"0":data.noOfBrothers.split('_')[0]}
+                                    onChangeText={text => {
+                                        // if(text){
+                                        let input=`${text}_${data.noOfBrothers ? data.noOfBrothers.split('_')[1] : "0"}`
+                                        setData({ ...data, noOfBrothers : input })}
+                                    // }
+                                    }
+                                    defaultValue={'0'}
+                                    value={!data.noOfBrothers || data.noOfBrothers == "0"?"0":data.noOfBrothers.split('_')[0]}
                                     keyboardType="number-pad"
-
-                                    
                                 />
-                           
                            <Image style={{ width: 40, height: 40, borderRadius: 10, }}
                                     source={require('../../../Imagess/avtar.png')} />
                                 <TextInput
                                     style={{ height: 40, width: 40, borderColor: "gray", borderWidth: 1, borderRadius: 5, }}
                                     // placeholder="Type here to translate!"
-                                    onChangeText={text => setText(text)}
-                                    value={number}
+                                    // console.log(data.noOfBrothers)
+                                    value={!data.noOfBrothers || data.noOfBrothers == "0" ? "0":data.noOfBrothers.split('_')[1]}
+                                    onChangeText={text => {
+                                       
+                                        let input=`${data.noOfBrothers ? data.noOfBrothers.split('_')[0] : "0"}_${text}`
+                                        console.log('INPUT',input)
+                                        setData({ ...data, noOfBrothers : input })}
+                                    
+                                    }
+                                    defaultValue={'0'}
+                                    // value={number}
                                     keyboardType="number-pad"
 
                                 />
@@ -331,11 +397,7 @@ const FamilyScreen = (props) => {
                                 color: "gray", fontSize: 15,
                                 fontWeight: "600",bottom:20
                             }}>Married</Text>
-                            
                            </View>
-    
-
-    
                             <Text style={{
                                 color: "gray", fontSize: 15,
                                 fontWeight: "bold", alignSelf: "center",marginTop:10
@@ -349,8 +411,14 @@ const FamilyScreen = (props) => {
                                 <TextInput
                                     style={{ height: 40, width: 40, borderColor: "gray", borderWidth: 1, borderRadius: 5, }}
                                     // placeholder="Type here to translate!"
-                                    onChangeText={text => setText(text)}
-                                    defaultValue={text}
+                                    value={!data.noOfSisters || data.noOfSisters == "0"?"0":data.noOfSisters.split('_')[0]}
+                                    onChangeText={text => {
+                                        // if(text){/
+                                        let input=`${text}_${data.noOfSisters ? data.noOfSisters.split('_')[1] : "0"}`
+                                        setData({ ...data, noOfSisters : input })}
+                                    // }
+                                    }
+                                    defaultValue={'0'}
                                     keyboardType="number-pad"
 
                                 />
@@ -359,9 +427,16 @@ const FamilyScreen = (props) => {
                                     source={require('../../../Imagess/girl.png')} />
                                 <TextInput
                                     style={{ height: 40, width: 40, borderColor: "gray", borderWidth: 1, borderRadius: 5, }}
-                                    // placeholder="Type here to translate!"
-                                    onChangeText={text => setText(text)}
-                                    defaultValue={text}
+                                    value={!data.noOfSisters || data.noOfSisters == "0"?"0":data.noOfSisters.split('_')[1]}
+                                    onChangeText={text => {
+                                        // if(text){
+                                            // if(text){
+                                            let input=`${data.noOfSisters ? data.noOfSisters.split('_')[0] : "0"}_${text}`
+                                        setData({ ...data, noOfSisters : input })}
+                                            // }
+                                        // }
+                                    }
+                                    defaultValue={'0'}
                                     keyboardType="number-pad"
                                 />
                             </View>
@@ -400,13 +475,15 @@ const FamilyScreen = (props) => {
 
                         <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
                             <Picker
-                                selectedValue={selectedValue}
+                                selectedValue={data.familyType}
                                 style={{ height: 40, width: 200, }}
-                                onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                                onValueChange={
+                                    (itemValue, itemIndex) => setData({ ...data, familyType : itemValue })
+                            }
                             >
-                                <Picker.Item label="Select" value="Select" />
-                                <Picker.Item label="Joint" value="Joint" />
-                                <Picker.Item label="Nuclear" value="Nuclear" />
+                               {familyType.map((item, index) => {
+                                            return (< Picker.Item label={item.title} value={item.value} key={index} />);
+                                        })}
                             </Picker>
                             <View style={{ height: 10 }}></View>
                         </View>
@@ -431,14 +508,13 @@ const FamilyScreen = (props) => {
 
                         <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
                             <Picker
-                                selectedValue={selectedValue}
+                                selectedValue={data.familyValue}
                                 style={{ height: 40, width: 200, }}
-                                onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                                onValueChange={ (itemValue, itemIndex) => setData({ ...data, familyValue : itemValue })}
                             >
-                                <Picker.Item label="Select" value="Select" />
-                                <Picker.Item label="Treditional" value="Treditional" />
-                                <Picker.Item label="Moderate" value="Moderate" />
-                                <Picker.Item label="Liberal" value="Liberal" />
+                              {familyVal.map((item, index) => {
+                                            return (< Picker.Item label={item.title} value={item.value} key={index} />);
+                                        })}
 
                             </Picker>
                             <View style={{ height: 10 }}></View>
@@ -463,15 +539,13 @@ const FamilyScreen = (props) => {
 
                         <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
                             <Picker
-                                selectedValue={selectedValue}
+                                selectedValue={data.familyStatus}
                                 style={{ height: 40, width: 200, }}
-                                onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                                onValueChange={ (itemValue, itemIndex) => setData({ ...data, familyStatus : itemValue })}
                             >
-                                <Picker.Item label="Select" value="Select" />
-                                <Picker.Item label="Affluent" value="Affluent" />
-                                <Picker.Item label="Upper Middle Class" value="Upper Middle Class" />
-                                <Picker.Item label="Lower Middle Class" value="Lower Middle Class" />
-
+                          {familyStatus.map((item, index) => {
+                                            return (< Picker.Item label={item.title} value={item.value} key={index} />);
+                                        })}
                             </Picker>
                             <View style={{ height: 10 }}></View>
                         </View>
@@ -481,14 +555,9 @@ const FamilyScreen = (props) => {
                     <View style={{ alignSelf: "center", }}>
                         <TouchableOpacity
                             style={styles.SubmitButtonStyle1}
-                            activeOpacity={.10}
-                        //   onPress={() =>
-
-                        // this.props.navigation.navigate('Customerlogin')
-                        // navigation.navigate('Customerlogin')}
-
-
-                        >
+                            activeOpacity={.10} 
+                            onPress={() => { handleSubmit() }}
+                            >
 
                             <Text style={styles.TextStyle1}>Update</Text>
 

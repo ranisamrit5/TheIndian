@@ -9,13 +9,7 @@ import {
     familyVal,
     familyType,
     heightoption,
-    countryoption,
     familyStatus,
-    stateoption,
-    cityoption,
-    rassioption,
-    castoption,
-    degreeoption,
     employoption,
     employeeption,
 } from "./Const/const";
@@ -25,7 +19,8 @@ import * as timeago from 'timeago.js';
 // import male from "../images/male.jpg";
 const JM = require('json-mapper');
 
-
+import female from "../Imagess/female.jpeg";
+import male from "../Imagess/male.jpg";
 export const userDataMapper = JM.makeConverter({
     id: function (i) {
         if (i && i.data && i.data.id !== 'undefined') {
@@ -34,13 +29,14 @@ export const userDataMapper = JM.makeConverter({
         return 'Not Specified';
     },
     height_: function (i) {
-        if (i && i.data && i.data.height !== 'undefined') {
-            return i.data.height
+        if (i && i.data && i.data.height !== 'undefined' && i.data.height !== '') {
+            return i.data.height ? i.data.height : '0'
         }
         return 'Not Specified';
     },
     height: function (i) {
-        if (i && i.data && i.data.height !== 'undefined') {
+        // console.log('HEIGHT',i.data.height)
+        if (i && i.data && i.data.height !== 'undefined' && i.data.height !== null) {
             return heightoption.find((x) => x.value === parseInt(i.data.height)).title;
         }
         return 'Not Specified';
@@ -118,13 +114,39 @@ export const userDataMapper = JM.makeConverter({
         }
         return 'Not Specified';
     },
+    plan: function (i) {
+        if (i && i.data && i.data.plan && i.data.plan !== 'undefined') {
+            console.log('=========>',i.data.plan)
+            return i.data.plan;
+        }
+        return 'Free';
+    },
     nativePlace: function (i) {
         if (i && i.data && i.data.familyDetails && i.data.familyDetails.nativePlace !== 'undefined') {
             console.log('=========>',i.data.familyDetails.nativePlace)
             return i.data.familyDetails.nativePlace;
         }
         return 'Not Specified';
-    }, noOfBrothers: function (i) {
+    },
+    noOfBrothers_: function (i) {
+        // console.log('noOfBrothers==>',i.data.familyDetails.noOfBrothers)
+        if (i && i.data && i.data.familyDetails && i.data.familyDetails.noOfBrothers !== 'undefined' && i.data.familyDetails.noOfBrothers !== null) {
+            console.log('noOfBrothers=========>',i.data.familyDetails.noOfBrothers)
+            if (i.data.familyDetails.noOfBrothers != '0_0' || i.data.familyDetails.noOfBrothers != '0') {
+                let data = i.data.familyDetails.noOfBrothers;
+                let broCount = Number(data.split('_')[0]) + Number(data.split('_')[1])
+                if(broCount == '0'){
+                    return '0';
+                }
+                return `${broCount} out of ${data.split('_')[1]} Married`
+            }
+            else
+                return '0';
+        }
+        return '0';
+    },
+     noOfBrothers: function (i) {
+        // console.log('noOfBrothers==>',i.data.familyDetails.noOfBrothers)
         if (i && i.data && i.data.familyDetails && i.data.familyDetails.noOfBrothers !== 'undefined') {
             return i.data.familyDetails.noOfBrothers;
         }
@@ -135,7 +157,23 @@ export const userDataMapper = JM.makeConverter({
             return i.data.familyDetails.noOfSisters;
         }
         return 'Not Specified';
-    }, nativePlace: function (i) {
+    },
+    noOfSisters_: function (i) {
+        if (i && i.data && i.data.familyDetails && i.data.familyDetails.noOfSisters !== 'undefined') {
+            if (i.data.familyDetails.noOfSisters != '0_0' || i.data.familyDetails.noOfSisters != '0') {
+                let data = i.data.familyDetails.noOfSisters;
+                let broCount = Number(data.split('_')[0]) + Number(data.split('_')[1]);
+                if(broCount == '0'){
+                    return '0';
+                }
+                return `${broCount} out of ${data.split('_')[1]} Married`
+            }
+            else
+                return '0';
+        }
+        return 'Not Specified';
+    },
+    nativePlace: function (i) {
         if (i && i.data && i.data.familyDetails && i.data.familyDetails.nativePlace !== 'undefined') {
             return i.data.familyDetails.nativePlace;
         }
@@ -165,6 +203,20 @@ export const userDataMapper = JM.makeConverter({
         }
         return 'Not Specified';
     },
+    familyValue: function (i) {
+        if (i && i.data && i.data.familyDetails && i.data.familyDetails.familyValue !== 'undefined') {
+            console.log('====>',i.data.familyDetails.familyValue)
+            return familyVal.find((x) => x.value === i.data.familyDetails.familyValue).title;
+        }
+        return 'Not Specified';
+    },
+    familyStatus: function (i) {
+        if (i && i.data && i.data.familyDetails && i.data.familyDetails.familyStatus !== 'undefined') {
+            console.log('====>',i.data.familyDetails.familyStatus)
+            return familyStatus.find((x) => x.value === i.data.familyDetails.familyStatus).title;
+        }
+        return 'Not Specified';
+    },
     annualIncome: function (i) {
         if (i && i.data && i.data.education && i.data.education.annualIncome !== 'undefined') {
 
@@ -173,16 +225,16 @@ export const userDataMapper = JM.makeConverter({
         return 'Not Specified';
     },
     maritalStatus: function (i) {
-        if (i && i.data && i.data.maritalStatus !== 'undefined') {
+        if (i && i.data && i.data.maritalStatus !== 'undefined' && i.data.maritalStatus !== null) {
             return statusoption.find((x) => x.value === i.data.maritalStatus).title;
         }
-        return 'Not Specified';
+        return 'NOT_SPECIFIED';
     },
     maritalStatus_: function (i) {
-        if (i && i.data && i.data.maritalStatus !== 'undefined') {
+        if (i && i.data && i.data.maritalStatus !== 'undefined'&& i.data.maritalStatus !== null) {
             return i.data.maritalStatus
         }
-        return 'Not Specified';
+        return 'NOT_SPECIFIED';
     },
     colg_institute: function (i) {
         if (i && i.data && i.data.education && i.data.education.colg_institute !== 'undefined') {
@@ -278,16 +330,13 @@ export const userDataMapper = JM.makeConverter({
         return 'Not Specified';
     },
     profilePic: function (i) {
-        if (i && i.data && i.data.profilePic && i.data.profilePic !== 'undefined') {
+        if (i && i.data && i.data.profilePic && i.data.profilePic !== 'undefined' && i.data.profilePic !== null) {
             console.log(i.data.profilePic)
             return i.data.profilePic.replace(/\s/g, '+');
         }
-        // else if(i && i.data && i.data.gender){
-        //     return i.data.profileCreatedFor = i.data.gender
-        // }
-        // else 
-            return 'Not Specified';
-            // return i.data.profileCreatedFor = female;
+        return null;
+        // else if (i && i.data && i.data.gender && i.data.gender !== 'undefined' && i.data.gender !== null)
+        //     return i.data.gender == 'MALE'?male:female;
     },
     motherTongue: function (i) {
         if (i && i.data && i.data.motherTongue &&i.data.motherTongue !== 'undefined') {

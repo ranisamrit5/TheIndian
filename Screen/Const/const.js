@@ -1,3 +1,7 @@
+// import {Country,State,City}  from 'country-state-city';  
+
+
+
 export const ageDiff = [
   { value: 18 },
   { value: 19 },
@@ -85,6 +89,7 @@ export const profileoption = [
     { value: "AWAITING_DIVORCE" ,title:"Awaiting Divorce"},
     { value: "WIDOW",title:"Widow" },
     { value: "ANY",title:"Any" },
+    { value: "NOT_SPECIFIED" ,title:"Not Specified"},
   ];
   
   export const annualoption = [
@@ -102,10 +107,10 @@ export const profileoption = [
     { title: "Above 90 Lakh" ,value:11},
   ];
   export const familyVal = [
-    { title: "ORTHODOX" ,value:"Orthodox"},
-    { title: "TRADITIONAL",value:"Traditional" },
-    { title: "MODERATE" ,value:"Moderate"},
-    { title: "LIBERAL" ,value:"Liberal"},
+    { value: "ORTHODOX" ,title:"Orthodox"},
+    { value: "TRADITIONAL",title:"Traditional" },
+    { value: "MODERATE" ,title:"Moderate"},
+    { value: "LIBERAL" ,title:"Liberal"},
   ];
   export const heightoption = [
     { title: "4 ft 0 in" ,value:0},
@@ -132,6 +137,8 @@ export const profileoption = [
     { title: "5 ft 9 in" ,value:21},
     { title: "5 ft 10 in" ,value:22},
     { title: "5 ft 11 in" ,value:23},
+    { title: "Not Specified" ,value:24},
+    
   ];
   // Loction
   export const countryoption = [
@@ -759,7 +766,7 @@ export const profileoption = [
     { title: "BSC" },
   ];
   export const employoption = [
-    { title: "Self" ,value:"SELFEMPLOYED"},
+    { title: "Self Employed" ,value:"SELFEMPLOYED"},
     { title: "Government" ,value:"GOVERNMENT"},
     { title: "Private" ,value:"PRIVATE"},
     { title: "Bussiness" ,value:"BUSINESS"},
@@ -784,6 +791,101 @@ export const familyStatus=[
   { title: "Middle Class" ,value:'MIDDLE_CLASS'},
   { title: "Upper Middle Class" ,value:'UPPER_MIDDLE_CLASS'},
   { title: "Rich Affluent" ,value:'RICH_AFFLUENT'},
+]
+
+export const education_=[
+  "B.E / B.Tech",
+  "M.E / M.Tech",
+  "M.S Engineering",
+  "B.Eng (Hons)",
+  "M.Eng (Hons)",
+  "Engineering Diploma",
+  "AE",
+  "AET",
+  "B.A",
+  "B.Ed",
+  "BJMC",
+  "BFA",
+  "B.Arch",
+  "B.Des",
+  "BMM",
+  "MFA",
+  "M.Ed",
+  "M.A",
+  "MSW",
+  "MJMC",
+  "M.Arch",
+  "M.Des",
+  "BA (Hons)",
+  "B.Arch (Hons)",
+  "DFA",
+  "D.Ed",
+  "D.Arch",
+  "AA",
+  "AFA",
+  "B.Com",
+  "CA / CPA",
+  "CFA",
+  "CS",
+  "BSc / BFin",
+  "M.Com",
+  "MSc / MFin / MS",
+  "BCom (Hons)",
+  "PGD Finance",
+  "BCA",
+  "B.IT",
+  "BCS",
+  "BA Computer Science",
+  "MCA",
+  "PGDCA",
+  "IT Diploma",
+  "ADIT",
+  "B.Sc",
+  "M.Sc",
+  "BSc (Hons)",
+  "DipSc",
+  "AS",
+  "AAS",
+  "MBBS",
+  "BDS",
+  "BPT",
+  "BAMS",
+  "BHMS",
+  "B.Pharma",
+  "BVSc",
+  "BSN / BScN",
+  "MDS",
+  "MCh",
+  "M.D",
+  "M.S Medicine",
+  "MPT",
+  "DM",
+  "M.Pharma",
+  "MVSc",
+  "MMed",
+  "PGD Medicine",
+  "ADN",
+  "BBA",
+  "BHM",
+  "BBM",
+  "MBA",
+  "PGDM",
+  "ABA",
+  "ADBus",
+  "BL / LLB",
+  "ML / LLM",
+  "LLB (Hons)",
+  "ALA",
+  "Ph.D",
+  "M.Phil",
+  "Bachelor",
+  "Master",
+  "Diploma",
+  "Honours",
+  "Doctorate",
+  "Associate",
+  "High school",
+  "Less than high school",
 ]
 
 export const hobbies=[
@@ -1027,3 +1129,7 @@ export const hobbies=[
 // ]
 
 
+
+
+
+   
