@@ -5,6 +5,7 @@ import {
     ScrollView,
     View,
     Text,
+    Dimensions,
     StatusBar,
     FlatList,
     Image,
@@ -18,17 +19,19 @@ import Received from '../Inbox/Received'
 import SentItem from '../Inbox/SentItem'
 import Deleted from '../Inbox/Deleted'
 
-export default class app extends Component {
+export default class InboxMainTab extends Component {
     constructor(props) {
         super(props)
         this.state = {
             TopArray: ['Received', 'Accepted', 'Sent Items', 'Contacts', 'Requests', 'Deleted'],
-            SelectClass: ''
+            SelectClass: 'Received'
         }
     }
-    SelectItemFun(item) {
-        console.log('itemsss', item)
+    SelectItemFun(item,index) {
+        console.log('itemsss', item,index)
         this.setState({ SelectClass: item })
+        this.flatList_Ref.scrollToIndex({animated: true,index:index,viewPosition: 0.5  });
+        // index: index, animated: true, viewPosition: 0.5 
     }
     render() {
         return (
@@ -36,11 +39,19 @@ export default class app extends Component {
                 <View style={{ width: '95%', alignSelf: 'center', marginTop: 10 }}>
                     <FlatList horizontal={true}
                         data={this.state.TopArray}
+                        ref={ref => {
+                            this.flatList_Ref = ref;  // <------ ADD Ref for the Flatlist 
+                          }}
                         showsHorizontalScrollIndicator={false}
-                        renderItem={({ item }) =>
+                        renderItem={({ item,index }) =>
                             <View>
                                 <TouchableOpacity style={{ borderWidth: 0.8, marginBottom: 10, marginRight: 10, alignItems: 'center', justifyContent: 'center', borderRadius: 10, width: 150, height: 35 }}
-                                    onPress={() => this.SelectItemFun(item)} >
+                                    onPress={() => 
+                                       {
+                                        // this.goIndex()   
+                                        this.SelectItemFun(item,index)}
+                                    
+                                    } >
                                     <Text style={{ fontSize: 16, fontWeight: '500' }}>{item}</Text>
                                 </TouchableOpacity>
                             </View>} />

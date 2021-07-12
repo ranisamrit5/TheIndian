@@ -2,12 +2,9 @@ import React from 'react';
 import {View, Text, StyleSheet,TouchableOpacity,SafeAreaView,Image,TouchableWithoutFeedback} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Images } from '../Screen/utils/theme';
+import CheckBox from '@react-native-community/checkbox';
 const MaritalStatus = (props) => {
-    const [isAccpet, setAccept] = React.useState(false);
-  const isAccpetData = () => {
-    setAccept(!isAccpet)
-    
-  }
+    const [toggleCheckBox, setToggleCheckBox] = React.useState(false)
   
         return (
             
@@ -46,44 +43,56 @@ const MaritalStatus = (props) => {
                    </View>
                </View>
                <View style={styles.rowView}>
-                                <TouchableWithoutFeedback onPress={() => props.isAccpetData()}>
-                                    <Image style={styles.checkImage} source={props.isAccpet ? Images.checked : Images.uncheck} />
-                                </TouchableWithoutFeedback>
+                          <CheckBox
+                          style={styles.checkImage}
+                        disabled={false}
+                         value={toggleCheckBox}
+                            onValueChange={(newValue) => setToggleCheckBox(newValue)}/>
                                 <Text style={{fontSize:15,textAlign:"center",marginTop:2}}>Open to all</Text>
                                     </View>
                                     <View style={styles.rowView}>
-                                <TouchableWithoutFeedback onPress={() => props.isAccpetData()}>
-                                    <Image style={styles.checkImage} source={props.isAccpet ? Images.checked : Images.uncheck} />
-                                </TouchableWithoutFeedback>
+                                    <CheckBox
+                          style={styles.checkImage}
+                        disabled={false}
+                         value={toggleCheckBox}
+                            onValueChange={(newValue) => setToggleCheckBox(newValue)}/>
                                 <Text style={{fontSize:15,textAlign:"center",marginTop:2}}>Naver Married</Text>
                                     </View>
                                     <View style={styles.rowView}>
-                                <TouchableWithoutFeedback onPress={() => props.isAccpetData()}>
-                                    <Image style={styles.checkImage} source={props.isAccpet ? Images.checked : Images.uncheck} />
-                                </TouchableWithoutFeedback>
+                                    <CheckBox
+                          style={styles.checkImage}
+                        disabled={false}
+                         value={toggleCheckBox}
+                            onValueChange={(newValue) => setToggleCheckBox(newValue)}/>
                                 <Text style={{fontSize:15,textAlign:"center",marginTop:2}}>Divorce</Text>
                                     </View>
                                     <View style={styles.rowView}>
-                                <TouchableWithoutFeedback onPress={() => props.isAccpetData()}>
-                                    <Image style={styles.checkImage} source={props.isAccpet ? Images.checked : Images.uncheck} />
-                                </TouchableWithoutFeedback>
+                                    <CheckBox
+                          style={styles.checkImage}
+                        disabled={false}
+                         value={toggleCheckBox}
+                            onValueChange={(newValue) => setToggleCheckBox(newValue)}/>
                                 <Text style={{fontSize:15,textAlign:"center",marginTop:2}}>Widowed</Text>
                                     </View> 
                                     <View style={styles.rowView}>
-                                <TouchableWithoutFeedback onPress={() => props.isAccpetData()}>
-                                    <Image style={styles.checkImage} source={props.isAccpet ? Images.checked : Images.uncheck} />
-                                </TouchableWithoutFeedback>
+                                    <CheckBox
+                          style={styles.checkImage}
+                        disabled={false}
+                         value={toggleCheckBox}
+                            onValueChange={(newValue) => setToggleCheckBox(newValue)}/>
                                 <Text style={{fontSize:15,textAlign:"center",marginTop:2}}>Awaiting Divorce</Text>
                                     </View>
                                     <View style={styles.rowView}>
-                                <TouchableWithoutFeedback onPress={() => props.isAccpetData()}>
-                                    <Image style={styles.checkImage} source={props.isAccpet ? Images.checked : Images.uncheck} />
-                                </TouchableWithoutFeedback>
+                                    <CheckBox
+                          style={styles.checkImage}
+                        disabled={false}
+                         value={toggleCheckBox}
+                            onValueChange={(newValue) => setToggleCheckBox(newValue)}/>
                                 <Text style={{fontSize:15,textAlign:"center",marginTop:2}}>Annulled</Text>
                                     </View>
 
                                 
-                                    <View style={{  flexDirection:'row',marginTop: 200,marginBottom:200}}>
+                                    <View style={{  flexDirection:'row',marginTop: 200,}}>
                             <TouchableOpacity
                                 style={styles.SubmitButtonStyleA}
                                 activeOpacity={.10}
@@ -165,10 +174,9 @@ const styles = StyleSheet.create({
         marginTop:16
       },
       checkImage: {
-        height: 30,
-        width: 30,
-        marginLeft: 20,
-        resizeMode: 'contain'
+       marginLeft: 20,
+        alignSelf:"center",
+        
       },
 
     

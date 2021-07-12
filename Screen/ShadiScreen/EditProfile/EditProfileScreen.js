@@ -10,14 +10,14 @@ import {
     Image,
     ImageBackground
 } from 'react-native';
-
+import Loader from '../../../Screen/Componentone/Loader';
 import { Auth } from "aws-amplify";
 import {  withApollo } from "react-apollo";
 import compose from "lodash.flowright";
 import Getdata from "../../../AppSync/query/Auth/getData";
 import { userDataMapper } from '../../mapper'
 const EditProfileScreen = (props) => {
-    const [text, setText] = useState('dcdsdsvdvdgvkjjnvdndvjnjvjnjknmvkvmdkvmdvkmvkdmvkdmckvmvkmvkdvmkvmkmkmv')
+    const [text, setText] = useState('')
     const [height, setHeight] = useState(100)
     const [id, setId] = useState()
     const [details, setDetails] = useState([])
@@ -60,6 +60,7 @@ const EditProfileScreen = (props) => {
 
     const getData = async (user) => {
         // console.log('user---->>',props)
+        setLoading(true)
         await props.client.query({
             query: Getdata,
             fetchPolicy: "network-only",
@@ -86,6 +87,7 @@ const EditProfileScreen = (props) => {
 
 
         <SafeAreaView style={styles.mainBody} >
+             <Loader loading={loading} />
             {/* {!loading ? */}
 
 
@@ -284,7 +286,7 @@ const EditProfileScreen = (props) => {
                         }}>More about Myself,Partner and Family</Text>
 
 
-                        <TouchableOpacity onPress={() => alert('Log out')}>
+                        <TouchableOpacity onPress={() => {}}>
                             <Image style={{ width: 20, height: 20, tintColor: "#000" }}
                                 source={require('../../../Imagess/pencil.png')} />
                         </TouchableOpacity>
@@ -441,7 +443,7 @@ const EditProfileScreen = (props) => {
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
                                 fontWeight: "bold",flex:1,flexWrap:"wrap"
-                            }}>: Not Specified</Text>
+                            }}>: {details.gotram?details.gotram:'Not Specified'}</Text>
 
                            
 
@@ -556,7 +558,7 @@ const EditProfileScreen = (props) => {
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
                                 fontWeight: "bold",flex:1,flexWrap:"wrap"
-                            }}>: {details.noOfBrothers}</Text>
+                            }}>: {details.noOfBrothers_}</Text>
 
                            
 
@@ -575,7 +577,7 @@ const EditProfileScreen = (props) => {
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
                                 fontWeight: "bold", flex:1,flexWrap:"wrap"
-                            }}>: {details.noOfSisters}</Text>
+                            }}>: {details.noOfSisters_}</Text>
 
                             
 
@@ -594,7 +596,7 @@ const EditProfileScreen = (props) => {
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
                                 fontWeight: "bold", flex:1,flexWrap:"wrap"
-                            }}>: { }</Text>
+                            }}>: { details.familyValue }</Text>
 
                            
 
@@ -613,7 +615,7 @@ const EditProfileScreen = (props) => {
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
                                 fontWeight: "bold",flex:1,flexWrap:"wrap"
-                            }}>: Enter Now</Text>
+                            }}>: {details.familyStatus}</Text>
 
                            
 

@@ -183,9 +183,10 @@ export default class app extends Component {
           <Stack.Screen name='Lifestyles' component={Lifestyles}/>
           <Stack.Screen name='PartnerBasicinfo' component={PartnerBasicinfo}/>
           <Stack.Screen name='GenderScreen' component={GenderScreen}/>
-          <Stack.Screen name='FamilyScreen' component={FamilyScreen}/>
+         <Stack.Screen name='FamilyScreen' component={FamilyScreen}/>
+         <Tab.Screen name="ProfileDeshbord" component={ProfileDeshbord} />
           <Stack.Screen name='Astro' component={Astro}/>
-          <Stack.Screen name='Location' component={Location}/>
+          <Stack.Screen name='Location' component={Location}/>  
           <Stack.Screen name='ChatTab' component={ChatTab}/>
           <Stack.Screen name='Feed' component={Feed}/>
           <Stack.Screen name='MessageScreen' component={MessageScreen}/>

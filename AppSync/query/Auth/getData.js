@@ -43,15 +43,16 @@ annualIncome
 }
 familyDetails{
   parentContact
-familyValue
-familyType
-familyStatus
-nativePlace
-fathersOccupation
-mothersOccupation
-noOfBrothers
-noOfSisters
-aboutMyFamily
+  familyValue
+  familyType
+  familyStatus
+  nativePlace
+  fathersOccupation
+  mothersOccupation
+  noOfBrothers
+  familyLocation
+  noOfSisters
+  aboutMyFamily
 }
     birthCity
     birthState

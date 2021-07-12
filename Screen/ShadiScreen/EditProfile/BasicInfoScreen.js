@@ -10,27 +10,32 @@ import {
     StyleSheet,
     TouchableOpacity,
     Image,
-    Pressable,
+    TextInput,
+    Pressable,YellowBox,
     Button, Platform
 } from 'react-native';
 import calendar from '../../../Imagess/calendar.png'
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { Auth } from "aws-amplify";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Picker } from 'native-base';
 import Spinner from 'react-native-loading-spinner-overlay';
+import { Auth } from "aws-amplify";
 import { graphql, withApollo } from "react-apollo";
 import compose from "lodash.flowright";
 import Getdata from "../../../AppSync/query/Auth/getData";
 import updateUser from "../../../AppSync/mutation/User/updateData";
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import Loader from '../../../Screen/Componentone/Loader';
+import { userDataMapper } from '../../mapper'
 import {
-    profileoption, religionoption, chidoption, languageoption, statusoption, annualoption, familyVal, heightoption, countryoption,
-    stateoption, cityoption, rassioption, castoption, degreeoption, employoption, employeeption
+    profileoption,  statusoption, heightoption, 
+     castoption
 } from "../../Const/const";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
+import moment from 'moment';
 const BasicInfoScreen = (props) => {
     const [text, setText] = useState('');
-    const [selectedValue, setSelectedValue] = useState("Self");
+    const [selectedValue, setSelectedValue] = useState("");
     const [gender, setGender] = useState("");
     const [marital, setMaterial] = useState("");
     const [height, setHeight] = useState("");
@@ -38,19 +43,20 @@ const BasicInfoScreen = (props) => {
     let [data, setData] = useState([]);
     const [id, setId] = useState()
     let [loading, setLoading] = useState(false);
+    const [chosenDate, setChosenDate] = useState(new Date());
     const [basicInfo, setBasicInfo] = useState({
         id: '',
         fname: '',
         lname: '',
         dob: '',
-        maritalStatus: 'SINGLE',
+        maritalStatus: '',
         noOfChildren: 0,
         height: '',
         physicalStatus: '',
-        religion: 'Hindu',
+        religion: '',
         caste: '',
         subcaste: '',
-        profileCreatedFor: 'Self',
+        profileCreatedFor: '',
         motherTongue: '',
         languagesKnown: '',
         gotram: '',
@@ -59,9 +65,28 @@ const BasicInfoScreen = (props) => {
         eatingHabit: '',
         smokingHabit: '',
         drinkingHabit: '',
-        aboutMe: ''
+        aboutMe: '',
+        gender:''
     })
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
+    const showDatePicker = () => {
+        console.log(isDatePickerVisible)
+        setDatePickerVisibility(true);
+    };
+
+    const hideDatePicker = () => {
+        setDatePickerVisibility(false);
+    };
+
+    const handleConfirm = (date) => {
+        console.warn("A date has been picked: ", date);
+        setBasicInfo({
+            ...basicInfo,
+            dob: date
+        })
+        hideDatePicker();
+    };
     useEffect(() => {
         setLoading(true)
         Auth.currentAuthenticatedUser()
@@ -75,23 +100,25 @@ const BasicInfoScreen = (props) => {
     )
 
     const handleSubmit = async (e) => {
+        setLoading(true)
         try {
 
             let data_ = data
             console.log('Table', data_.tablename, marital, height, gender)
             console.log('ID', data_.id)
-            setBasicInfo({
-                ...basicInfo,
-                height: height,
-                gender: gender,
-                maritalStatus: marital
-            })
+            // setBasicInfo({
+            //     ...basicInfo,
+            //     height: height,
+            //     gender: gender,
+            //     maritalStatus: marital
+            // })
             const savedData = await props.updateUser({ variables: { input: basicInfo } })
             console.log(savedData)
 
         } catch (err) {
             console.log('error creating todo:', err)
         }
+        setLoading(false)
     }
 
     const getData = async (user) => {
@@ -105,31 +132,39 @@ const BasicInfoScreen = (props) => {
         });
         if (data) {
             let userData = data.getUser
+            let all = {}
+            all.data = data.getUser
+            let pDetails = userDataMapper(all)
             setData(userData)
-            console.log(userData);
-            const { noOfChildren, maritalStatus, eatingHabit, smokingHabit, drinkingHabit, manglik, physicalStatus,
-                religion, caste, star, height, motherTongue, dob, aboutMe, fname, profileCreatedFor
-            } = userData
+            
+            const { noOfChildren, maritalStatus_, eatingHabit, smokingHabit, drinkingHabit, manglik, physicalStatus,
+                religion, caste, star, height, motherTongue, dob, aboutMe, fname, profileCreatedFor,gender_,height_,physicalStatus_
+            } = pDetails
+            console.log('IN===>',maritalStatus_);
+
+            setMaterial()
+            setGender(gender)
             setBasicInfo({
                 ...basicInfo,
                 id: user,
-                profileCreatedFor: !profileCreatedFor ? "Self" : profileCreatedFor,
-                maritalStatus: !maritalStatus ? "SINGLE" : maritalStatus,
+                profileCreatedFor: profileCreatedFor,
+                maritalStatus:  maritalStatus_,
                 // maritalStatus: maritalStatus !== null ? maritalStatus : 0,
-                noOfChildren: !noOfChildren ? 0 : noOfChildren,
+                noOfChildren:  noOfChildren,
                 eatingHabit: eatingHabit,
                 smokingHabit: smokingHabit,
                 drinkingHabit: drinkingHabit,
                 manglik: manglik,
-                physicalStatus: physicalStatus,
+                physicalStatus: physicalStatus_,
                 religion: religion,
                 caste: caste,
                 star: star,
-                height: !height ? 0 : height,
+                height: height_,
                 motherTongue: motherTongue,
                 dob: dob,
                 aboutMe: aboutMe,
-                fname: fname
+                fname: fname,
+                gender:gender_,
 
             });
         }
@@ -138,32 +173,36 @@ const BasicInfoScreen = (props) => {
     const [date, setDate] = useState(new Date(1598051730000));
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
-  
+
     const onChange = (event, selectedDate) => {
-      const currentDate = selectedDate || date;
-      setShow(Platform.OS === 'ios');
-      setDate(currentDate);
+        const currentDate = selectedDate || date;
+        setShow(Platform.OS === 'ios');
+        setDate(currentDate);
     };
-  
+
     const showMode = (currentMode) => {
-      setShow(true);
-      setMode(currentMode);
+        setShow(true);
+        setMode(currentMode);
     };
-  
+
     const showDatepicker = () => {
-      showMode('date');
+
+        console.log('-----')
+        showMode('date');
     };
-  
+
     const showTimepicker = () => {
-      showMode('time');
+        showMode('time');
     };
+    console.log('----->',basicInfo.manglik)
     return (
 
         <View safe style={styles.container}>
+            <Loader loading={loading} />
             <Spinner visible={props.isLoading} />
             <SafeAreaView style={styles.safeContainer}>
-                <KeyboardAwareScrollView keyboardShouldPersistTaps={'always'} style={styles.keyBordContainer}>
-                    <ScrollView>
+                <KeyboardAwareScrollView nestedScrollEnabled={true} keyboardShouldPersistTaps={'always'} style={styles.keyBordContainer}>
+                    <ScrollView nestedScrollEnabled={true}>
 
                         <View style={{ flexDirection: 'row', width: '100%', alignItems: 'center', backgroundColor: '#FF5733', height: 50 }}>
                             <TouchableOpacity style={{ marginLeft: 20 }} onPress={() => props.navigation.pop()}>
@@ -199,10 +238,17 @@ const BasicInfoScreen = (props) => {
                                 </View>
 
                                 <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
+                                {/* <FlatList
+                                        data={profileoption}
+                                        renderItem={({ item }) => (<Text>{item.title}</Text>)}
+                                        keyExtractor={(item, index) => String(index)}
+                                    /> */}
                                     <Picker
-                                        selectedValue={selectedValue}
-                                        style={{ height: 40, width: 200, }}
-                                        onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                                        selectedValue={basicInfo.profileCreatedFor}
+                                        style={{ height: 40, width: 200 }}
+                                        onValueChange={(itemValue, itemIndex) => {
+                                            setBasicInfo({ ...basicInfo, profileCreatedFor: itemValue })
+                                            setSelectedValue(itemValue)}}
                                     >
                                         {profileoption.map((item, index) => {
                                             return (< Picker.Item label={item.title} value={item.title} key={index} />);
@@ -230,10 +276,11 @@ const BasicInfoScreen = (props) => {
 
                                 <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
                                     <Picker
-                                        selectedValue={gender}
+                                        selectedValue={basicInfo.gender.toUpperCase()}
                                         style={{ height: 40, width: 200, }}
                                         onValueChange={(itemValue, itemIndex) => {
                                             setGender(itemValue)
+                                            console.log(itemValue)
                                             setBasicInfo({ ...basicInfo, gender: itemValue })
                                         }}
                                     >
@@ -259,24 +306,27 @@ const BasicInfoScreen = (props) => {
                                     }}>Date Of Birth</Text>
                                 </View>
                                 <View>
-      
-    
-                       {show && (
-                          <DateTimePicker
-          testID="dateTimePicker"
-          value={date}
-          mode={mode}
-          is24Hour={true}
-          display="default"
-          onChange={onChange}
-        />
-      )}
-    </View>
+
+
+
+                                    <DateTimePickerModal
+                                        isVisible={isDatePickerVisible}
+                                        mode="date"
+                                        onConfirm={handleConfirm}
+                                        onCancel={hideDatePicker}
+                                    />
+
+
+                                </View>
                                 <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
-
+                                    <TextInput
+                                        // {...props}
+                                        multiline={true}
+                                        style={[styles.default, { height: Math.max(35, height) }]}
+                                        value={moment(basicInfo.dob).format("DD/MM/YYYY")}
+                                    />
                                     <View style={{ height: 40, width: 197, }}>
-                                        <TouchableOpacity onPress={showDatepicker} >
-
+                                        <TouchableOpacity onPress={showDatePicker}>
                                             <Image
                                                 source={calendar}
                                                 style={{
@@ -284,7 +334,6 @@ const BasicInfoScreen = (props) => {
                                                     height: 20,
                                                     resizeMode: 'contain',
                                                     alignSelf: "flex-end",
-                                                    marginTop: 7,
                                                     right: 10
                                                 }}
                                             />
@@ -319,9 +368,10 @@ const BasicInfoScreen = (props) => {
 
                                 <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
                                     <Picker
-                                        selectedValue={marital}
+                                        selectedValue={basicInfo.maritalStatus}
                                         style={{ height: 40, width: 200, }}
                                         onValueChange={(itemValue, itemIndex) => {
+                                            console.log('MATSTATUS',itemValue);
                                             setMaterial(itemValue)
                                             setBasicInfo({ ...basicInfo, maritalStatus: itemValue })
                                         }}
@@ -354,9 +404,11 @@ const BasicInfoScreen = (props) => {
 
                                 <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
                                     <Picker
-                                        selectedValue={height}
+                                    listMode="SCROLLVIEW"
+                                        selectedValue={Number(basicInfo.height)}
                                         style={{ height: 40, width: 200, }}
                                         onValueChange={(itemValue, itemIndex) => {
+                                            // console.log()
                                             setBasicInfo({ ...basicInfo, height: itemValue })
                                             setHeight(itemValue)
                                         }}
@@ -391,9 +443,11 @@ const BasicInfoScreen = (props) => {
 
                                 <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
                                     <Picker
-                                        selectedValue={selectedValue}
+                                        selectedValue={basicInfo.physicalStatus}
                                         style={{ height: 40, width: 200, }}
-                                        onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                                        onValueChange={(itemValue, itemIndex) => {
+                                            setBasicInfo({ ...basicInfo, physicalStatus: itemValue })
+                                            setSelectedValue(itemValue)}}
                                     >
                                         <Picker.Item label="Normal" value="NORMAL" />
                                         <Picker.Item label="Physical Disability" value="PHYSICALLY_CHALLENGED" />
@@ -415,25 +469,22 @@ const BasicInfoScreen = (props) => {
                                     <Text style={{
                                         color: "gray", fontSize: 14,
                                         fontWeight: "bold"
-                                    }}>Health Information</Text>
+                                    }}>Manglik</Text>
 
 
 
 
                                     <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
                                         <Picker
-                                            selectedValue={selectedValue}
+                                            selectedValue={basicInfo.manglik}
                                             style={{ height: 40, width: 200, }}
-                                            onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                                            onValueChange={(itemValue, itemIndex) => {
+                                                setBasicInfo({ ...basicInfo, manglik: itemValue })
+                                                setSelectedValue(itemValue)}}
                                         >
-                                            <Picker.Item label="Select" value="Select" />
-                                            <Picker.Item label="No Health Problems" value="No Health Problems" />
-                                            <Picker.Item label="HIV positive" value="HIV positive" />
-                                            <Picker.Item label="Diabetes" value="Diabetes" />
-                                            <Picker.Item label="Low BP" value="Low BP" />
-                                            <Picker.Item label="High BP" value="High BP" />
-                                            <Picker.Item label="Herat Ailments" value="Herat Ailments" />
-                                            <Picker.Item label="Other" value="Other" />
+                                            <Picker.Item label="Yes" value="YES" />
+                                            <Picker.Item label="No" value="NO" />
+                                            <Picker.Item label="Dont Know" value="UNKNOWN" />
                                         </Picker>
                                         <View style={{ height: 10 }}></View>
                                     </View>
@@ -451,27 +502,22 @@ const BasicInfoScreen = (props) => {
                                     <Text style={{
                                         color: "gray", fontSize: 15,
                                         fontWeight: "bold"
-                                    }}>Blood Group</Text>
+                                    }}>Caste</Text>
 
 
                                 </View>
 
                                 <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
                                     <Picker
-                                        selectedValue={selectedValue}
+                                        selectedValue={basicInfo.caste}
                                         style={{ height: 40, width: 200, }}
-                                        onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                                        onValueChange={(itemValue, itemIndex) => {
+                                            setBasicInfo({ ...basicInfo, caste: itemValue })
+                                            setSelectedValue(itemValue)}}
                                     >
-                                        <Picker.Item label="Select" value="Select" />
-                                        <Picker.Item label="Don't Know" value="Don't Know" />
-                                        <Picker.Item label="A+" value="A+" />
-                                        <Picker.Item label="A-" value="A-" />
-                                        <Picker.Item label="B+" value="B+" />
-                                        <Picker.Item label="B-" value="B-" />
-                                        <Picker.Item label="AB+" value="AB+" />
-                                        <Picker.Item label="AB-" value="AB-" />
-                                        <Picker.Item label="O+" value="O+" />
-                                        <Picker.Item label="O-" value="O-" />
+                                      {castoption.map((item, index) => {
+                                            return (< Picker.Item label={item.title} value={item.title} key={index} />);
+                                        })}
 
                                     </Picker>
                                     <View style={{ height: 10 }}></View>

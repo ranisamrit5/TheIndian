@@ -9,6 +9,9 @@ const awsmobile = {
   aws_appsync_authenticationType: "API_KEY",
   s3Bucket:"amplify-matrimony-matdev-201729-deployment",
   region: "ap-south-1",
+  googleApiKey:'AIzaSyBEplA_xW72WGM-QR7IEpUkiF7zcCQlJzg',
+  aws_access_key_id: 'AKIA4QREK63EKSH36QY4',//awsexport.aws_access_key_id,
+  aws_secret_access_key: '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'
 };
 export default awsmobile;
 // const awsmobile = {
