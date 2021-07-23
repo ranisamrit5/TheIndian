@@ -16,9 +16,13 @@ const SplashScreen = (props) => {
   let [animating, setAnimating] = useState(true);
   const { colors } = useTheme();
   useEffect(() => {
-    Auth.currentAuthenticatedUser().then((data) => {
-      // console.log('user----::',data.username)
+    Auth.currentAuthenticatedUser()
+    .then((data) => {
+      console.log('user----::',data)
       props.navigation.navigate('TabNavigation');
+    }).catch((error)=>{
+      props.navigation.navigate('LoginScreen');
+      console.log('error----::',error)
     })
   }, []);
 

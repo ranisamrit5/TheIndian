@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -13,14 +13,10 @@ import {
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import ColorCode from '../Stylesss/ColorCode'
 
-export default class app extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            AcceptArray:[1,2,3,4,5]
-        }
-    }
-    render() {
+const Accepted = (props) => {
+    // props.route.params=''
+    const [AcceptArray, setAcceptArray] = useState([1,2,3,4,5]);
+
         return (
               <SafeAreaView style={{flex:1}}>
                 {/* <ScrollView> */}
@@ -28,7 +24,7 @@ export default class app extends Component {
                         <Text style={{ fontSize: 16 }}>Accepted Invitation (13)</Text>
                         <View style={{width:'100%',flex:1,marginBottom:10}}>
                             <FlatList 
-                                 data={this.state.AcceptArray}
+                                 data={AcceptArray}
                                  showsVerticalScrollIndicator={false}
                                  renderItem={({item})=>
                                  <View style={{ width: '100%',borderRadius:10, borderWidth: 1, alignItems: 'center', marginTop: 10 }}>
@@ -54,7 +50,7 @@ export default class app extends Component {
                                     source={require('../../Imagess/chatimage.jpeg')} />
                                 <Text style={{fontSize:14,marginLeft:10}}>Hi, is nice connecting with you. ....</Text>
                                 <TouchableOpacity>
-                                    <Text style={{fontSize:14,color:'green',marginLeft:10}}>more ></Text>
+                                    <Text style={{fontSize:14,color:'green',marginLeft:10}}>more </Text>
                                 </TouchableOpacity>
                             </View>
                             <View style={{padding:10,alignItems:'center',flexDirection:'row',justifyContent:'space-around',width:'90%'}}>
@@ -82,4 +78,4 @@ export default class app extends Component {
              </SafeAreaView>
         )
     }
-}
+    export default Accepted;

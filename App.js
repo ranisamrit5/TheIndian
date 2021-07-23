@@ -44,7 +44,7 @@ import Meet from './Screen/ChatScreen/Meet';
 import Recent from './Screen/ChatScreen/Recent';
 import Astro from './Screen/ShadiScreen/EditProfile/Astro';
 import Location from './Screen/ShadiScreen/EditProfile/Location';
-
+import MaritalStatus from './Screen/MaritalStatus';
 
 //============ Rating Star =====================
 import RatingStar from './Screen/Rating/RatingStar'
@@ -156,8 +156,8 @@ export default class app extends Component {
       <Provider client={client}>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}  >
-
-    
+               <Stack.Screen name='Partner_Preferences' component={Partner_Preferences}/>
+                  <Stack.Screen name="MaritalStatus" component={MaritalStatus} />
              {/* <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} /> */}
           <Stack.Screen name="SplashScreen" component={SplashScreen} />
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
@@ -171,16 +171,16 @@ export default class app extends Component {
           <Stack.Screen name="TabNavigation" component={this.TabNavigation} />
           <Stack.Screen name='RatingStar' component={RatingStar}/>
           <Stack.Screen name='Notification' component={Notification}/>
-          <Stack.Screen name='Partner_Preferences' component={Partner_Preferences}/>
+
           <Stack.Screen name='AccountSettings' component={AccountSettings}/> 
           <Stack.Screen name='BasicInfoScreen' component={BasicInfoScreen}/>
+          <Stack.Screen name='Location' component={Location}/>   
           <Stack.Screen name='EditProfileScreen' component={EditProfileScreen}/>
           <Stack.Screen name='ReligiousScreen' component={ReligiousScreen}/>
           <Stack.Screen name='GenderScreen' component={GenderScreen}/>
-      <Stack.Screen name='FamilyScreen' component={FamilyScreen}/>
+          <Stack.Screen name='FamilyScreen' component={FamilyScreen}/>
         <Tab.Screen name="ProfileDeshbord" component={ProfileDeshbord} />
           <Stack.Screen name='Astro' component={Astro}/>
-          <Stack.Screen name='Location' component={Location}/>  
           <Stack.Screen name='ChatTab' component={ChatTab}/>
           <Stack.Screen name='Feed' component={Feed}/>
           <Stack.Screen name='MessageScreen' component={MessageScreen}/>

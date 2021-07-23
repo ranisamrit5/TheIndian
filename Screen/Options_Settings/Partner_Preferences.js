@@ -1,9 +1,4 @@
-
-
-
-
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState ,useRef} from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -26,10 +21,18 @@ import {  withApollo } from "react-apollo";
 import compose from "lodash.flowright";
 import Getdata from "../../AppSync/query/Auth/getData";
 import { userDataMapper } from '../mapper'
+import MultiSelect from 'react-native-multiple-select';
+import _ from 'lodash';
 //import RangeSlider from 'rn-range-slider';
 //import RangeSlider from 'react-native-range-slider'
+import Icon from 'react-native-vector-icons/MaterialIcons'
+import SectionedMultiSelect from 'react-native-sectioned-multi-select';
+import {
+    statusoption, heightoption, 
+     castoption,religionoption
+} from "../Const/const";
 const PartnerPreference = (props) => {
-
+    let multiSelect = useRef(null)
     const [id,setId]=useState()
     const [loading, setLoading] = useState(true);
     const [value, setValues] = useState();
@@ -39,6 +42,9 @@ const PartnerPreference = (props) => {
     const [heightto,setHeightTo]=useState(0)
     const [heightfrom,setHeightFrom]=useState(0)
     const [more,setMore]=useState(false)
+    const [selectedItems,setSelectedItems]=useState([])
+    const [selectedReligion,setSelectedReligion]=useState([])
+    const [show,setShow]=useState([])
     const [basicInfo,setBasicInfo]=useState({
       id:'',
       pare:''
@@ -69,6 +75,8 @@ const PartnerPreference = (props) => {
             setAgeFrom(userData.ageRange.from)
             setHeightTo(userData.heightRange.to)
             setHeightFrom(userData.heightRange.from)
+            setSelectedItems([userData.maritalStatus])
+            
             console.log('userPD', userData)
             let all = {}
             all.data = data.getUser
@@ -99,7 +107,18 @@ const PartnerPreference = (props) => {
         setAgeFrom(values[0])
         setHeightTo(values[1])
     }
-    console.log('values', value)
+    const  onSelectedItemsChange = val => {
+        setSelectedItems(val);
+        let maritial=_.includes(val,'ANY');
+        if(maritial){
+            setSelectedItems(['ANY']);
+        }
+        console.log('=3=>', val)
+      };
+    const onSelectedReligionChange = val =>{
+        console.log('=3=>', val)
+        setSelectedReligion(val)
+    }
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 <View style={{flexDirection:'row',width:'100%',alignItems:'center',backgroundColor:'#FF5733',height:50}}>
@@ -152,21 +171,60 @@ const PartnerPreference = (props) => {
                             max={10.0}
                             step={1}
                         />
-                        <View style={styles.ViewContener}>
+                         <View style={{ flex: 1 }}>
+                            <MultiSelect
+                            // hideTags
+                            ref={(component) => { multiSelect = component }}
+                            items={statusoption}
+                            uniqueKey="value"
+                            onSelectedItemsChange={(data)=>onSelectedItemsChange(data)}
+                            selectedItems={selectedItems}
+                            selectText={`    Marital Status `}
+                            searchInputPlaceholderText="Search..."
+                            tagRemoveIconColor="red"
+                            tagBorderColor="#CCC"
+                            tagTextColor="#CCC"
+                            selectedItemTextColor="#CCC"
+                            selectedItemIconColor="#CCC"
+                            itemTextColor="#000"
+                            displayKey="title"
+                            searchInputStyle={{ color: '#CCC' }}
+                            submitButtonColor="#CCC"
+                            submitButtonText="Submit"
+                            />
+                           
+                        </View>
+                        {/* <View style={styles.ViewContener}>
                             <Text style={{fontSize:14,fontWeight:'400'}}>Marital Status</Text>
                             <TouchableOpacity style={{ flexDirection: 'row',alignItems:'center',marginTop:5, Hieght: 60,justifyContent:'space-between' }}>
                                 <Text style={{fontSize:16}}>Never Married</Text>
                                 <Image style={{  width: 25, height: 25, tintColor: 'black',transform: [{ rotate: '270deg'}] }}
                                     source={require('../../Imagess/arrowiconVc.png')} />
                             </TouchableOpacity>
-                        </View>
-                        <View style={styles.ViewContener}>
-                            <Text style={{fontSize:14,fontWeight:'400'}}>Religion</Text>
-                            <TouchableOpacity style={{ flexDirection: 'row',alignItems:'center',marginTop:5, Hieght: 60,justifyContent:'space-between' }}>
-                                <Text style={{fontSize:16}}>Hindu</Text>
-                                <Image style={{  width: 25, height: 25, tintColor: 'black',transform: [{ rotate: '260deg'}] }}
-                                    source={require('../../Imagess/arrowiconVc.png')} />
-                            </TouchableOpacity>
+                        </View> */}
+                      
+                      <View style={{ flex: 1 }}>
+                            <MultiSelect
+                            // hideTags
+                            ref={(component) => { multiSelect = component }}
+                            items={religionoption}
+                            uniqueKey="title"
+                            onSelectedItemsChange={(data)=>onSelectedReligionChange(data)}
+                            selectedItems={selectedReligion}
+                            selectText={`    Religion `}
+                            searchInputPlaceholderText="Search..."
+                            tagRemoveIconColor="red"
+                            tagBorderColor="#CCC"
+                            tagTextColor="#CCC"
+                            selectedItemTextColor="#CCC"
+                            selectedItemIconColor="#CCC"
+                            itemTextColor="#000"
+                            displayKey="title"
+                            searchInputStyle={{ color: '#CCC' }}
+                            submitButtonColor="#CCC"
+                            submitButtonText="Submit"
+                            />
+                           
                         </View>
                         <View style={styles.ViewContener}>
                             <Text style={{fontSize:14,fontWeight:'400'}}>Community</Text>

@@ -1,12 +1,4 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
-import React, { Component } from 'react';
+import React, { useState,useEffect } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -27,19 +19,91 @@ import {
     DebugInstructions,
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-export default class app extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            DATA: [1, 2, 3, 4, 5, 6],
-            FullImageData: [1, 2, 3],
-            ProfileLike: false   // grey =true & white = false
+import { userDataMapper } from './mapper'
+// import $ from "jquery";
+import GetSuggestion from "../AppSync/query/getSuggestion";
+import CreateInterest from "../AppSync/query/createInterest";
+import updateRequest from "../AppSync/mutation/updateRequest";
+import { withApollo, graphql } from "react-apollo";
+import compose from "lodash.flowright";
+import { Auth } from "aws-amplify";
+let DATA= [1, 2, 3, 4, 5, 6]
+let FullImageData= [1, 2, 3]
+const MyMatches = (props) => {
+    const [ProfileLike, setProfileLike] = useState(false);
+    let [data, setData] = useState([]);
+    const [id, setId] = useState()
+    let [loading, setLoading] = useState(false);
+    // constructor(props) {
+    //     super(props)
+    //     this.state = {
+            // DATA: [1, 2, 3, 4, 5, 6],
+            // FullImageData: [1, 2, 3],
+            // ProfileLike: false   // grey =true & white = false
+    //     }
+    // }
+    useEffect(() => {
+        Auth.currentAuthenticatedUser()
+        .then((data) => {
+          setId(data.username);
+          getData(data.username);
+        }).catch((err) => {
+
+        })
+      }, []);
+
+      const getData = async function (user) {
+        // console.log("getData::::::", user);
+        try {
+          const { data } = await props.client.query({
+            query: GetSuggestion,
+            fetchPolicy: "network-only",
+            variables: {
+              id: `${user}`,
+            },
+          });
+          let allSuggestion = []
+          if (data && data.getSuggestion && data.getSuggestion.items) {
+            const suggest = data.getSuggestion.items;
+            // setData(suggest)
+            console.log("element==>", suggest);
+            let _data;
+            suggest.forEach(element => {
+              let all = {}
+              all.data = element
+            //   console.log("element==>", element);
+              let myDetails = userDataMapper(all)
+              allSuggestion.push(myDetails)
+              console.log("myDetails==>", myDetails);
+            //   let pic=[]
+            //   pic.push(myDetails.profilePic ? myDetails.profilePic : myDetails.gender == 'Male' ? male : female)
+            //   if (myDetails.gallery)
+            //     pic = [...pic, ...myDetails.gallery]
+            //   console.log(pic)
+            //   setImage(pic)
+    
+    
+            });
+    
+            // if (suggest) {
+    
+            setData(allSuggestion);
+            // } else {
+            //   console.log("no data found");
+            // }
+          } else {
+            console.log("no data found");
+          }
+        } catch (error) {
+          console.log("ERROR::", error);
         }
+    
+        setLoading(false);
+      };
+   const LikeProcess=()=> {
+        // this.setState({ ProfileLike: !ProfileLike })
     }
-    LikeProcess() {
-        this.setState({ ProfileLike: !this.state.ProfileLike })
-    }
-    render() {
+
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 <ScrollView>
@@ -59,7 +123,7 @@ export default class app extends Component {
                         </View>
                         <View style={{ marginTop: 30, width: '97%', alignSelf: 'center' }}>
                             <FlatList horizontal={true}
-                                data={this.state.DATA}
+                                data={DATA}
                                 renderItem={({ item }) =>
                                     <View style={{ width: 120, height: 160, borderRadius: 5, borderWidth: 0.5, marginLeft: 10 }}>
                                         <Text style={{ marginLeft: 5, marginTop: 5 }}>Plus</Text>
@@ -76,32 +140,47 @@ export default class app extends Component {
                                         </TouchableOpacity>
                                     </View>} />
                             <FlatList style={{ marginBottom: 20, marginBottom: 10, flex: 1 }}
-                                data={this.state.FullImageData}
+                                data={data}
                                 renderItem={({ item }) =>
                                     <View style={{ marginBottom: 10, width: '98%', alignSelf: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ImageBackground style={{ width: '100%', alignSelf: 'center', height: 375, borderRadius: 10, overflow: 'hidden' }} resizeMode='cover'
-                                            source={require('../Imagess/AllImage.jpg')}  >
+                                            
+                                            // {item.profilePic?
+                                                source={
+                                                    !item.profilePic ?
+                                                    item.gender == 'Male' || item.gender == 'MALE' ?
+                                                    require('../Imagess/male.jpg'):
+                                                    require('../Imagess/female.jpeg'): 
+                                                    {uri:item.profilePic}
+                                                
+                                                } 
+
+                                            // }
+                                            
+                                            
+                                            
+                                            >
                                             <TouchableOpacity style={{ alignSelf: 'flex-end', alignItems: 'center', padding: 5, borderRadius: 15, flexDirection: 'row', marginTop: 40, marginRight: '8%', backgroundColor: 'grey' }}>
                                                 <Image style={{ width: 20, height: 20, marginLeft: 5 }}
                                                     source={require('../Imagess/Camera.png')} />
                                                 <Text style={{ marginLeft: 5 }}>7</Text>
                                             </TouchableOpacity>
                                             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 175 }}>
-                                                <Text style={{ fontSize: 18, color: 'white', marginRight: 20 }}>Xyz Name</Text>
-                                                <View style={{ width: 10, height: 10, backgroundColor: 'green', borderRadius: 5, marginRight: 10 }}></View>
-                                                <Text style={{ fontSize: 16, color: 'white' }}>Online</Text>
+                                                <Text style={{ fontSize: 18, color: 'white', marginRight: 20 }}>{item.fname}</Text>
+                                                <View style={{ width: 10, height: 10, backgroundColor: item.active == 'just now' ? 'green' : 'red' , borderRadius: 5, marginRight: 10 }}></View>
+                                                <Text style={{ fontSize: 16, color: 'white' }}>{item.active == 'just now' ? 'Active' : item.active  }</Text>
                                             </View>
                                             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                                                <Text style={{ color: 'white' }}>27 yrs, 5' 8"   .</Text>
+                                                <Text style={{ color: 'white' }}>{item.age} yrs, {item.height}  .</Text>
                                                 <Text style={{ color: 'white' }}>Non IT Engineer</Text>
                                             </View>
                                             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                                                <Text style={{ color: 'white', alignItems: 'center', justifyContent: 'center' }}>Marathi, Teli  .</Text>
-                                                <Text style={{ color: 'white', alignItems: 'center', justifyContent: 'center' }}>Ratnagiri, Maharashtra</Text>
+                                                <Text style={{ color: 'white', alignItems: 'center', justifyContent: 'center' }}>{item.motherTongue} {`,${item.caste}`}  .</Text>
+                                                <Text style={{ color: 'white', alignItems: 'center', justifyContent: 'center' }}>{item.city}, {item.state}</Text>
                                             </View>
                                             <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10, justifyContent: 'center' }}>
-                                                <TouchableOpacity onPress={() => this.LikeProcess()}>
-                                                    <Text style={{ fontSize: 17, color: this.state.ProfileLike == true ? 'green' : 'white' }}>Like this Profile?</Text>
+                                                <TouchableOpacity onPress={() => LikeProcess()}>
+                                                    <Text style={{ fontSize: 17, color: ProfileLike == true ? 'green' : 'white' }}>Like this Profile?</Text>
                                                 </TouchableOpacity>
                                                 <TouchableOpacity style={{ marginLeft: 20, alignItems: 'center', justifyContent: 'center' }}>
                                                     <View style={{ width: 30, height: 30, borderRadius: 15, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white' }}>
@@ -128,8 +207,15 @@ export default class app extends Component {
                 </ScrollView>
             </SafeAreaView>
         )
-    }
+    
 }
+
+const profile = compose(
+    withApollo,
+    graphql(updateRequest, { name: "updateRequest" })
+  )(MyMatches);
+  export default profile;
+// export default MyMatches;
 const styles = StyleSheet.create({
     HeaderText: {
         fontSize: 16
