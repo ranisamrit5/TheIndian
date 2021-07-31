@@ -64,7 +64,8 @@ export const profileoption = [
     { title: "Buddhist" },
     { title: "Jain" },
     { title: "Other Religions" },
-    { title: "Any" },
+    { title: "ANY" },
+    { title: "Not Specified" },
   ];
   // chidoption
   export const chidoption = [
@@ -115,31 +116,35 @@ export const profileoption = [
     { value: "LIBERAL" ,title:"Liberal"},
   ];
   export const heightoption = [
-    { title: "4 ft 0 in" ,value:0},
-    { title: "4 ft 1 in" ,value:1},
-    { title: "4 ft 2 in" ,value:2},
-    { title: "4 ft 3 in" ,value:3},
-    { title: "4 ft 4 in" ,value:4},
-    { title: "4 ft 5 in" ,value:5},
-    { title: "4 ft 6 in" ,value:6},
-    { title: "4 ft 7 in" ,value:7},
-    { title: "4 ft 8 in" ,value:8},
-    { title: "4 ft 9 in" ,value:9},
-    { title: "4 ft 10 in" ,value:10},
-    { title: "4 ft 11 in" ,value:11},
-    { title: "5 ft 0 in	" ,value:12},
-    { title: "5 ft 1 in" ,value:13},
-    { title: "5 ft 2 in" ,value:14},
-    { title: "5 ft 3 in" ,value:15},
-    { title: "5 ft 4 in" ,value:16},
-    { title: "5 ft 5 in" ,value:17},
-    { title: "5 ft 6 in" ,value:18},
-    { title: "5 ft 7 in" ,value:19},
-    { title: "5 ft 8 in" ,value:20},
-    { title: "5 ft 9 in" ,value:21},
-    { title: "5 ft 10 in" ,value:22},
-    { title: "5 ft 11 in" ,value:23},
-    { title: "Not Specified" ,value:24},
+    { title: "4 ft 0 in" ,value:0,data:4.0},
+    { title: "4 ft 1 in" ,value:1,data:4.1},
+    { title: "4 ft 2 in" ,value:2,data:4.2},
+    { title: "4 ft 3 in" ,value:3,data:4.3},
+    { title: "4 ft 4 in" ,value:4,data:4.4},
+    { title: "4 ft 5 in" ,value:5,data:4.5},
+    { title: "4 ft 6 in" ,value:6,data:4.6},
+    { title: "4 ft 7 in" ,value:7,data:4.7},
+    { title: "4 ft 8 in" ,value:8,data:4.8},
+    { title: "4 ft 9 in" ,value:9,data:4.9},
+    { title: "4 ft 10 in" ,value:10,data:4.10},
+    { title: "4 ft 11 in" ,value:11,data:4.11},
+    { title: "5 ft 0 in	" ,value:12,data:5.0},
+    { title: "5 ft 1 in" ,value:13,data:5.1},
+    { title: "5 ft 2 in" ,value:14,data:5.2},
+    { title: "5 ft 3 in" ,value:15,data:5.3},
+    { title: "5 ft 4 in" ,value:16,data:5.4},
+    { title: "5 ft 5 in" ,value:17,data:5.5},
+    { title: "5 ft 6 in" ,value:18,data:5.6},
+    { title: "5 ft 7 in" ,value:19,data:5.7},
+    { title: "5 ft 8 in" ,value:20,data:5.8},
+    { title: "5 ft 9 in" ,value:21,data:5.9},
+    { title: "5 ft 10 in" ,value:22,data:5.10},
+    { title: "5 ft 11 in" ,value:23,data:5.11},
+    { title: "6 ft 0 in" ,value:24,data:6.0},
+    { title: "6 ft 1 in" ,value:25,data:6.1},
+    { title: "6 ft 2 in" ,value:26,data:6.2},
+    { title: "6 ft 3 in" ,value:27,data:6.3},
+    { title: "Not Specified" ,value:28,data:0.0},
     
   ];
   // Loction
@@ -500,6 +505,8 @@ export const profileoption = [
     
   ];
   export const castoption = [
+    { title: "Other" },
+    { title: "ANY" },
     { title: "24 Manai Telugu Chettiar" },
     { title: "96 Kuli Maratha" },
     { title: "96K Kokanastha" },
@@ -983,7 +990,7 @@ export const profileoption = [
     { title: "Waada Balija" },
     { title: "Yadav" },
     { title: "Yellapu" },
-    { title: "Other" },
+
   ];
   export const degreeoption = [
     { title: "BE" },

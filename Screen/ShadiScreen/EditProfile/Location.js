@@ -74,7 +74,7 @@ const Location = (props) => {
                 getData(data.username)
                 setId(data.username)
             }).catch(error => {
-                this.props.navigation.navigate('LoginScreen')
+                props.navigation.navigate('LoginScreen')
             })
             setLoading(false)
     }, []

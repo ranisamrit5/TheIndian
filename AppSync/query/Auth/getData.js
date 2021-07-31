@@ -72,13 +72,16 @@ familyDetails{
       eatingHabit
       smokingHabit
       drinkingHabit
-      religion
+      partnerReligion
       caste
       star
       manglik
       education
       occupation
-      annualIncome
+      annualIncome{
+        from
+        to
+      }
       citizenship
       country
       lookingForGender

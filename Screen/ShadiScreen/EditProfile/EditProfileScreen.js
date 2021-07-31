@@ -994,7 +994,7 @@ const EditProfileScreen = (props) => {
                         }}>Partner Basic Info</Text>
 
 
-                        <TouchableOpacity onPress={() => alert('Log out')}>
+                        <TouchableOpacity onPress={() =>  props.navigation.navigate('Partner_Preferences')}>
                             <Image style={{ width: 20, height: 20, tintColor: "#000" }}
                                 source={require('../../../Imagess/pencil.png')} />
                         </TouchableOpacity>

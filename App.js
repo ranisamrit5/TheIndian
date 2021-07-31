@@ -18,7 +18,6 @@ import Amplify, { Auth, Hub } from 'aws-amplify';
 import { ApolloProvider as Provider } from 'react-apollo';
 import Client from 'aws-appsync';
 import awsConfig from './aws-export';
-
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import SplashScreen from './Screen/SplashScreen';
@@ -45,7 +44,7 @@ import Recent from './Screen/ChatScreen/Recent';
 import Astro from './Screen/ShadiScreen/EditProfile/Astro';
 import Location from './Screen/ShadiScreen/EditProfile/Location';
 import MaritalStatus from './Screen/MaritalStatus';
-
+import NetworkScreen from './Screen/NetworkScreen';
 //============ Rating Star =====================
 import RatingStar from './Screen/Rating/RatingStar'
 
@@ -156,10 +155,10 @@ export default class app extends Component {
       <Provider client={client}>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}  >
-               <Stack.Screen name='Partner_Preferences' component={Partner_Preferences}/>
-                  <Stack.Screen name="MaritalStatus" component={MaritalStatus} />
-             {/* <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} /> */}
+     
           <Stack.Screen name="SplashScreen" component={SplashScreen} />
+            <Stack.Screen name="NetworkScreen" component={NetworkScreen} />
+          <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} /> 
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
           <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
           <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
@@ -171,11 +170,12 @@ export default class app extends Component {
           <Stack.Screen name="TabNavigation" component={this.TabNavigation} />
           <Stack.Screen name='RatingStar' component={RatingStar}/>
           <Stack.Screen name='Notification' component={Notification}/>
-
+              <Stack.Screen name='Partner_Preferences' component={Partner_Preferences}/>
+                  <Stack.Screen name="MaritalStatus" component={MaritalStatus} />
           <Stack.Screen name='AccountSettings' component={AccountSettings}/> 
           <Stack.Screen name='BasicInfoScreen' component={BasicInfoScreen}/>
           <Stack.Screen name='Location' component={Location}/>   
-          <Stack.Screen name='EditProfileScreen' component={EditProfileScreen}/>
+          {/* <Stack.Screen name='EditProfileScreen' component={EditProfileScreen}/> */}
           <Stack.Screen name='ReligiousScreen' component={ReligiousScreen}/>
           <Stack.Screen name='GenderScreen' component={GenderScreen}/>
           <Stack.Screen name='FamilyScreen' component={FamilyScreen}/>

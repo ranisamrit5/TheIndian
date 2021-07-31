@@ -15,13 +15,17 @@ export default gql`query GetPartnerPreference($id:String!){
   eatingHabit
   smokingHabit
   drinkingHabit
-  religion
+  partnerReligion
   caste
+  motherTongue
   star
   manglik
   education
   occupation
-  annualIncome
+  annualIncome{
+    to
+    from
+  }
   citizenship
   country
   lookingForGender
