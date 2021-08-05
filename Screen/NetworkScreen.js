@@ -6,7 +6,7 @@ import NetInfo from '@react-native-community/netinfo';
 
 
 const NetworkScreen = (props) => {
-    console.log('Check',props.onCheck)
+    console.log('NetworkScreen Check 1',props.onCheck)
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView>
@@ -20,8 +20,9 @@ const NetworkScreen = (props) => {
                         style={styles.SubmitButtonStyle1}
                         activeOpacity={.10}
                         onPress={() => { 
-                            console.log('Check',props.onCheck)
-                            props.onCheck }}>
+                            console.log('NetworkScreen Check 2',props.onCheck)
+                            props.onCheck
+                             }}>
                         <Text style={styles.TextStyle1}>Try Again</Text>
 
                     </TouchableOpacity>

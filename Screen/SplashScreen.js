@@ -20,38 +20,43 @@ const SplashScreen =  (props) => {
   //State for ActivityIndicator animation
   let [animating, setAnimating] = useState(true);
   const { colors } = useTheme();
-  const [connected,setConnected] = useState(true);
-   checkConnected()
-   .then((state => {
-    console.log('Network Check----::',state)
-    setConnected(state)
-  }))
+  const [connected,setConnected] = useState(false);
+
+  const network = async () => {
+    checkConnected()
+    .then((state => {
+     console.log('Network Check----::',state)
+     setConnected(state)
+   }))
+    // if (!state.isConnected)
+    //   props.navigation.navigate('NetworkScreen')
+  }; 
+  
+  network();
+  
   useEffect(() => {
-    // network();
+
+    
     // console.log('===',state)
     Auth.currentAuthenticatedUser()
     .then((data) => {
       console.log('user----::',data)
-      // props.navigation.navigate('TabNavigation');
+      // if (connected)
+        props.navigation.navigate('TabNavigation');
     }).catch((error)=>{
       // props.navigation.navigate('LoginScreen');
       console.log('error----::',error)
     })
+
   }, []);
 
-  const network = async () => {
-    const state = await NetInfo.fetch();
-    console.log('===',state.isConnected)
-    setConnected(state.isConnected)
-    // if (!state.isConnected)
-    //   props.navigation.navigate('NetworkScreen')
-  }; 
+
   
 
 
   return (
 
-    connected ? (
+    connected == true? (
       <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor='#ffa07a' barStyle="light-content" />
       <Image

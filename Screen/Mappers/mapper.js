@@ -7,15 +7,15 @@ import {
     heightoption,
     familyStatus,
     employoption,
-} from "./Const/const";
+} from "../Const/const";
 import moment from "moment"
 import * as timeago from 'timeago.js';
 // import female from "../images/female.jpeg";
 // import male from "../images/male.jpg";
 const JM = require('json-mapper');
 
-import female from "../Imagess/female.jpeg";
-import male from "../Imagess/male.jpg";
+import female from "../../Imagess/female.jpeg";
+import male from "../../Imagess/male.jpg";
 export const userDataMapper = JM.makeConverter({
     id: function (i) {
         if (i && i.data && i.data.id !== 'undefined') {

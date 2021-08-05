@@ -19,7 +19,7 @@ import {
     DebugInstructions,
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import { userDataMapper } from './mapper'
+import { userDataMapper } from './Mappers/mapper'
 // import $ from "jquery";
 import GetSuggestion from "../AppSync/query/getSuggestion";
 import CreateInterest from "../AppSync/query/createInterest";

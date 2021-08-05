@@ -19,7 +19,7 @@ import updateUser from "../../AppSync/mutation/User/updateData";
 import { graphql, withApollo } from "react-apollo";
 import compose from "lodash.flowright";
 import Getdata from "../../AppSync/query/Auth/getData";
-import { userDataMapper } from '../mapper'
+import { userDataMapper } from '../Mappers/mapper'
 import MultiSelect from 'react-native-multiple-select';
 import _ from 'lodash';
 //import RangeSlider from 'rn-range-slider';

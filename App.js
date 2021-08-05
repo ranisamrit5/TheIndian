@@ -155,10 +155,10 @@ export default class app extends Component {
       <Provider client={client}>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}  >
-     
+       <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} /> 
           <Stack.Screen name="SplashScreen" component={SplashScreen} />
             <Stack.Screen name="NetworkScreen" component={NetworkScreen} />
-          <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} /> 
+        
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
           <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
           <Stack.Screen name="ForgotPassword" component={ForgotPassword} />

@@ -21,7 +21,7 @@ import _ from "lodash";
 import Getdata from "../../../AppSync/query/Auth/getData";
 import updateUser from "../../../AppSync/mutation/User/updateData";
 import Loader from '../../../Screen/Componentone/Loader';
-import { userDataMapper } from '../../mapper'
+import { userDataMapper } from '../../Mappers/mapper'
 import {
     countryoption,  statusoption, heightoption, 
      castoption
