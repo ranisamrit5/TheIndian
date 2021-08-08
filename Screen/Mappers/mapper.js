@@ -1,9 +1,5 @@
 
 import {
-    profileoption,
-    religionoption,
-    chidoption,
-    languageoption,
     statusoption,
     annualoption,
     familyVal,
@@ -11,16 +7,15 @@ import {
     heightoption,
     familyStatus,
     employoption,
-    employeeption,
-} from "./Const/const";
+} from "../Const/const";
 import moment from "moment"
 import * as timeago from 'timeago.js';
 // import female from "../images/female.jpeg";
 // import male from "../images/male.jpg";
 const JM = require('json-mapper');
 
-import female from "../Imagess/female.jpeg";
-import male from "../Imagess/male.jpg";
+import female from "../../Imagess/female.jpeg";
+import male from "../../Imagess/male.jpg";
 export const userDataMapper = JM.makeConverter({
     id: function (i) {
         if (i && i.data && i.data.id !== 'undefined') {
@@ -71,9 +66,33 @@ export const userDataMapper = JM.makeConverter({
         }
         return 'Not Specified';
     },
+    zipcode: function (i) {
+        if (i && i.data && i.data.location && i.data.location.zipcode !== 'undefined') {
+            return i.data.location.zipcode;
+        }
+        return 'Not Specified';
+    },
+    grewUpIn: function (i) {
+        if (i && i.data && i.data.location && i.data.location.grewUpIn !== 'undefined') {
+            return i.data.location.grewUpIn;
+        }
+        return 'Not Specified';
+    },
+    ethinicOrigin: function (i) {
+        if (i && i.data && i.data.location && i.data.location.ethinicOrigin !== 'undefined') {
+            return i.data.location.ethinicOrigin;
+        }
+        return 'Not Specified';
+    },
     country: function (i) {
         if (i && i.data && i.data.location && i.data.location.country !== 'undefined') {
             return i.data.location.country;
+        }
+        return 'Not Specified';
+    },
+    citizenship: function (i) {
+        if (i && i.data && i.data.location && i.data.location.citizenship !== 'undefined') {
+            return i.data.location.citizenship;
         }
         return 'Not Specified';
     },
@@ -212,17 +231,17 @@ export const userDataMapper = JM.makeConverter({
     },
     familyStatus: function (i) {
         if (i && i.data && i.data.familyDetails && i.data.familyDetails.familyStatus !== 'undefined') {
-            console.log('====>',i.data.familyDetails.familyStatus)
+            
             return familyStatus.find((x) => x.value === i.data.familyDetails.familyStatus).title;
         }
         return 'Not Specified';
     },
     annualIncome: function (i) {
-        if (i && i.data && i.data.education && i.data.education.annualIncome !== 'undefined') {
-
-            return annualoption.find((x) => x.value === parseInt(i.data.education.annualIncome)).title;
+        console.log('i.data.education.annualIncome',i.data.education.annualIncome)
+        if (i && i.data && i.data.education  && i.data.education.annualIncome !== 'undefined') {
+            return i.data.education.annualIncome;
         }
-        return 'Not Specified';
+        return '12';
     },
     maritalStatus: function (i) {
         if (i && i.data && i.data.maritalStatus !== 'undefined' && i.data.maritalStatus !== null) {
@@ -250,11 +269,12 @@ export const userDataMapper = JM.makeConverter({
     },
     employedIn: function (i) {
         if (i && i.data && i.data.education && i.data.education.employedIn !== 'undefined') {
-            return employoption.find((x) => x.value === i.data.education.employedIn).title;
+            return i.data.education.employedIn;
         }
-        return 'Not Specified';
+        return 'NOT_SPECIFIED';
     },
     highestEducation: function (i) {
+        console.log('highestEducation',i.data.education.highestEducation)
         if (i && i.data && i.data.education && i.data.education.highestEducation !== 'undefined') {
             return i.data.education.highestEducation;
         }
@@ -292,7 +312,9 @@ export const userDataMapper = JM.makeConverter({
     },
     age: function (i) {
         if (i && i.data && i.data.dob !== 'undefined') {
-            return getAge(i.data.dob);
+            console.log(i.data.dob)
+            console.log('AGE',getAge(i.data.dob))
+            return getAge(moment(i.data.dob).utc().format('YYYY-MM-DD'));
         }
         return 'Not Specified';
     },
@@ -420,6 +442,7 @@ const capitalizeFirstLetter = (s) => {
 }
 
 const getAge = (dateString) => {
+    console.log('date string',dateString)
     var today = new Date();
     var birthDate = new Date(dateString);
     var age = today.getFullYear() - birthDate.getFullYear();

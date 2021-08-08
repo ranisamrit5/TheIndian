@@ -19,9 +19,11 @@ import updateRequest from "../../AppSync/mutation/updateRequest";
 import listUser from "../../AppSync/query/ListUser";
 import Loader from '../../Screen/Componentone/Loader';
 import Swiper from 'react-native-deck-swiper'
+import Accepted from '../Inbox/Accepted'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 const images = []
 const Recieved = (props) => {
+    console.log('Recieved PROPS:',props.route.params)
     const [id, setId] = useState()
     const [swiper, setSwiper] = useState()
     let [loading, setLoading] = useState(true);
@@ -37,7 +39,6 @@ const Recieved = (props) => {
                 // props.id=data.username
                 // getData(data.username)
             });
-            
     }, []
     )
 
@@ -55,9 +56,9 @@ const Recieved = (props) => {
             setRecieved(data.listUser.items)
             setLoading(false)
         }else{
-            props.navigation.navigate('InboxMainTab');
+            props.route.params='Accepted'
         }
-        console.log('getRecieved====>', data.listUser.items)
+        // console.log('getRecieved====>', data.listUser.items)
     }
 
     const updateIntrestData = async (tablename, id_, status) => {
@@ -119,17 +120,13 @@ const Recieved = (props) => {
 
     const onTapCard = (cardIndex, event) => {
         console.log(`on onTapCard ${cardIndex}${event}`)
-        // let ref = cardRef[cardIndex];
-        // if (ref) {
-        //     let locationX = event.nativeEvent.locationX;
-        //     if (0 < Math.round(locationX) && (SCREEN_WIDTH / 2) > Math.round(locationX)) {
-        //         ref.onTapRightPress();
-        //     } else if ((SCREEN_WIDTH / 2) < Math.round(locationX) && Math.round(locationX) < SCREEN_WIDTH) {
-        //         ref.onTapLeftPress();
-        //     }
-        // }
+
+        props.route.params='Accepted'
+
+        // <Accepted />
+        // props.navigation.navigate('InboxMainTab',{item:'Accepted'});
     };
-    console.log('OUT', recieved_)
+    // console.log('OUT', recieved_)
         return (
             <SafeAreaView style={{ flex: 1, }}>
                
@@ -311,3 +308,4 @@ const overlayLabel = {
         }
     }
 }
+

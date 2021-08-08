@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState,useEffect } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -18,29 +18,65 @@ import Request from '../Inbox/Reqest'
 import Received from '../Inbox/Received'
 import SentItem from '../Inbox/SentItem'
 import Deleted from '../Inbox/Deleted'
+import { Auth } from "aws-amplify";
+import listUser from "../../AppSync/query/ListUser";
+import Loader from '../../Screen/Componentone/Loader';
+const InboxMainTab = (props) => {
+    console.log('InboxMainTab:',props.route)
+    let [loading, setLoading] = useState(true);
+    const [id, setId] = useState('')
+    const [selectClass, setSelectClass] = useState("Accepted");
+    const [TopArray, setTopArray] = useState(['Received', 'Accepted', 'Sent Items', 'Contacts', 'Requests', 'Deleted']);
+    let flatList_Ref;
+    const [recieved_,setRecieved]= useState([]); 
 
-export default class InboxMainTab extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            TopArray: ['Received', 'Accepted', 'Sent Items', 'Contacts', 'Requests', 'Deleted'],
-            SelectClass: 'Received'
+    useEffect(() => {
+        setLoading(true)
+        Auth.currentAuthenticatedUser()
+            .then((data) => {
+                console.log('user----::',data.username)
+                setId(data.username)
+                getRecieved(data.username);
+                // props.id=data.username
+                // getData(data.username)
+            });
+    }, []
+    )
+    const getRecieved = async (userId) => {
+        const { data } = await props.client.query({
+            query: listUser,
+            fetchPolicy: "network-only",
+            variables: {
+                id: `${userId}`,
+                type:'RECIEVED'
+            },
+        });
+        if(data && data.listUser && data.listUser.items){
+            // props.navigation.navigate('InboxMainTab');
+            props.route.params=data.listUser.items
+            setRecieved(data.listUser.items)
+            setLoading(false)
+            setSelectClass(['Recieved'])
+        }else{
+            setTopArray(['Accepted'])
         }
+        // console.log('getRecieved====>', data.listUser.items)
     }
-    SelectItemFun(item,index) {
+   const SelectItemFun=(item,index) =>{
         console.log('itemsss', item,index)
-        this.setState({ SelectClass: item })
-        this.flatList_Ref.scrollToIndex({animated: true,index:index,viewPosition: 0.5  });
+        setSelectClass(item)
+        // this.setState({ SelectClass: item })
+        flatList_Ref.scrollToIndex({animated: true,index:index,viewPosition: 0.5  });
         // index: index, animated: true, viewPosition: 0.5 
     }
-    render() {
+    // render() {
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 <View style={{ width: '95%', alignSelf: 'center', marginTop: 10 }}>
                     <FlatList horizontal={true}
-                        data={this.state.TopArray}
+                        data={TopArray}
                         ref={ref => {
-                            this.flatList_Ref = ref;  // <------ ADD Ref for the Flatlist 
+                            flatList_Ref = ref;  // <------ ADD Ref for the Flatlist 
                           }}
                         showsHorizontalScrollIndicator={false}
                         renderItem={({ item,index }) =>
@@ -49,7 +85,7 @@ export default class InboxMainTab extends Component {
                                     onPress={() => 
                                        {
                                         // this.goIndex()   
-                                        this.SelectItemFun(item,index)}
+                                        SelectItemFun(item,index)}
                                     
                                     } >
                                     <Text style={{ fontSize: 16, fontWeight: '500' }}>{item}</Text>
@@ -57,26 +93,26 @@ export default class InboxMainTab extends Component {
                             </View>} />
 
                 </View>
-                {this.state.SelectClass == 'Accepted' ?
-                    <Accepted style={{}} />
+                {selectClass == 'Accepted' ?
+                    <Accepted {...props} />
                     : null}
-                {this.state.SelectClass == 'Contacts' ?
-                    <Contact />
+                {selectClass == 'Contacts' ?
+                    <Contact {...props}/>
                     : null}
-                {this.state.SelectClass == 'Requests' ?
-                    <Request />
+                {selectClass == 'Requests' ?
+                    <Request {...props}/>
                     : null}
-                {this.state.SelectClass == 'Received' ?
-                    <Received />
+                {selectClass == 'Received' ?
+                    <Received  {...props} />
                     : null}
-                {this.state.SelectClass == 'Sent Items' ?
-                    <SentItem />
+                {selectClass == 'Sent Items' ?
+                    <SentItem {...props}/>
                     : null}
-                {this.state.SelectClass == 'Deleted' ?
-                    <Deleted />
+                {selectClass == 'Deleted' ?
+                    <Deleted {...props}/>
                     : null}
                 {/* <SentItem/> */}
             </SafeAreaView>
         )
     }
-}
+    export default InboxMainTab;

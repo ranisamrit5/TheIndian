@@ -18,7 +18,7 @@ import { graphql, withApollo } from "react-apollo";
 import { Auth } from "aws-amplify";
 import compose from "lodash.flowright";
 import Loader from '../../../Screen/Componentone/Loader';
-import { userDataMapper } from '../../mapper'
+import { userDataMapper } from '../../Mappers/mapper'
 import Getdata from "../../../AppSync/query/Auth/getData";
 import updateUser from "../../../AppSync/mutation/User/updateData";
 // import HeaderComponent from "../../../components/HeaderComponent";

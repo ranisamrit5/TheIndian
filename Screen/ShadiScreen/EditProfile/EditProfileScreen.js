@@ -15,12 +15,14 @@ import { Auth } from "aws-amplify";
 import {  withApollo } from "react-apollo";
 import compose from "lodash.flowright";
 import Getdata from "../../../AppSync/query/Auth/getData";
-import { userDataMapper } from '../../mapper'
+import { userDataMapper } from '../../Mappers/mapper'
+import { partnerDataMapper } from '../../Mappers/partnerMapper'
 const EditProfileScreen = (props) => {
     const [text, setText] = useState('')
     const [height, setHeight] = useState(100)
     const [id, setId] = useState()
     const [details, setDetails] = useState([])
+    const [partner, setPartner] = useState([])
     let [basicInfo, setBasicInfo] = useState({
         id: '',
         fname: '',
@@ -71,13 +73,17 @@ const EditProfileScreen = (props) => {
             let all = {}
             all.data = data.getUser
             let pDetails = userDataMapper(all)
+        
+            let partnerData= partnerDataMapper(data.getUser.partnerPreference)
+            // setPartner()
+            console.log('partnerData===>',partnerData)
             setDetails(pDetails)
         })
         setLoading(false);
     }
 
     // console.log('loading::', loading)
-    console.log('loading::', details)
+    // console.log('loading::', details)
 
     // const { bio, job_title, company, university, sex } = state;
 

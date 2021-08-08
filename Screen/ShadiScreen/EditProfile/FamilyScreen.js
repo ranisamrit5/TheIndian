@@ -26,7 +26,7 @@ import compose from "lodash.flowright";
 import Getdata from "../../../AppSync/query/Auth/getData";
 import updateUser from "../../../AppSync/mutation/User/updateData";
 import Loader from '../../../Screen/Componentone/Loader';
-import { userDataMapper } from '../../mapper'
+import { userDataMapper } from '../../Mappers/mapper'
 import awsConfig from '../../../aws-export';
 import {familyType,  familyStatus, familyVal} from "../../Const/const";
 const FamilyScreen = (props) => {

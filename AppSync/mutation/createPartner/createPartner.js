@@ -18,13 +18,17 @@ physicalStatus
 eatingHabit
 smokingHabit
 drinkingHabit
-religion
+partnerReligion
+motherTongue
 caste
 star
 manglik
 education
 occupation
-annualIncome
+annualIncome{
+  to
+  from
+}
 citizenship
 lookingForGender
 country
