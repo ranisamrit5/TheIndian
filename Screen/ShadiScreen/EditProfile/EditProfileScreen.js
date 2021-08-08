@@ -75,7 +75,8 @@ const EditProfileScreen = (props) => {
             let pDetails = userDataMapper(all)
         
             let partnerData= partnerDataMapper(data.getUser.partnerPreference)
-            // setPartner()
+            setPartner(partnerData)
+            console.log('partnerData===>',data.getUser.partnerPreference['motherTongue'])
             console.log('partnerData===>',partnerData)
             setDetails(pDetails)
         })
@@ -1021,7 +1022,7 @@ const EditProfileScreen = (props) => {
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
                                 fontWeight: "bold",flex:1,flexWrap:"wrap"
-                            }}>: 20 to 25</Text>
+                            }}>: {partner.ageRange}</Text>
 
 
                           
@@ -1042,7 +1043,7 @@ const EditProfileScreen = (props) => {
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
                                 fontWeight: "bold",flex:1,flexWrap:"wrap"
-                            }}>: 5'3"(160cm) to 6'0"</Text>
+                            }}>: {partner.heightRange}</Text>
 
 
 
@@ -1062,7 +1063,7 @@ const EditProfileScreen = (props) => {
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
                                 fontWeight: "bold", flex:1,flexWrap:"wrap"
-                            }}>: Naver Married</Text>
+                            }}>: {partner.maritalStatus}</Text>
 
 
                          
@@ -1083,7 +1084,7 @@ const EditProfileScreen = (props) => {
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
                                 fontWeight: "bold", flex:1,flexWrap:"wrap"
-                            }}>: Hindu:Teli</Text>
+                            }}>: {partner.partnerReligion}/{partner.caste}</Text>
 
 
                           
@@ -1104,7 +1105,7 @@ const EditProfileScreen = (props) => {
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
                                 fontWeight: "bold",flex:1,flexWrap:"wrap"
-                            }}>: Marathi</Text>
+                            }}>: {partner.motherTongue}</Text>
 
 
                          
