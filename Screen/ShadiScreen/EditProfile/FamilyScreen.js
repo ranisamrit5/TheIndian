@@ -11,12 +11,12 @@ import {
     StyleSheet,
     TouchableOpacity,
     Image,
- 
+
     Button, Platform
 } from 'react-native';
 import GetLocation from 'react-native-get-location'
 // var NodeGeocoder = require('node-geocoder');
-import {Picker} from 'native-base';
+import { Picker } from 'native-base';
 // import HeaderComponent from "../../../components/HeaderComponent";
 // import { BACKGROUNDCOLOR, BLACK, RED, WHITE } from "../../../themes/colors";
 import { RadioButton, Card } from 'react-native-paper';
@@ -28,7 +28,7 @@ import updateUser from "../../../AppSync/mutation/User/updateData";
 import Loader from '../../../Screen/Componentone/Loader';
 import { userDataMapper } from '../../Mappers/mapper'
 import awsConfig from '../../../aws-export';
-import {familyType,  familyStatus, familyVal} from "../../Const/const";
+import { familyType, familyStatus, familyVal } from "../../Const/const";
 const FamilyScreen = (props) => {
     const [value, setValue] = React.useState('Kgs');
     const [number, onChangeNumber] = React.useState(null);
@@ -37,28 +37,28 @@ const FamilyScreen = (props) => {
     const [id, setId] = useState()
     const [fathersOccupation, setFathersOccupation] = useState('')
     let [data, setData] = useState({
-        parentContact:'',
-        familyValue:'',
-        familyType:'',
-        familyStatus:'',
-        nativePlace:'',
-        familyLocation:"",
-        fathersOccupation:'',
-        mothersOccupation:'',
-        noOfBrothers:'0_0',
-        noOfSisters:'0_0',
-        aboutMyFamily:'',
-});
+        parentContact: '',
+        familyValue: '',
+        familyType: '',
+        familyStatus: '',
+        nativePlace: '',
+        familyLocation: "",
+        fathersOccupation: '',
+        mothersOccupation: '',
+        noOfBrothers: '0_0',
+        noOfSisters: '0_0',
+        aboutMyFamily: '',
+    });
     let [loading, setLoading] = useState(true);
     const [basicInfo, setBasicInfo] = useState({
         id: '',
-        familyDetails:{}
+        familyDetails: {}
     })
     useEffect(() => {
         setLoading(true)
         Auth.currentAuthenticatedUser()
             .then((data) => {
-                console.log('user----::',data)
+                console.log('user----::', data)
                 setId(data.username)
                 // props.id=data.username
                 getData(data.username)
@@ -81,17 +81,17 @@ const FamilyScreen = (props) => {
             let pDetails = userDataMapper(all)
             // console.log('IN===>',pDetails.familyDetails.noOfBrothers);
             const { noOfChildren, maritalStatus_, eatingHabit, smokingHabit, drinkingHabit, manglik, subcaste,
-                religion, caste, familyDetails, gotram, motherTongue, dob, aboutMe, fname, profileCreatedFor,gender_,height_,physicalStatus_
+                religion, caste, familyDetails, gotram, motherTongue, dob, aboutMe, fname, profileCreatedFor, gender_, height_, physicalStatus_
             } = pDetails
 
 
 
-                setData(familyDetails)
+            setData(familyDetails)
 
-                if (familyDetails==null){
-                    setData({ ...data, noOfBrothers: '0_0' })
-                    setData({ ...data, noOfSisters: '0_0' })
-                }
+            if (familyDetails == null) {
+                setData({ ...data, noOfBrothers: '0_0' })
+                setData({ ...data, noOfSisters: '0_0' })
+            }
 
             // console.log('IN===>',familyDetails);
             // setMaterial()
@@ -101,8 +101,8 @@ const FamilyScreen = (props) => {
                 ...basicInfo,
                 id: user,
                 profileCreatedFor: profileCreatedFor,
-                maritalStatus:  maritalStatus_,
-                noOfChildren:  noOfChildren,
+                maritalStatus: maritalStatus_,
+                noOfChildren: noOfChildren,
                 eatingHabit: eatingHabit,
                 smokingHabit: smokingHabit,
                 drinkingHabit: drinkingHabit,
@@ -111,14 +111,14 @@ const FamilyScreen = (props) => {
                 religion: religion,
                 caste: caste,
                 subcaste: subcaste,
-                gotram:gotram,
+                gotram: gotram,
                 height: height_,
                 motherTongue: motherTongue,
                 dob: dob,
                 aboutMe: aboutMe,
                 fname: fname,
-                gender:gender_,
-                familyDetails:familyDetails
+                gender: gender_,
+                familyDetails: familyDetails
 
             });
         }
@@ -126,21 +126,21 @@ const FamilyScreen = (props) => {
     }
     const handleSubmit = async (e) => {
         setLoading(true)
-        let familyDetails={}
-        familyDetails.parentContact=data.parentContact;
-        familyDetails.familyValue=data.familyValue;
-        familyDetails.familyType=data.familyType;
-        familyDetails.familyStatus=data.familyStatus;
-        familyDetails.nativePlace=data.nativePlace;
-        familyDetails.fathersOccupation=data.fathersOccupation;
-        familyDetails.mothersOccupation=data.mothersOccupation;
-        familyDetails.noOfBrothers=data.noOfBrothers;
-        familyDetails.noOfSisters=data.noOfSisters;
-        familyDetails.aboutMyFamily=data.aboutMyFamily;
-        familyDetails.familyLocation=data.familyLocation;
-        
-        let data_ =basicInfo;
-        data_.familyDetails=familyDetails
+        let familyDetails = {}
+        familyDetails.parentContact = data.parentContact;
+        familyDetails.familyValue = data.familyValue;
+        familyDetails.familyType = data.familyType;
+        familyDetails.familyStatus = data.familyStatus;
+        familyDetails.nativePlace = data.nativePlace;
+        familyDetails.fathersOccupation = data.fathersOccupation;
+        familyDetails.mothersOccupation = data.mothersOccupation;
+        familyDetails.noOfBrothers = data.noOfBrothers;
+        familyDetails.noOfSisters = data.noOfSisters;
+        familyDetails.aboutMyFamily = data.aboutMyFamily;
+        familyDetails.familyLocation = data.familyLocation;
+
+        let data_ = basicInfo;
+        data_.familyDetails = familyDetails
         delete data_.familyDetails.__typename;
 
 
@@ -154,75 +154,58 @@ const FamilyScreen = (props) => {
         }
         setLoading(false)
     }
-const getLocation=async()=>{
-   await GetLocation.getCurrentPosition({
-        enableHighAccuracy: true,
-        timeout: 15000,
-    })
-    .then(location => {
-        console.log(location);
-        // displayLocation(location.latitude,location.longitude)
-    })
-    .catch(error => {
-        const { code, message } = error;
-        console.warn(code, message);
-    })
-}
+    const getLocation = async () => {
+        await GetLocation.getCurrentPosition({
+            enableHighAccuracy: true,
+            timeout: 15000,
+        })
+            .then(location => {
+                console.log(location);
+                // displayLocation(location.latitude,location.longitude)
+            })
+            .catch(error => {
+                const { code, message } = error;
+                console.warn(code, message);
+            })
+    }
 
-// const displayLocation= async (latitude,longitude)=>{
-//     var options = {
-//         provider: 'google',
-//         httpAdapter: 'https', // Default
-//         apiKey: awsConfig.googleApiKey, // for Mapquest, OpenCage, Google Premier
-//         formatter: 'json' // 'gpx', 'string', ...
-//       };
-//       let geocoder = await NodeGeocoder(options);
-//       await geocoder.reverse({lat:latitude, lon:longitude}, function(err, res) {
-//         console.log(JSON.stringify(res));
-//       });
-//   };
-    console.log('data=====>======',data)
+    // const displayLocation= async (latitude,longitude)=>{
+    //     var options = {
+    //         provider: 'google',
+    //         httpAdapter: 'https', // Default
+    //         apiKey: awsConfig.googleApiKey, // for Mapquest, OpenCage, Google Premier
+    //         formatter: 'json' // 'gpx', 'string', ...
+    //       };
+    //       let geocoder = await NodeGeocoder(options);
+    //       await geocoder.reverse({lat:latitude, lon:longitude}, function(err, res) {
+    //         console.log(JSON.stringify(res));
+    //       });
+    //   };
+    console.log('data=====>======', data)
     return (
-
-        <ScrollView>
-<Loader loading={loading} />
-            <View style={{ flexDirection: 'row', width: '100%', alignItems: 'center', backgroundColor: '#FF5733', height: 50 }}>
-                <TouchableOpacity style={{ marginLeft: 20 }} onPress={() => props.navigation.pop()}>
-                    <Image style={{ width: 20, height: 20, tintColor: 'white', transform: [{ rotate: '180deg' }] }}
-                        source={require('../../../Imagess/ErrorVector.png')} />
-                </TouchableOpacity>
-                <View style={{ width: '80%' }}>
-                    <Text style={{ alignSelf: 'center', fontSize: 18, fontWeight: "bold", color: 'white' }}>My Profile</Text>
+        <SafeAreaView>
+            <ScrollView>
+                <Loader loading={loading} />
+                <View style={styles.Hadera}>
+                    <TouchableOpacity style={{ marginLeft: 20 }} onPress={() => props.navigation.navigate('EditProfileScreen')}>
+                        <Image style={styles.Imagehadera}
+                            source={require('../../../Imagess/ErrorVector.png')} />
+                    </TouchableOpacity>
+                    <View style={{ width: '80%' }}>
+                        <Text style={styles.textStyle}>{"My Profile"}</Text>
+                    </View>
                 </View>
-            </View>
-            <Text style={{ alignSelf: 'center', fontSize: 18, fontWeight: "600", color: 'gray', marginTop: 10 }}>Family</Text>
+                <Text style={styles.hadertextStyle}>{"Family"}</Text>
+                <View style={styles.mainBody}>
 
-            <View style={{ backgroundColor: "#fff", marginTop: 10 }}>
-                <SafeAreaView style={styles.mainBody}>
-
-
-                    <View style={{
-                        justifyContent: "space-between",
-                        flexDirection: "row", padding: 13,
-                    }}>
-                        <View style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row", padding: 13,
-                        }}>
-                            <Text style={{
-                                color: "gray", fontSize: 15,
-                                fontWeight: "bold"
-                            }}>Father's Status</Text>
-
-
-                        </View>
-
-                        <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
+                    <View style={styles.haderRow}>
+                        <Text style={styles.textBold}>{"Father's Status"}</Text>
+                        <View style={styles.pickerStyle}>
                             <Picker
                                 selectedValue={data.fathersOccupation}
                                 style={{ height: 40, width: 200, }}
                                 onValueChange={(itemValue, itemIndex) => {
-                                    setData({ ...data, fathersOccupation : itemValue })
+                                    setData({ ...data, fathersOccupation: itemValue })
                                 }}
                             >
                                 <Picker.Item label="Employed" value="Employed" />
@@ -233,27 +216,13 @@ const getLocation=async()=>{
                             </Picker>
                         </View>
                     </View>
-                    <View style={{
-                        justifyContent: "space-between",
-                        flexDirection: "row", padding: 13,
-                    }}>
-                        <View style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row", padding: 13,
-                        }}>
-                            <Text style={{
-                                color: "gray", fontSize: 15,
-                                fontWeight: "bold"
-                            }}>Mother's Status</Text>
-
-
-                        </View>
-
-                        <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
+                    <View style={styles.haderRow}>
+                        <Text style={styles.textBold}>{"Mother's Status"}</Text>
+                        <View style={styles.pickerStyle}>
                             <Picker
                                 selectedValue={data.mothersOccupation}
                                 style={{ height: 40, width: 200, }}
-                                onValueChange={(itemValue, itemIndex) =>  setData({ ...data, mothersOccupation : itemValue })}
+                                onValueChange={(itemValue, itemIndex) => setData({ ...data, mothersOccupation: itemValue })}
                             >
                                 <Picker.Item label="Employed" value="Employed" />
                                 <Picker.Item label="Business" value="Business" />
@@ -263,123 +232,67 @@ const getLocation=async()=>{
                             </Picker>
                         </View>
                     </View>
-                    <View style={{
-                        justifyContent: "space-between",
-                        flexDirection: "row", padding: 13,
-
-                    }}>
-                        <View style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row", padding: 13,
-                        }}>
-                            <Text style={{
-                                color: "gray", fontSize: 15,
-                                fontWeight: "bold"
-                            }}>Family Location</Text>
-
-
-                        </View>
-
-                        <View style={{
-                            borderColor: "gray", borderWidth: 1,
-                            borderRadius: 5, height: 40,
-                        }}>
+                    <View style={styles.haderRow}>
+                        <Text style={styles.textBold}>{"Family Location"}</Text>
+                        <View style={styles.pickerStyle}>
                             <TextInput
-                                style={{ height: 40, width: 200, }}
+                                style={{ height: 40, width: 195, }}
                                 value={data.familyLocation}
                                 // placeholder="Type here to translate!"
-                                onChangeText={text => setData({ ...data, familyLocation : text })}
-                                // defaultValue={text}
+                                onChangeText={text => setData({ ...data, familyLocation: text })}
+                            // defaultValue={text}
                             />
-
                         </View>
 
                     </View>
-
-                    <View style={{
-                        justifyContent: "space-between",
-                        flexDirection: "row", padding: 13,
-
-                    }}>
-                        <View style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row", padding: 13,
-                        }}>
-                            <Text style={{
-                                color: "gray", fontSize: 15,
-                                fontWeight: "bold"
-                            }}>Native Place</Text>
-
-
-                        </View>
-
-                        <View style={{
-                            borderColor: "gray", borderWidth: 1,
-                            borderRadius: 5, height: 40,
-                        }}>
+                    <View style={styles.haderRow}>
+                        <Text style={styles.textBold}>{"Native Place"}</Text>
+                        <View style={styles.pickerStyle}>
                             <TextInput
                                 value={data.nativePlace}
-                                style={{ height: 40, width: 200, }}
+                                style={{ height: 40, width: 195, }}
                                 // placeholder="Type here to translate!"
-                                onChangeText={text => setData({ ...data, nativePlace : text })}
-                                // defaultValue={text}
+                                onChangeText={text => setData({ ...data, nativePlace: text })}
+                            // defaultValue={text}
                             />
-
                         </View>
-
                     </View>
 
-                    <View style={{
-                        justifyContent: "space-between",
-                        flexDirection: "row", padding: 13,
+                    <View style={styles.haderRow}>
+                        <Text style={styles.textBold}>{"No.of Siblings"}</Text>
 
-                    }}>
-                        <View style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row", padding: 13,
-                        }}>
-                            <Text style={{
-                                color: "gray", fontSize: 15,
-                                fontWeight: "bold"
-                            }}>No.of Siblings</Text>
-
-
-                        </View>
-
-                        <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, width: 200 }}>
-                            <Text style={{
-                                color: "gray", fontSize: 15,
-                                fontWeight: "bold", alignSelf: "center",marginTop:10
-                            }}>No.of Brother's</Text>
-
+                        <View style={styles.ViewA}>
+                            <Text style={styles.text}>{"No.of Brother's"}</Text>
                             <View style={{ flexDirection: "row", justifyContent: "space-between", padding: 16 }}>
 
                                 <TextInput
-                                    style={{ height: 40, width: 40, borderColor: "gray", borderWidth: 1, borderRadius: 5, }}
+                                    style={{ height: 40, width: 40, borderColor: "#0000001A", borderWidth: 1, borderRadius: 5, }}
                                     // placeholder="Type here to translate!"
                                     onChangeText={text => {
                                         // if(text){
-                                        let input=`${text}_${data.noOfBrothers ? data.noOfBrothers.split('_')[1] : "0"}`
-                                        setData({ ...data, noOfBrothers : input })}
-                                    // }
+                                        let input = `${text}_${data.noOfBrothers ? data.noOfBrothers.split('_')[1] : "0"}`
+                                        setData({ ...data, noOfBrothers: input })
+                                    }
+                                        // }
                                     }
                                     defaultValue={'0'}
-                                    value={!data.noOfBrothers || data.noOfBrothers == "0"?"0":data.noOfBrothers.split('_')[0]}
+                                    value={!data.noOfBrothers || data.noOfBrothers == "0" ? "0" : data.noOfBrothers.split('_')[0]}
                                     keyboardType="number-pad"
                                 />
-                           <Image style={{ width: 40, height: 40, borderRadius: 10, }}
+                                <Image style={{ width: 40, height: 40, borderRadius: 10, }}
                                     source={require('../../../Imagess/avtar.png')} />
                                 <TextInput
-                                    style={{ height: 40, width: 40, borderColor: "gray", borderWidth: 1, borderRadius: 5, }}
+                                    style={{ height: 40, width: 40, borderColor: "#0000001A", borderWidth: 1, borderRadius: 5, }}
                                     // placeholder="Type here to translate!"
                                     // console.log(data.noOfBrothers)
-                                    value={!data.noOfBrothers || data.noOfBrothers == "0" ? "0":data.noOfBrothers.split('_')[1]}
+                                    value={!data.noOfBrothers || data.noOfBrothers == "0" ? "0" : data.noOfBrothers.split('_')[1]}
                                     onChangeText={text => {
-                                       
-                                        let input=`${data.noOfBrothers ? data.noOfBrothers.split('_')[0] : "0"}_${text}`
-                                        console.log('INPUT',input)
-                                        setData({ ...data, noOfBrothers : input })}
-                                    
+
+                                        let input = `${data.noOfBrothers ? data.noOfBrothers.split('_')[0] : "0"}_${text}`
+                                        console.log('INPUT', input)
+                                        setData({ ...data, noOfBrothers: input })
+                                    }
+
                                     }
                                     defaultValue={'0'}
                                     // value={number}
@@ -387,36 +300,22 @@ const getLocation=async()=>{
 
                                 />
                             </View>
-                            <View style={{ flexDirection: "row",  padding: 10,justifyContent:"space-between" }}>
-                           <Text style={{
-                                color: "gray", fontSize: 15,
-                                fontWeight: "600",bottom:20
-                            }}>Not Married</Text>
-
-                         <Text style={{
-                                color: "gray", fontSize: 15,
-                                fontWeight: "600",bottom:20
-                            }}>Married</Text>
-                           </View>
-                            <Text style={{
-                                color: "gray", fontSize: 15,
-                                fontWeight: "bold", alignSelf: "center",marginTop:10
-                            }}>No.of Sister(s)</Text>
-
-
+                            <View style={{ flexDirection: "row", padding: 10, justifyContent: "space-between" }}>
+                                <Text style={{ color: "gray", fontSize: 15, fontWeight: "600", bottom: 20 }}>{"Not Married"}</Text>
+                                <Text style={{ color: "gray", fontSize: 15, fontWeight: "600", bottom: 20 }}>{"Married"}</Text>
+                            </View>
+                            <Text style={{ color: "gray", fontSize: 15, fontWeight: "bold", alignSelf: "center", marginTop: 10 }}>{"No.of Sister(s)"}</Text>
                             <View style={{ flexDirection: "row", justifyContent: "space-between", padding: 16 }}>
-
-
-
                                 <TextInput
-                                    style={{ height: 40, width: 40, borderColor: "gray", borderWidth: 1, borderRadius: 5, }}
+                                    style={{ height: 40, width: 40, borderColor: "#0000001A", borderWidth: 1, borderRadius: 5, }}
                                     // placeholder="Type here to translate!"
-                                    value={!data.noOfSisters || data.noOfSisters == "0"?"0":data.noOfSisters.split('_')[0]}
+                                    value={!data.noOfSisters || data.noOfSisters == "0" ? "0" : data.noOfSisters.split('_')[0]}
                                     onChangeText={text => {
                                         // if(text){/
-                                        let input=`${text}_${data.noOfSisters ? data.noOfSisters.split('_')[1] : "0"}`
-                                        setData({ ...data, noOfSisters : input })}
-                                    // }
+                                        let input = `${text}_${data.noOfSisters ? data.noOfSisters.split('_')[1] : "0"}`
+                                        setData({ ...data, noOfSisters: input })
+                                    }
+                                        // }
                                     }
                                     defaultValue={'0'}
                                     keyboardType="number-pad"
@@ -426,147 +325,88 @@ const getLocation=async()=>{
                                 <Image style={{ width: 35, height: 35, borderRadius: 10, }}
                                     source={require('../../../Imagess/girl.png')} />
                                 <TextInput
-                                    style={{ height: 40, width: 40, borderColor: "gray", borderWidth: 1, borderRadius: 5, }}
-                                    value={!data.noOfSisters || data.noOfSisters == "0"?"0":data.noOfSisters.split('_')[1]}
+                                    style={{ height: 40, width: 40, borderColor: "#0000001A", borderWidth: 1, borderRadius: 5, }}
+                                    value={!data.noOfSisters || data.noOfSisters == "0" ? "0" : data.noOfSisters.split('_')[1]}
                                     onChangeText={text => {
                                         // if(text){
-                                            // if(text){
-                                            let input=`${data.noOfSisters ? data.noOfSisters.split('_')[0] : "0"}_${text}`
-                                        setData({ ...data, noOfSisters : input })}
-                                            // }
+                                        // if(text){
+                                        let input = `${data.noOfSisters ? data.noOfSisters.split('_')[0] : "0"}_${text}`
+                                        setData({ ...data, noOfSisters: input })
+                                    }
+                                        // }
                                         // }
                                     }
                                     defaultValue={'0'}
                                     keyboardType="number-pad"
                                 />
                             </View>
-                            <View style={{ flexDirection: "row",  padding: 10,justifyContent:"space-between", }}>
-                           <Text style={{
-                                color: "gray", fontSize: 15,
-                                fontWeight: "600",bottom:20
-                            }}>Not Married</Text>
-
-                         <Text style={{
-                                color: "gray", fontSize: 15,
-                                fontWeight: "600",bottom:20
-                            }}>Married</Text>
-                            
-                           </View>
-
+                            <View style={{ flexDirection: "row", padding: 10, justifyContent: "space-between", }}>
+                                <Text style={{ color: "gray", fontSize: 15, fontWeight: "600", bottom: 20 }}>{"Not Married"}</Text>
+                                <Text style={{ color: "gray", fontSize: 15, fontWeight: "600", bottom: 20 }}>{"Married"}</Text>
+                            </View>
                         </View>
 
                     </View>
-                    <View style={{
-                        justifyContent: "space-between",
-                        flexDirection: "row", padding: 13,
-
-                    }}>
-                        <View style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row", padding: 13,
-                        }}>
-                            <Text style={{
-                                color: "gray", fontSize: 15,
-                                fontWeight: "bold"
-                            }}>Family Type</Text>
-
-
-                        </View>
-
-                        <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
+                    <View style={styles.haderRow}>
+                        <Text style={styles.textBold}>{"Family Type"}</Text>
+                        <View style={styles.pickerStyle}>
                             <Picker
                                 selectedValue={data.familyType}
                                 style={{ height: 40, width: 200, }}
                                 onValueChange={
-                                    (itemValue, itemIndex) => setData({ ...data, familyType : itemValue })
-                            }
+                                    (itemValue, itemIndex) => setData({ ...data, familyType: itemValue })
+                                }
                             >
-                               {familyType.map((item, index) => {
-                                            return (< Picker.Item label={item.title} value={item.value} key={index} />);
-                                        })}
+                                {familyType.map((item, index) => {
+                                    return (< Picker.Item label={item.title} value={item.value} key={index} />);
+                                })}
                             </Picker>
-                            <View style={{ height: 10 }}></View>
                         </View>
-
                     </View>
-                    <View style={{
-                        justifyContent: "space-between",
-                        flexDirection: "row", padding: 13,
-
-                    }}>
-                        <View style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row", padding: 13,
-                        }}>
-                            <Text style={{
-                                color: "gray", fontSize: 15,
-                                fontWeight: "bold"
-                            }}>Family Values</Text>
-                           
-
-                        </View>
-
-                        <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
+                    <View style={styles.haderRow}>
+                        <Text style={styles.textBold}>{"Family Values"}</Text>
+                        <View style={styles.pickerStyle}>
                             <Picker
                                 selectedValue={data.familyValue}
                                 style={{ height: 40, width: 200, }}
-                                onValueChange={ (itemValue, itemIndex) => setData({ ...data, familyValue : itemValue })}
+                                onValueChange={(itemValue, itemIndex) => setData({ ...data, familyValue: itemValue })}
                             >
-                              {familyVal.map((item, index) => {
-                                            return (< Picker.Item label={item.title} value={item.value} key={index} />);
-                                        })}
+                                {familyVal.map((item, index) => {
+                                    return (< Picker.Item label={item.title} value={item.value} key={index} />);
+                                })}
 
                             </Picker>
-                            <View style={{ height: 10 }}></View>
                         </View>
                     </View>
-                    <View style={{
-                        justifyContent: "space-between",
-                        flexDirection: "row", padding: 13,
-
-                    }}>
-                        <View style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row", padding: 13,
-                        }}>
-                            <Text style={{
-                                color: "gray", fontSize: 15,
-                                fontWeight: "bold"
-                            }}>Affluence Level</Text>
-                           
-
-                        </View>
-
-                        <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
+                    <View style={styles.haderRow}>
+                        <Text style={styles.textBold}>{"Affluence Level"}</Text>
+                        <View style={styles.pickerStyle}>
                             <Picker
                                 selectedValue={data.familyStatus}
                                 style={{ height: 40, width: 200, }}
-                                onValueChange={ (itemValue, itemIndex) => setData({ ...data, familyStatus : itemValue })}
+                                onValueChange={(itemValue, itemIndex) => setData({ ...data, familyStatus: itemValue })}
                             >
-                          {familyStatus.map((item, index) => {
-                                            return (< Picker.Item label={item.title} value={item.value} key={index} />);
-                                        })}
+                                {familyStatus.map((item, index) => {
+                                    return (< Picker.Item label={item.title} value={item.value} key={index} />);
+                                })}
                             </Picker>
-                            <View style={{ height: 10 }}></View>
                         </View>
                     </View>
-                        
-                    
-                    <View style={{ alignSelf: "center", }}>
+                    <View style={{ alignSelf: "center", marginTop: 16 }}>
                         <TouchableOpacity
                             style={styles.SubmitButtonStyle1}
-                            activeOpacity={.10} 
+                            activeOpacity={.10}
                             onPress={() => { handleSubmit() }}
-                            >
+                        >
 
-                            <Text style={styles.TextStyle1}>Update</Text>
+                            <Text style={styles.TextStyle1}>{"Update"}</Text>
 
                         </TouchableOpacity>
                     </View>
-                </SafeAreaView>
-            </View>
-        </ScrollView >
+                </View>
 
+            </ScrollView>
+        </SafeAreaView>
     );
 }
 
@@ -579,9 +419,77 @@ export default profile;
 export const styles = StyleSheet.create({
     mainBody: {
         flex: 1,
-        // backgroundColor: "#fff",
+        backgroundColor: "#fff",
+        marginLeft: 10,
+        marginRight: 10,
+        marginTop: 16,
+        marginBottom: 16,
+        paddingBottom: 16,
+        elevation: 5
     },
-
+    Hadera: {
+        flexDirection: 'row',
+        width: '100%',
+        alignItems: 'center',
+        backgroundColor: '#FF5733',
+        height: 50
+    },
+    Imagehadera: {
+        width: 20,
+        height: 20,
+        tintColor: 'white',
+        transform: [{ rotate: '180deg' }]
+    },
+    textStyle: {
+        alignSelf: 'center',
+        fontSize: 18,
+        fontWeight: "bold",
+        color: 'white'
+    },
+    hadertextStyle: {
+        alignSelf: 'center',
+        fontSize: 17,
+        fontWeight: "600",
+        color: 'gray',
+        marginTop: 8
+    },
+    haderRow: {
+        justifyContent: "space-between",
+        flexDirection: "row",
+        padding: 13,
+    },
+    textBold: {
+        color: "gray",
+        fontSize: 15,
+        fontWeight: "bold",
+        alignSelf: "center",
+    },
+    ViewA: {
+        borderColor: "#0000001A",
+        borderWidth: 1,
+        borderRadius: 5,
+        width: 200
+    },
+    inputtext: {
+        height: 40,
+        width: 40,
+        borderColor: "#0000001A",
+        borderWidth: 1,
+        borderRadius: 5,
+    },
+    text: {
+        color: "gray",
+        fontSize: 15,
+        fontWeight: "bold",
+        alignSelf: "center",
+        marginTop: 10
+    },
+    pickerStyle: {
+        borderColor: "#0000001A",
+        borderWidth: 1,
+        borderRadius: 5,
+        height: 40
+    },
     SubmitButtonStyle1: {
         width: 150,
         height: 40,
@@ -592,14 +500,14 @@ export const styles = StyleSheet.create({
         // marginLeft: 100,
         // marginRight: 100,
         backgroundColor: '#FF5733',
-        borderRadius: 10,
+        borderRadius: 5,
         borderWidth: 1,
         borderColor: '#FF5733',
         // bottom: 60
     },
 
     TextStyle1: {
-        color: 'black',
+        color: '#fff',
         textAlign: 'center',
         fontWeight: "bold",
         fontSize: 14,

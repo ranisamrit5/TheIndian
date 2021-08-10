@@ -47,7 +47,7 @@ import Lifestyles from './Screen/ShadiScreen/EditProfile/Lifestyles';
 import PartnerBasicinfo from './Screen/ShadiScreen/EditProfile/PartnerBasicinfo';
 import NetworkScreen from './Screen/NetworkScreen';
 import MaritalStatus from './Screen/MaritalStatus';
-
+import Myselftextinput from './Screen/ShadiScreen/EditProfile/Myselftextinput'; 
 
 //============ Rating Star =====================
 import RatingStar from './Screen/Rating/RatingStar'
@@ -160,7 +160,7 @@ export default class app extends Component {
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}  >
       
-          <Stack.Screen name="SplashScreen" component={SplashScreen} />
+          <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
           <Stack.Screen name="NetworkScreen" component={NetworkScreen} />
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
           <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
@@ -177,8 +177,9 @@ export default class app extends Component {
           <Stack.Screen name='AccountSettings' component={AccountSettings}/>
           <Stack.Screen name="MaritalStatus" component={MaritalStatus} />
           <Stack.Screen name='BasicInfoScreen' component={BasicInfoScreen}/>
+          <Stack.Screen name='Myselftextinput' component={Myselftextinput}/>
           <Stack.Screen name='Location' component={Location}/>   
-          <Stack.Screen name='EditProfileScreen' component={EditProfileScreen}/>
+          {/* <Stack.Screen name='EditProfileScreen' component={EditProfileScreen}/> */}
           <Stack.Screen name='ReligiousScreen' component={ReligiousScreen}/>
           <Stack.Screen name='Lifestyles' component={Lifestyles}/>
           <Stack.Screen name='PartnerBasicinfo' component={PartnerBasicinfo}/>
@@ -192,6 +193,8 @@ export default class app extends Component {
           <Stack.Screen name='Meet' component={Meet}/>
           <Stack.Screen name='Recent' component={Recent}/>
           {/* <Stack.Screen name='MaritalStatus' component={MaritalStatus}/> */}
+       
+          
           </Stack.Navigator>
       </NavigationContainer>
       </Provider>

@@ -145,12 +145,12 @@ export const partnerDataMapper = JM.makeConverter({
     //     }
     //     return 'Not Specified';
     // },
-    // religion: function (i) {
-    //     if (i && i.religion !== 'undefined') {
-    //         return i.religion;
-    //     }
-    //     return 'Not Specified';
-    // },
+    motherTongue: function (i) {
+        if (i && i.motherTongue !== 'undefined') {
+            return i.motherTongue.toString();
+        }
+        return 'Not Specified';
+    },
     smokingHabit: function (i) {
         if (i && i.smokingHabit !== 'undefined') {
             return i.smokingHabit;

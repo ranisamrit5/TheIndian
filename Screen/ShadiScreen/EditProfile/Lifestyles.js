@@ -22,9 +22,7 @@ const Lifestyles = (props) => {
     return (
 
         <ScrollView style={{ backgroundColor: "#fff" }}>
-
-
-            <View style={{ flexDirection: 'row', width: '100%', alignItems: 'center', backgroundColor: '#FF5733', height: 50 }}>
+           <View style={{ flexDirection: 'row', width: '100%', alignItems: 'center', backgroundColor: '#FF5733', height: 50 }}>
                 <TouchableOpacity style={{ marginLeft: 20 }} onPress={() => props.navigation.pop()}>
                     <Image style={{ width: 20, height: 20, tintColor: 'white', transform: [{ rotate: '180deg' }] }}
                         source={require('../../../Imagess/ErrorVector.png')} />
