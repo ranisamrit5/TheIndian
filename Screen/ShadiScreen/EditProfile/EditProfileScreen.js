@@ -1143,7 +1143,7 @@ const EditProfileScreen = (props) => {
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
                                 fontWeight: "bold",flex:1,flexWrap:"wrap"
-                            }}>: India</Text>
+                            }}>: {partner.country}</Text>
 
 
                             
@@ -1185,7 +1185,7 @@ const EditProfileScreen = (props) => {
                             <Text style={{
                                 color: "#454F63", fontSize: 15,
                                 fontWeight: "bold",flex:1,flexWrap:"wrap"
-                            }}>: </Text>
+                            }}>: {partner.city}</Text>
 
 
                            
