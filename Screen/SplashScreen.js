@@ -44,7 +44,7 @@ const SplashScreen =  (props) => {
       // if (connected)
         props.navigation.navigate('TabNavigation');
     }).catch((error)=>{
-      // props.navigation.navigate('LoginScreen');
+      props.navigation.navigate('LoginScreen');
       console.log('error----::',error)
     })
 

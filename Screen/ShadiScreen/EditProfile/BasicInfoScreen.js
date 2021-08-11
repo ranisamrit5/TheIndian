@@ -11,7 +11,7 @@ import {
     TouchableOpacity,
     Image,
     TextInput,
-    Pressable,YellowBox,
+    Pressable, YellowBox,
     Button, Platform
 } from 'react-native';
 import calendar from '../../../Imagess/calendar.png'
@@ -27,8 +27,8 @@ import updateUser from "../../../AppSync/mutation/User/updateData";
 import Loader from '../../../Screen/Componentone/Loader';
 import { userDataMapper } from '../../Mappers/mapper'
 import {
-    profileoption,  statusoption, heightoption, 
-     castoption
+    profileoption, statusoption, heightoption,
+    castoption
 } from "../../Const/const";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
@@ -66,7 +66,7 @@ const BasicInfoScreen = (props) => {
         smokingHabit: '',
         drinkingHabit: '',
         aboutMe: '',
-        gender:''
+        gender: ''
     })
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
@@ -136,11 +136,11 @@ const BasicInfoScreen = (props) => {
             all.data = data.getUser
             let pDetails = userDataMapper(all)
             setData(userData)
-            
+
             const { noOfChildren, maritalStatus_, eatingHabit, smokingHabit, drinkingHabit, manglik, physicalStatus,
-                religion, caste, star, height, motherTongue, dob, aboutMe, fname, profileCreatedFor,gender_,height_,physicalStatus_
+                religion, caste, star, height, motherTongue, dob, aboutMe, fname, profileCreatedFor, gender_, height_, physicalStatus_
             } = pDetails
-            console.log('IN===>',maritalStatus_);
+            console.log('IN===>', maritalStatus_);
 
             setMaterial()
             setGender(gender)
@@ -148,9 +148,9 @@ const BasicInfoScreen = (props) => {
                 ...basicInfo,
                 id: user,
                 profileCreatedFor: profileCreatedFor,
-                maritalStatus:  maritalStatus_,
+                maritalStatus: maritalStatus_,
                 // maritalStatus: maritalStatus !== null ? maritalStatus : 0,
-                noOfChildren:  noOfChildren,
+                noOfChildren: noOfChildren,
                 eatingHabit: eatingHabit,
                 smokingHabit: smokingHabit,
                 drinkingHabit: drinkingHabit,
@@ -164,7 +164,7 @@ const BasicInfoScreen = (props) => {
                 dob: dob,
                 aboutMe: aboutMe,
                 fname: fname,
-                gender:gender_,
+                gender: gender_,
 
             });
         }
@@ -194,355 +194,220 @@ const BasicInfoScreen = (props) => {
     const showTimepicker = () => {
         showMode('time');
     };
-    console.log('----->',basicInfo.manglik)
+    console.log('----->', basicInfo.manglik)
     return (
-
-        <View safe style={styles.container}>
+        <SafeAreaView style={styles.safeContainer}>
             <Loader loading={loading} />
-            <Spinner visible={props.isLoading} />
-            <SafeAreaView style={styles.safeContainer}>
-                <KeyboardAwareScrollView nestedScrollEnabled={true} keyboardShouldPersistTaps={'always'} style={styles.keyBordContainer}>
-                    <ScrollView nestedScrollEnabled={true}>
-
-                        <View style={{ flexDirection: 'row', width: '100%', alignItems: 'center', backgroundColor: '#FF5733', height: 50 }}>
-                            <TouchableOpacity style={{ marginLeft: 20 }} onPress={() => props.navigation.pop()}>
-                                <Image style={{ width: 20, height: 20, tintColor: 'white', transform: [{ rotate: '180deg' }] }}
-                                    source={require('../../../Imagess/ErrorVector.png')} />
-                            </TouchableOpacity>
-                            <View style={{ width: '80%' }}>
-                                <Text style={{ alignSelf: 'center', fontSize: 18, fontWeight: "bold", color: 'white' }}>My Profile</Text>
-                            </View>
+            <KeyboardAwareScrollView nestedScrollEnabled={true} keyboardShouldPersistTaps={'always'} style={styles.keyBordContainer}>
+                <ScrollView nestedScrollEnabled={true}>
+                    <View style={styles.Hadera}>
+                        <TouchableOpacity style={{ marginLeft: 20 }} onPress={() => props.navigation.navigate('EditProfileScreen')}>
+                            <Image style={styles.Imagehadera}
+                                source={require('../../../Imagess/ErrorVector.png')} />
+                        </TouchableOpacity>
+                        <View style={{ width: '80%' }}>
+                            <Text style={styles.textStyle}>{"My Profile"}</Text>
                         </View>
-                        <Text style={{ alignSelf: 'center', fontSize: 18, fontWeight: "600", color: 'gray', marginTop: 20 }}>Basic Info</Text>
-
-                        <View style={{ backgroundColor: "#fff", marginTop: 10 }}>
-
-
-                            <View style={{
-                                justifyContent: "space-between",
-                                flexDirection: "row", padding: 13,
-                            }}>
-                                <View style={{
-                                    justifyContent: "space-between",
-                                    flexDirection: "row", alignSelf: "center"
-                                }}>
-                                    <Text style={{
-                                        color: "gray", fontSize: 15,
-                                        fontWeight: "bold",
-                                    }}>Profile create by</Text>
-                                    <Text style={{
-                                        color: "red", fontSize: 15,
-                                        fontWeight: "bold"
-                                    }}>*</Text>
-
-                                </View>
-
-                                <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
+                    </View>
+                    <Text style={styles.hadertextStyle}>{"Basic Info"}</Text>
+                    <View style={styles.mainBody}>
+                        <View style={styles.rowView}>
+                            <View style={styles.rowViewA}>
+                                <Text style={styles.textRow}>{"Profile create by"}</Text>
+                                <Text style={styles.textred}>{"*"}</Text>
+                            </View>
+                            <View style={styles.borderBox}>
                                 {/* <FlatList
                                         data={profileoption}
                                         renderItem={({ item }) => (<Text>{item.title}</Text>)}
                                         keyExtractor={(item, index) => String(index)}
                                     /> */}
-                                    <Picker
-                                        selectedValue={basicInfo.profileCreatedFor}
-                                        style={{ height: 40, width: 200 }}
-                                        onValueChange={(itemValue, itemIndex) => {
-                                            setBasicInfo({ ...basicInfo, profileCreatedFor: itemValue })
-                                            setSelectedValue(itemValue)}}
-                                    >
-                                        {profileoption.map((item, index) => {
-                                            return (< Picker.Item label={item.title} value={item.title} key={index} />);
-                                        })}
-                                    </Picker>
-                                    <View style={{ height: 10 }}></View>
-                                </View>
-                            </View>
-                            <View style={{
-                                justifyContent: "space-between",
-                                flexDirection: "row", padding: 13,
-
-                            }}>
-                                <View style={{
-                                    justifyContent: "space-between",
-                                    flexDirection: "row", alignSelf: "center"
-                                }}>
-                                    <Text style={{
-                                        color: "gray", fontSize: 15,
-                                        fontWeight: "bold"
-                                    }}>Gender</Text>
-
-
-                                </View>
-
-                                <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
-                                    <Picker
-                                        selectedValue={basicInfo.gender.toUpperCase()}
-                                        style={{ height: 40, width: 200, }}
-                                        onValueChange={(itemValue, itemIndex) => {
-                                            setGender(itemValue)
-                                            console.log(itemValue)
-                                            setBasicInfo({ ...basicInfo, gender: itemValue })
-                                        }}
-                                    >
-                                        <Picker.Item label="Male" value="MALE" />
-                                        <Picker.Item label="Female" value="FEMALE" />
-                                    </Picker>
-                                    <View style={{ height: 10 }}></View>
-                                </View>
-
-                            </View>
-                            <View style={{
-                                justifyContent: "space-between",
-                                flexDirection: "row", padding: 13,
-
-                            }}>
-                                <View style={{
-                                    justifyContent: "space-between",
-                                    flexDirection: "row", alignSelf: "center"
-                                }}>
-                                    <Text style={{
-                                        color: "gray", fontSize: 15,
-                                        fontWeight: "bold"
-                                    }}>Date Of Birth</Text>
-                                </View>
-                                <View>
-
-
-
-                                    <DateTimePickerModal
-                                        isVisible={isDatePickerVisible}
-                                        mode="date"
-                                        onConfirm={handleConfirm}
-                                        onCancel={hideDatePicker}
-                                    />
-
-
-                                </View>
-                                <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
-                                    <TextInput
-                                        // {...props}
-                                        multiline={true}
-                                        style={[styles.default, { height: Math.max(35, height) }]}
-                                        value={moment(basicInfo.dob).format("DD/MM/YYYY")}
-                                    />
-                                    <View style={{ height: 40, width: 197, }}>
-                                        <TouchableOpacity onPress={showDatePicker}>
-                                            <Image
-                                                source={calendar}
-                                                style={{
-                                                    width: 20,
-                                                    height: 20,
-                                                    resizeMode: 'contain',
-                                                    alignSelf: "flex-end",
-                                                    right: 10
-                                                }}
-                                            />
-                                        </TouchableOpacity>
-
-
-
-                                    </View>
-
-                                </View>
-
-                            </View>
-                            <View style={{
-                                justifyContent: "space-between",
-                                flexDirection: "row", padding: 13,
-
-                            }}>
-                                <View style={{
-                                    justifyContent: "space-between",
-                                    flexDirection: "row", alignSelf: "center"
-                                }}>
-                                    <Text style={{
-                                        color: "gray", fontSize: 15,
-                                        fontWeight: "bold"
-                                    }}>Marital status</Text>
-                                    <Text style={{
-                                        color: "red", fontSize: 15,
-                                        fontWeight: "bold"
-                                    }}>*</Text>
-
-                                </View>
-
-                                <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
-                                    <Picker
-                                        selectedValue={basicInfo.maritalStatus}
-                                        style={{ height: 40, width: 200, }}
-                                        onValueChange={(itemValue, itemIndex) => {
-                                            console.log('MATSTATUS',itemValue);
-                                            setMaterial(itemValue)
-                                            setBasicInfo({ ...basicInfo, maritalStatus: itemValue })
-                                        }}
-
-                                    >
-                                        {statusoption.map((item, index) => {
-                                            return (< Picker.Item label={item.title} value={item.value} key={index} />);
-                                        })}
-                                    </Picker>
-                                    <View style={{ height: 10 }}></View>
-                                </View>
-
-                            </View>
-                            <View style={{
-                                justifyContent: "space-between",
-                                flexDirection: "row", padding: 13,
-
-                            }}>
-                                <View style={{
-                                    justifyContent: "space-between",
-                                    flexDirection: "row", alignSelf: "center"
-                                }}>
-                                    <Text style={{
-                                        color: "gray", fontSize: 15,
-                                        fontWeight: "bold"
-                                    }}>Height</Text>
-
-
-                                </View>
-
-                                <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
-                                    <Picker
-                                    listMode="SCROLLVIEW"
-                                        selectedValue={Number(basicInfo.height)}
-                                        style={{ height: 40, width: 200, }}
-                                        onValueChange={(itemValue, itemIndex) => {
-                                            // console.log()
-                                            setBasicInfo({ ...basicInfo, height: itemValue })
-                                            setHeight(itemValue)
-                                        }}
-                                    >
-                                        {heightoption.map((item, index) => {
-                                            return (< Picker.Item label={item.title} value={item.value} key={index} />);
-                                        })}
-                                    </Picker>
-                                    <View style={{ height: 10 }}></View>
-                                </View>
-
-                            </View>
-                            <View style={{
-                                justifyContent: "space-between",
-                                flexDirection: "row", padding: 13,
-
-                            }}>
-                                <View style={{
-                                    justifyContent: "space-between",
-                                    flexDirection: "row", alignSelf: "center"
-                                }}>
-                                    <Text style={{
-                                        color: "gray", fontSize: 15,
-                                        fontWeight: "bold"
-                                    }}>Physical Status</Text>
-                                    <Text style={{
-                                        color: "red", fontSize: 15,
-                                        fontWeight: "bold"
-                                    }}>*</Text>
-
-                                </View>
-
-                                <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
-                                    <Picker
-                                        selectedValue={basicInfo.physicalStatus}
-                                        style={{ height: 40, width: 200, }}
-                                        onValueChange={(itemValue, itemIndex) => {
-                                            setBasicInfo({ ...basicInfo, physicalStatus: itemValue })
-                                            setSelectedValue(itemValue)}}
-                                    >
-                                        <Picker.Item label="Normal" value="NORMAL" />
-                                        <Picker.Item label="Physical Disability" value="PHYSICALLY_CHALLENGED" />
-
-                                    </Picker>
-                                    <View style={{ height: 10 }}></View>
-                                </View>
-                            </View>
-
-                            <View style={{
-                                justifyContent: "space-between",
-                                flexDirection: "row",
-
-                            }}>
-                                <View style={{
-                                    justifyContent: "space-between", alignSelf: "center",
-                                    flexDirection: "row", padding: 13, width: "100%"
-                                }}>
-                                    <Text style={{
-                                        color: "gray", fontSize: 14,
-                                        fontWeight: "bold"
-                                    }}>Manglik</Text>
-
-
-
-
-                                    <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
-                                        <Picker
-                                            selectedValue={basicInfo.manglik}
-                                            style={{ height: 40, width: 200, }}
-                                            onValueChange={(itemValue, itemIndex) => {
-                                                setBasicInfo({ ...basicInfo, manglik: itemValue })
-                                                setSelectedValue(itemValue)}}
-                                        >
-                                            <Picker.Item label="Yes" value="YES" />
-                                            <Picker.Item label="No" value="NO" />
-                                            <Picker.Item label="Dont Know" value="UNKNOWN" />
-                                        </Picker>
-                                        <View style={{ height: 10 }}></View>
-                                    </View>
-                                </View>
-                            </View>
-                            <View style={{
-                                justifyContent: "space-between",
-                                flexDirection: "row", padding: 13,
-
-                            }}>
-                                <View style={{
-                                    justifyContent: "space-between",
-                                    flexDirection: "row", alignSelf: "center"
-                                }}>
-                                    <Text style={{
-                                        color: "gray", fontSize: 15,
-                                        fontWeight: "bold"
-                                    }}>Caste</Text>
-
-
-                                </View>
-
-                                <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 5, height: 40 }}>
-                                    <Picker
-                                        selectedValue={basicInfo.caste}
-                                        style={{ height: 40, width: 200, }}
-                                        onValueChange={(itemValue, itemIndex) => {
-                                            setBasicInfo({ ...basicInfo, caste: itemValue })
-                                            setSelectedValue(itemValue)}}
-                                    >
-                                      {castoption.map((item, index) => {
-                                            return (< Picker.Item label={item.title} value={item.title} key={index} />);
-                                        })}
-
-                                    </Picker>
-                                    <View style={{ height: 10 }}></View>
-                                </View>
-
-                            </View>
-                            <View style={{ alignSelf: "center", marginTop: 20 }}>
-                                <TouchableOpacity
-                                    style={styles.SubmitButtonStyle1}
-                                    activeOpacity={.10}
-                                    onPress={() => { handleSubmit() }}
-
-
+                                <Picker
+                                    selectedValue={basicInfo.profileCreatedFor}
+                                    style={{ height: 40, width: 200 }}
+                                    onValueChange={(itemValue, itemIndex) => {
+                                        setBasicInfo({ ...basicInfo, profileCreatedFor: itemValue })
+                                        setSelectedValue(itemValue)
+                                    }}
                                 >
+                                    {profileoption.map((item, index) => {
+                                        return (< Picker.Item label={item.title} value={item.title} key={index} />);
+                                    })}
+                                </Picker>
+                            </View>
+                        </View>
+                        <View style={styles.rowView}>
+                            <View style={styles.rowViewA}>
+                                <Text style={styles.textRow}>{"Gender"}</Text>
+                                <Text style={styles.textred}>{"*"}</Text>
+                            </View>
+                            <View style={styles.borderBox}>
+                                <Picker
+                                    selectedValue={basicInfo.gender.toUpperCase()}
+                                    style={{ height: 40, width: 200, }}
+                                    onValueChange={(itemValue, itemIndex) => {
+                                        setGender(itemValue)
+                                        console.log(itemValue)
+                                        setBasicInfo({ ...basicInfo, gender: itemValue })
+                                    }}
+                                >
+                                    <Picker.Item label="Male" value="MALE" />
+                                    <Picker.Item label="Female" value="FEMALE" />
+                                </Picker>
 
-                                    <Text style={styles.TextStyle1}>Update</Text>
-
-                                </TouchableOpacity>
                             </View>
 
                         </View>
-                    </ScrollView >
-                </KeyboardAwareScrollView>
-            </SafeAreaView>
-        </View>
+
+                        <View style={styles.rowView}>
+                            <View style={styles.rowViewA}>
+                                <Text style={styles.textRow}>{"Date Of Birth"}</Text>
+                                <Text style={styles.textred}>{"*"}</Text>
+                            </View>
+                            <View style={styles.borderBox}>
+                                <TextInput style={styles.textInput}
+                                    // {...props}
+                                    multiline={true}
+                                    style={[styles.default, { height: Math.max(35, height) }]}
+                                    value={moment(basicInfo.dob).format("DD/MM/YYYY")}
+                                />
+                                <View style={{ height: 40, width: 200, }}>
+                                    <TouchableOpacity onPress={showDatePicker}>
+                                        <Image
+                                            source={calendar}
+                                            style={{
+                                                width: 15,
+                                                height: 15,
+                                                resizeMode: 'contain',
+                                                position: "absolute",
+                                                right: 10,
+                                                bottom: 5,
+                                                alignSelf: "center"
+                                            }}
+                                        />
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </View>
+                        <View style={styles.rowView}>
+                            <View style={styles.rowViewA}>
+                                <Text style={styles.textRow}>{"Marital status"}</Text>
+                                <Text style={styles.textred}>{"*"}</Text>
+                            </View>
+                            <View style={styles.borderBox}>
+                                <Picker
+                                    selectedValue={basicInfo.maritalStatus}
+                                    style={{ height: 40, width: 200, }}
+                                    onValueChange={(itemValue, itemIndex) => {
+                                        console.log('MATSTATUS', itemValue);
+                                        setMaterial(itemValue)
+                                        setBasicInfo({ ...basicInfo, maritalStatus: itemValue })
+                                    }}
+
+                                >
+                                    {statusoption.map((item, index) => {
+                                        return (< Picker.Item label={item.title} value={item.value} key={index} />);
+                                    })}
+                                </Picker>
+
+                            </View>
+
+                        </View>
+                        <View style={styles.rowView}>
+                            <View style={styles.rowViewA}>
+                                <Text style={styles.textRow}>{"Height"}</Text>
+                            </View>
+                            <View style={styles.borderBox}>
+                                <Picker
+                                    listMode="SCROLLVIEW"
+                                    selectedValue={Number(basicInfo.height)}
+                                    style={{ height: 40, width: 200, }}
+                                    onValueChange={(itemValue, itemIndex) => {
+                                        // console.log()
+                                        setBasicInfo({ ...basicInfo, height: itemValue })
+                                        setHeight(itemValue)
+                                    }}
+                                >
+                                    {heightoption.map((item, index) => {
+                                        return (< Picker.Item label={item.title} value={item.value} key={index} />);
+                                    })}
+                                </Picker>
+                            </View>
+                        </View>
+                        <View style={styles.rowView}>
+                            <View style={styles.rowViewA}>
+                                <Text style={styles.textRow}>{"Physical Status"}</Text>
+                                <Text style={styles.textred}>{"*"}</Text>
+                            </View>
+                            <View style={styles.borderBox}>
+                                <Picker
+                                    selectedValue={basicInfo.physicalStatus}
+                                    style={{ height: 40, width: 200, }}
+                                    onValueChange={(itemValue, itemIndex) => {
+                                        setBasicInfo({ ...basicInfo, physicalStatus: itemValue })
+                                        setSelectedValue(itemValue)
+                                    }}
+                                >
+                                    <Picker.Item label="Normal" value="NORMAL" />
+                                    <Picker.Item label="Physical Disability" value="PHYSICALLY_CHALLENGED" />
+                                </Picker>
+                            </View>
+                        </View>
+                        <View style={styles.rowView}>
+                            <View style={styles.rowViewA}>
+                                <Text style={styles.textRow}>{"Manglik"}</Text>
+                            </View>
+                            <View style={styles.borderBox}>
+                                <Picker
+                                    selectedValue={basicInfo.manglik}
+                                    style={{ height: 40, width: 200, }}
+                                    onValueChange={(itemValue, itemIndex) => {
+                                        setBasicInfo({ ...basicInfo, manglik: itemValue })
+                                        setSelectedValue(itemValue)
+                                    }}
+                                >
+                                    <Picker.Item label="Yes" value="YES" />
+                                    <Picker.Item label="No" value="NO" />
+                                    <Picker.Item label="Dont Know" value="UNKNOWN" />
+                                </Picker>
+                                <View style={{ height: 10 }}></View>
+                            </View>
+                        </View>
+                        <View style={styles.rowView}>
+                            <View style={styles.rowViewA}>
+                                <Text style={styles.textRow}>{"Caste"}</Text>
+                            </View>
+                            <View style={styles.borderBox}>
+                                <Picker
+                                    selectedValue={basicInfo.caste}
+                                    style={{ height: 40, width: 200, }}
+                                    onValueChange={(itemValue, itemIndex) => {
+                                        setBasicInfo({ ...basicInfo, caste: itemValue })
+                                        setSelectedValue(itemValue)
+                                    }}
+                                >
+                                    {castoption.map((item, index) => {
+                                        return (< Picker.Item label={item.title} value={item.title} key={index} />);
+                                    })}
+
+                                </Picker>
+
+                            </View>
+
+                        </View>
+                        <View style={{ alignSelf: "center", marginBottom: 16, marginTop: 16 }}>
+                            <TouchableOpacity
+                                style={styles.SubmitButtonStyle1}
+                                activeOpacity={.10}
+                                onPress={() => { handleSubmit() }}>
+                                <Text style={styles.TextStyle1}>{"Update"}</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </ScrollView>
+            </KeyboardAwareScrollView>
+        </SafeAreaView>
+
 
     );
 }
@@ -559,31 +424,105 @@ export const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'stretch',
-        backgroundColor: "#fff"
+        backgroundColor: "#EFEFEF"
     },
     safeContainer: {
         flex: 1,
-        backgroundColor: "#fff"
+        backgroundColor: "#EFEFEF"
     },
 
     keyBordContainer: {
         flex: 1,
         flexDirection: 'column',
     },
-
+    mainBody: {
+        flex: 1,
+        backgroundColor: "#fff",
+        marginLeft: 10,
+        marginRight: 10,
+        marginTop: 16,
+        marginBottom: 16,
+        elevation: 5
+    },
+    rowView: {
+        justifyContent: "space-between",
+        flexDirection: "row",
+        padding: 10,
+        marginTop: 10
+    },
+    rowViewA: {
+        justifyContent: "space-between",
+        flexDirection: "row",
+        alignSelf: "center"
+    },
+    textRow: {
+        color: "gray",
+        fontSize: 15,
+        fontWeight: "bold",
+    },
+    textred: {
+        color: "red",
+        fontSize: 15,
+        fontWeight: "bold"
+    },
+    textInput: {
+        fontSize: 12,
+        color: "#000",
+        flex: 1,
+        borderWidth: 1,
+        borderColor: "#0000001A",
+        borderRadius: 8,
+    },
+    borderBox: {
+        borderColor: "#0000001A",
+        borderWidth: 1,
+        borderRadius: 5,
+        height: 40
+    },
+    Hadera: {
+        flexDirection: 'row',
+        width: '100%',
+        alignItems: 'center',
+        backgroundColor: '#FF5733',
+        height: 50
+    },
+    Imagehadera: {
+        width: 20,
+        height: 20,
+        tintColor: 'white',
+        transform: [{ rotate: '180deg' }]
+    },
+    textStyle: {
+        alignSelf: 'center',
+        fontSize: 18,
+        fontWeight: "bold",
+        color: 'white'
+    },
+    hadertextStyle: {
+        alignSelf: 'center',
+        fontSize: 17,
+        fontWeight: "600",
+        color: 'gray',
+        marginTop: 8
+    },
     SubmitButtonStyle1: {
         width: 150,
         height: 40,
         alignSelf: "center",
+
+        // paddingTop: 10,
+        // paddingBottom: 15,
+        // marginLeft: 100,
+        // marginRight: 100,
         backgroundColor: '#FF5733',
-        borderRadius: 10,
+        borderRadius: 5,
         borderWidth: 1,
         borderColor: '#FF5733',
-
+        // bottom: 60
     },
 
     TextStyle1: {
-        color: 'black',
+        color: '#fff',
         textAlign: 'center',
         fontWeight: "bold",
         fontSize: 14,

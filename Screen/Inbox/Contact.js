@@ -36,7 +36,7 @@ export default class app extends Component {
                         <Text style={{ fontSize: 16, fontWeight: '600' }}>150</Text>
                     </View>
                 </View>
-                <View style={{marginTop:10,marginBottom:10}}>
+                <View style={{marginTop:10,marginBottom:10,}}>
                     <FlatList
                         data={this.state.ContatectArray}
                         renderItem={({ item }) =>

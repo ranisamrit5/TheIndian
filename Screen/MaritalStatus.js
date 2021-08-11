@@ -1,12 +1,13 @@
 import React from 'react';
 import {View, Text, StyleSheet,TouchableOpacity,SafeAreaView,Image,TouchableWithoutFeedback} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-// import { Images } from '../Screen/utils/them÷÷e';
+import { Images } from '../Screen/utils/theme';
 import CheckBox from '@react-native-community/checkbox';
 const MaritalStatus = (props) => {
     const [toggleCheckBox, setToggleCheckBox] = React.useState(false)
   
         return (
+            
             <SafeAreaView style={styles.container}>
                 <ScrollView>
                 <View style={{ flexDirection: 'row', width: '100%', alignItems: 'center', backgroundColor: '#FF5733', height: 50 }}>
@@ -20,6 +21,7 @@ const MaritalStatus = (props) => {
             </View>
 
                 <View style={{backgroundColor:"lightgray",height:100}}>
+                  
                     <View style={{flexDirection:"row",justifyContent:"space-between",backgroundColor:"#EFEFEF",marginLeft:16,marginRight:16,marginTop:16,marginBottom:8,borderRadius:30,padding:10,width:"35%"}}>
                         <Text style={{fontSize:13,fontWeight:"900",color:"gray",textAlign:"center"}}>Naver Married</Text>
                           <TouchableOpacity>
@@ -29,6 +31,8 @@ const MaritalStatus = (props) => {
                         </View>
                       </TouchableOpacity>
                     </View>
+               
+              
                  <View style={{flexDirection:"row",justifyContent:"flex-end",marginLeft:16,marginRight:16,bottom:24}}>
                         <TouchableOpacity>
                       <View style={{backgroundColor:"gray",borderRadius:30,width:20,height:20}}>
@@ -37,7 +41,6 @@ const MaritalStatus = (props) => {
                         </View>
                          </TouchableOpacity>
                    </View>
-                   
                </View>
                <View style={styles.rowView}>
                           <CheckBox
@@ -45,7 +48,7 @@ const MaritalStatus = (props) => {
                         disabled={false}
                          value={toggleCheckBox}
                             onValueChange={(newValue) => setToggleCheckBox(newValue)}/>
-                                <Text style={{fontSize:15,textAlign:"center"}}>Open to all</Text>
+                                <Text style={{fontSize:15,textAlign:"center",marginTop:2}}>Open to all</Text>
                                     </View>
                                     <View style={styles.rowView}>
                                     <CheckBox
@@ -87,6 +90,8 @@ const MaritalStatus = (props) => {
                             onValueChange={(newValue) => setToggleCheckBox(newValue)}/>
                                 <Text style={{fontSize:15,textAlign:"center",marginTop:2}}>Annulled</Text>
                                     </View>
+
+                                
                                     <View style={{  flexDirection:'row',marginTop: 200,}}>
                             <TouchableOpacity
                                 style={styles.SubmitButtonStyleA}
