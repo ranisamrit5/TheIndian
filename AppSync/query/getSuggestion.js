@@ -18,6 +18,10 @@ export default gql`query GetSuggestion($id:String!){
         profileCreatedFor
         username
         religion
+        gallery
+        dob
+        mob
+        email
         caste
         motherTongue
         aboutMe

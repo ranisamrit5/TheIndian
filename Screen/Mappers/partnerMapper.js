@@ -139,12 +139,20 @@ export const partnerDataMapper = JM.makeConverter({
         }
         return 'Not Specified';
     },
-    // religion: function (i) {
-    //     if (i && i.religion !== 'undefined') {
-    //         return i.religion;
-    //     }
-    //     return 'Not Specified';
-    // },
+    profileCreatedFor: function (i) {
+        if (i && i.data && i.data.profileCreatedFor && i.data.profileCreatedFor !== 'undefined') {
+            
+            return i.data.profileCreatedFor;
+        }
+      
+        return 'Not Specified';
+    },
+    username: function (i) {
+        if (i && i.data && i.data.username !== 'undefined') {
+            return i.data.username;
+        }
+        return 'Not Specified';
+    },
     motherTongue: function (i) {
         if (i && i.motherTongue !== 'undefined') {
             return i.motherTongue.toString();
@@ -154,6 +162,12 @@ export const partnerDataMapper = JM.makeConverter({
     smokingHabit: function (i) {
         if (i && i.smokingHabit !== 'undefined') {
             return i.smokingHabit;
+        }
+        return 'Not Specified';
+    },
+    dob: function (i) {
+        if (i && i.data && i.data.dob !== 'undefined') {
+            return moment(i.data.dob).format('LLLL');
         }
         return 'Not Specified';
     },

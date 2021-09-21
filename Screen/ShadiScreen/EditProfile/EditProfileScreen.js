@@ -79,6 +79,8 @@ const EditProfileScreen = (props) => {
             console.log('partnerData===>', data.getUser.partnerPreference['motherTongue'])
             console.log('partnerData===>', partnerData)
             setDetails(pDetails)
+        }).catch((error)=>{
+            setLoading(false);
         })
         setLoading(false);
     }
@@ -158,7 +160,7 @@ const EditProfileScreen = (props) => {
                 </View>
                 <View style={styles.haderRow}>
                     <Text style={styles.title}>{"More about Myself,Partner and Family"}</Text>
-                    <TouchableOpacity onPress={() => props.navigation.navigate('Myselftextinput')}>
+                    <TouchableOpacity onPress={() => props.navigation.navigate('Myselftextinput',details)}>
                         <Image style={styles.ImageStyle}
                             source={require('../../../Imagess/pencil.png')} />
                     </TouchableOpacity>

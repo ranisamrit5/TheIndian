@@ -20,25 +20,25 @@ import listUser from "../../AppSync/query/ListUser";
 import Loader from '../../Screen/Componentone/Loader';
 import Swiper from 'react-native-deck-swiper'
 import Accepted from '../Inbox/Accepted'
+import utils from "../libs/config/utils"
 import { TouchableOpacity } from 'react-native-gesture-handler';
 const images = []
-const Recieved = (props) => {
-    console.log('Recieved PROPS:',props.route.params)
+const Recieved = (props,{ navigation }) => {
+    // console.log('Recieved PROPS:',navigation,props)
     const [id, setId] = useState()
     const [swiper, setSwiper] = useState()
-    let [loading, setLoading] = useState(true);
+    let [loading, setLoading] = useState(false);
     const [recieved_,setRecieved]= useState([]);
 
     useEffect(() => {
         setLoading(true)
         Auth.currentAuthenticatedUser()
             .then((data) => {
-                console.log('user----::',data.username)
+                console.log('Recieved---->::',data.username)
                 setId(data.username)
                 getRecieved(data.username);
-                // props.id=data.username
-                // getData(data.username)
             });
+            setLoading(false)
     }, []
     )
 
@@ -53,42 +53,41 @@ const Recieved = (props) => {
         });
         if(data && data.listUser && data.listUser.items){
             // props.navigation.navigate('InboxMainTab');
+            // setRecieved(list)
             setRecieved(data.listUser.items)
             setLoading(false)
         }else{
-            props.route.params='Accepted'
+            setLoading(false)
         }
-        // console.log('getRecieved====>', data.listUser.items)
+        console.log('getRecieved====>', data.listUser.items)
     }
 
-    const updateIntrestData = async (tablename, id_, status) => {
+    const updateIntrestData = async (i, status) => {
+        console.log("item::====>", recieved_.length);
         try {
           await props
             .updateRequest({
               variables: {
                 userId:id,
-                tablename: `${tablename}`,
-                id: id_,
+                tablename: `${recieved_[i]['tablename']}`,
+                id: recieved_[i]['id'],
                 status: status,
               },
             })
             .then((res) => {
+                if (recieved_.length == 1)
+                    setRecieved([]);
+                else
+                    {
+                        recieved_.splice(i, 1)
+                        setRecieved(recieved_);
+                    }
+
               console.log("Response Update data::");
-            //   let updation = details.partnerConnectStatus ? details.partnerConnectStatus :details.request
-            //   updation.status = 'ACCEPTED'
-            //   setDetails({
-            //     ...details,
-            //     partnerConnectStatus: updation
-    
-            //   });
-    
-              //       // window.location.reload(true);
             });
         } catch (error) {
           console.log("ERROR::", error);
         }
-    
-    
       };
 
    const onSwiped = (type) => {
@@ -129,32 +128,21 @@ const Recieved = (props) => {
     // console.log('OUT', recieved_)
         return (
             <SafeAreaView style={{ flex: 1, }}>
-               
-                {/* <ScrollView> */}
-                {/* <View style={{ alignSelf: 'center', marginTop: 20, alignItems: 'center', justifyContent: 'center' }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                        <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>{images.length} Members are eagerly awaiting your</Text>
-                        <TouchableOpacity style={{ marginLeft: 10 }}>
-                            <Text style={{ fontSize: 38, fontWeight: '500', color: 'white', transform: [{ rotate: '45deg' }] }}>+</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>reply. Respond Now</Text>
-                </View> */}
                 <View style={{ width: '95%', flex: 1, alignSelf: 'center', alignItems: 'center', justifyContent: 'center' }}>
              <Loader loading={loading} />
-             {recieved_ && loading == false ?
+             {recieved_.length > 0 && loading == false ?
                     <Swiper
                         overlayLabels={overlayLabel}
                         ref={swiper => { setSwiper(swiper) }}
-                        onSwipedLeft={() => onSwiped('left')}
-                        onSwipedRight={() => onSwiped('right')}
+                        onSwipedLeft={(i) => updateIntrestData(i,'DECLINE')}
+                        onSwipedRight={(i) => updateIntrestData(i,'ACCEPTED')}
                         onSwipedTop={() => onSwiped('top')}
-                        onTapCard={(data,index) => onTapCard(data,index)}
+                        // onTapCard={(data,index) => onTapCard(data,index)}
                         disableBottomSwipe={true}
                         cards={recieved_}
                         // cardVerticalMargin={8}
                         //cardHorizontalMargin={20}
-                        renderCard={(cards) => {
+                        renderCard={(cards,index) => {
                             return (
                                 <View style={{ borderRadius: 6,width: '95%', marginTop: 20, alignItems: 'center', borderWidth: 1, backgroundColor: 'white' }} >
                                     {/* <Text style={styles.text}>{card}</Text> */}
@@ -179,7 +167,7 @@ const Recieved = (props) => {
                                     <View style={{ marginBottom: 15, width: '85%', borderTopWidth: 1, padding: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                             <TouchableOpacity style={{ backgroundColor: '#F5F5F5', alignItems: 'center', justifyContent: 'center', padding: 10, borderRadius: 40 }}
-                                            onPress={() => { updateIntrestData(cards.tablename,cards.id,'DECLINE') }}
+                                            onPress={() => { updateIntrestData(index,'DECLINE') }}
                                             >
                                                 <Image style={{ width: 25, height: 25 }}
                                                     source={require('../../Imagess/Decline.png')} />
@@ -190,7 +178,7 @@ const Recieved = (props) => {
                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                             <Text style={{ marginRight: 10, color: 'green' }}>Accept</Text>
                                             <TouchableOpacity style={{ backgroundColor: 'green', alignItems: 'center', justifyContent: 'center', padding: 10, borderRadius: 40 }}
-                                            onPress={() => { updateIntrestData(cards.tablename,cards.id,'ACCEPTED') }}
+                                            onPress={() => { updateIntrestData(index,'ACCEPTED') }}
                                             >
                                                 <Image style={{ width: 25, height: 25, tintColor: 'white' }}
                                                     source={require('../../Imagess/SingleTick.png')} />
@@ -200,16 +188,10 @@ const Recieved = (props) => {
                                 </View>
                             )
                         }}
-                        //onSwiped={(cardIndex) => { console.log(cardIndex) }}
                         onSwipedAll={() => { console.log('onSwipedAll') }}
                         cardIndex={0}
                         backgroundColor={'#4FD0E9'}
                         stackSize={3}>
-                        {/* <Button
-                            onPress={() => { console.log('oulala') }}
-                            title="Press me">
-                            You can press me
-                         </Button> */}
                         <View style={{ alignSelf: 'center', marginBottom: 20, alignItems: 'center', justifyContent: 'center' }}>
                             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                                 <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>{images.length} Members are eagerly awaiting your</Text>
@@ -220,7 +202,21 @@ const Recieved = (props) => {
                             <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>reply. Respond Now</Text>
                         </View>
                     </Swiper>
-               : null
+               :  <View style={{ alignSelf: "center", marginBottom: 200, marginTop: 200, marginLeft: 24, marginRight: 24 }}>
+               <Text style={{ fontSize: 18, fontWeight: "bold", textAlign: "center", }}>NO CONNECTION'S RECIEVED</Text>
+               <Text style={{ fontSize: 12, fontWeight: "400", color: "#00000099", textAlign: "center", marginTop: 8, marginBottom: 16 }}>Sorry,looks like there is no internet connection.Please check your Wi-Fi or data connectivity.</Text>
+               <View style={{ alignSelf: "center", }}>
+                    <TouchableOpacity
+                        style={styles.SubmitButtonStyle1}
+                        activeOpacity={.10}
+                        onPress={() => { 
+                            props.navigation.navigate('Accepted')
+                             }}>
+                        <Text style={styles.TextStyle1}>GO TO ACCEPTED</Text>
+
+                    </TouchableOpacity>
+                </View>
+           </View>
                         }
                 </View>
                 {/* </ScrollView> */}

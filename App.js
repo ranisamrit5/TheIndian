@@ -28,6 +28,7 @@ import ForgotPassword from './Screen/ForgotPassword';
 import OTP from './Screen/OTP';
 import MainTab from './Screen/MainTab'
 import MyMatches from './Screen/MyMatches'
+import MatchProfile from './Screen/MatchProfile'
 import MorMatches from './Screen/MorMatches'
 import ProfileDeshbord from './Screen/ShadiScreen/ProfileDeshbord'
 import TodaysMaches from './Screen/TodaysMaches'
@@ -111,7 +112,7 @@ function MyTabBar({ state, descriptors, navigation }) {
         </TouchableOpacity>
       </View>
       <View>
-        <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }} onPress={() => navigation.navigate('MainTab')}>
+        <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }} onPress={() => navigation.navigate('MainTab',navigation)}>
           <Image style={{ width: 25, height: 25 }}
             source={require('./Imagess/Matches.png')} />
           <Text>Matches</Text>
@@ -159,8 +160,9 @@ export default class app extends Component {
       <Provider client={client}>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}  >
-      
-          <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
+          
+        {/* <Stack.Screen name="TabNavigation" component={this.TabNavigation} />  */}
+          <Stack.Screen name="SplashScreen" component={SplashScreen} />
           <Stack.Screen name="NetworkScreen" component={NetworkScreen} />
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
           <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
@@ -168,6 +170,7 @@ export default class app extends Component {
           <Stack.Screen name="OTP" component={OTP} />
           <Stack.Screen name="MainTab" component={MainTab} />
           <Stack.Screen name="MyMatches" component={MyMatches} />
+          <Stack.Screen name="MatchProfile" component={MatchProfile} />
           <Stack.Screen name="MorMatches" component={MorMatches} />
           <Stack.Screen name="TodaysMaches" component={TodaysMaches} />
           <Stack.Screen name="TabNavigation" component={this.TabNavigation} />
@@ -179,7 +182,7 @@ export default class app extends Component {
           <Stack.Screen name='BasicInfoScreen' component={BasicInfoScreen}/>
           <Stack.Screen name='Myselftextinput' component={Myselftextinput}/>
           <Stack.Screen name='Location' component={Location}/>   
-          {/* <Stack.Screen name='EditProfileScreen' component={EditProfileScreen}/> */}
+          <Stack.Screen name='EditProfileScreen' component={EditProfileScreen}/>
           <Stack.Screen name='ReligiousScreen' component={ReligiousScreen}/>
           <Stack.Screen name='Lifestyles' component={Lifestyles}/>
           <Stack.Screen name='PartnerBasicinfo' component={PartnerBasicinfo}/>

@@ -1,7 +1,8 @@
 import gql from 'graphql-tag';
 export default gql`query ListUser($nextToken:String $limit:Int $type:String!  $id:String! ){
     listUser(id:$id nextToken:$nextToken  limit: $limit type:$type ){
-         items{
+        items{
+            tablename
             id
             fname
             gender
@@ -11,23 +12,33 @@ export default gql`query ListUser($nextToken:String $limit:Int $type:String!  $i
             caste
             availability
             religion
+            mob
+            email
+            profileCreatedFor
             motherTongue
             aboutMe
-            location{
+            location
+            {
             state
             country
             city
           }
-          familyDetails{
+          familyDetails
+          {
             parentContact
           }
-          education{
+          education
+          {
             colg_institute
             annualIncome
             employedIn
             occuDetails
             occupation
             highestEducation
+          }
+          partnerConnectStatus
+          {
+            created_at
           }
             interest{
             status

@@ -118,6 +118,7 @@ export default class app extends Component {
        
        };
     render() {
+        console.log('-------------------------------------------')
         if (this.state.SerchBar == false) {
             //this.setState({ SearchOpt: false })
             //this.setState({ ProfileIDSearch: false })
@@ -170,6 +171,7 @@ export default class app extends Component {
                 <View style={{ marginTop: 10, height: '100%' }}>
                     <View>
                         <FlatList style={{ marginBottom: 10 }} horizontal={true}
+                        keyExtractor={(item, index) => index.toString()} 
                         ref={ref => {
                             this.flatList_Ref = ref;  // <------ ADD Ref for the Flatlist 
                             console.log(ref); //
@@ -199,7 +201,7 @@ export default class app extends Component {
                             </TouchableOpacity>
                         </View> : null}
 
-                    {this.state.MyMatches ? <MyMatches /> : null}
+                    {this.state.MyMatches ? <MyMatches {...this.props}/> : null}
                     {this.state.MoreMatches ? <MorMatches /> : null}
                     {this.state.TodaysMatches ? <TodaysMaches /> : null}
                     {/* <TodaysMaches /> */}

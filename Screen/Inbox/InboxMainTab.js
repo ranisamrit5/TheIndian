@@ -11,6 +11,7 @@ import {
     Image,
     ImageBackground
 } from 'react-native';
+import utils from '../libs/config/utils'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Accepted from '../Inbox/Accepted'
 import Contact from '../Inbox/Contact'
@@ -18,31 +19,35 @@ import Request from '../Inbox/Reqest'
 import Received from '../Inbox/Received'
 import SentItem from '../Inbox/SentItem'
 import Deleted from '../Inbox/Deleted'
+import { graphql, withApollo } from "react-apollo";
+import compose from "lodash.flowright";
 import { Auth } from "aws-amplify";
 import listUser from "../../AppSync/query/ListUser";
 import Loader from '../../Screen/Componentone/Loader';
 const InboxMainTab = (props) => {
-    console.log('InboxMainTab:',props.route)
-    let [loading, setLoading] = useState(true);
+    // console.log('InboxMainTab:',props.route.params)
+    let [loading, setLoading] = useState(false);
     const [id, setId] = useState('')
-    const [selectClass, setSelectClass] = useState("Accepted");
+    const [selectClass, setSelectClass] = useState("Received");
     const [TopArray, setTopArray] = useState(['Received', 'Accepted', 'Sent Items', 'Contacts', 'Requests', 'Deleted']);
     let flatList_Ref;
     const [recieved_,setRecieved]= useState([]); 
 
     useEffect(() => {
-        setLoading(true)
+        // setLoading(true)
         Auth.currentAuthenticatedUser()
-            .then((data) => {
-                console.log('user----::',data.username)
+            .then(async(data) => {
+                console.log('Inbox---->::',data.username)
                 setId(data.username)
-                getRecieved(data.username);
-                // props.id=data.username
-                // getData(data.username)
+                let activity = utils.userActivity(data.username,'RECIEVED',props)
+                setRecieved(activity)
+                await getRecieved(data.username);
             });
+            setLoading(false)   
     }, []
     )
     const getRecieved = async (userId) => {
+
         const { data } = await props.client.query({
             query: listUser,
             fetchPolicy: "network-only",
@@ -51,14 +56,17 @@ const InboxMainTab = (props) => {
                 type:'RECIEVED'
             },
         });
-        if(data && data.listUser && data.listUser.items){
-            // props.navigation.navigate('InboxMainTab');
+        console.log('=====>',data)
+        if(data && data.listUser && data.listUser.items && data.listUser.items > 0){
+            console.log('=====>',data.listUser.items)
             props.route.params=data.listUser.items
             setRecieved(data.listUser.items)
             setLoading(false)
-            setSelectClass(['Recieved'])
+            setSelectClass("Received")
         }else{
-            setTopArray(['Accepted'])
+            setSelectClass("Accepted")
+            console.log('Else')
+            // setSelectClass('Accepted')
         }
         // console.log('getRecieved====>', data.listUser.items)
     }
@@ -74,6 +82,7 @@ const InboxMainTab = (props) => {
             <SafeAreaView style={{ flex: 1 }}>
                 <View style={{ width: '95%', alignSelf: 'center', marginTop: 10 }}>
                     <FlatList horizontal={true}
+ keyExtractor={(item, index) => index.toString()} 
                         data={TopArray}
                         ref={ref => {
                             flatList_Ref = ref;  // <------ ADD Ref for the Flatlist 
@@ -115,4 +124,9 @@ const InboxMainTab = (props) => {
             </SafeAreaView>
         )
     }
-    export default InboxMainTab;
+    const profile = compose(
+        withApollo,
+        // graphql(updateUser, { name: "updateUser" })
+    )(InboxMainTab);
+    export default profile;
+    // export default InboxMainTab;

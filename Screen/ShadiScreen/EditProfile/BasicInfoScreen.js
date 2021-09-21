@@ -44,6 +44,9 @@ const BasicInfoScreen = (props) => {
     const [id, setId] = useState()
     let [loading, setLoading] = useState(false);
     const [chosenDate, setChosenDate] = useState(new Date());
+    const [date, setDate] = useState(new Date(1598051730000));
+    const [mode, setMode] = useState('date');
+    const [show, setShow] = useState(false);
     const [basicInfo, setBasicInfo] = useState({
         id: '',
         fname: '',
@@ -70,10 +73,6 @@ const BasicInfoScreen = (props) => {
     })
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
-    const showDatePicker = () => {
-        console.log(isDatePickerVisible)
-        setDatePickerVisibility(true);
-    };
 
     const hideDatePicker = () => {
         setDatePickerVisibility(false);
@@ -102,16 +101,11 @@ const BasicInfoScreen = (props) => {
     const handleSubmit = async (e) => {
         setLoading(true)
         try {
-
-            let data_ = data
-            console.log('Table', data_.tablename, marital, height, gender)
-            console.log('ID', data_.id)
-            // setBasicInfo({
-            //     ...basicInfo,
-            //     height: height,
-            //     gender: gender,
-            //     maritalStatus: marital
-            // })
+            var j = moment(basicInfo.dob);
+            j.add(1, 'days'); 
+            console.log(j.format('LL'));
+            console.log('Table', basicInfo.dob)
+            // return;
             const savedData = await props.updateUser({ variables: { input: basicInfo } })
             console.log(savedData)
 
@@ -170,14 +164,22 @@ const BasicInfoScreen = (props) => {
         }
         setLoading(false)
     }
-    const [date, setDate] = useState(new Date(1598051730000));
-    const [mode, setMode] = useState('date');
-    const [show, setShow] = useState(false);
+
 
     const onChange = (event, selectedDate) => {
+        // console.log(new Date(selectedDate))
+
+        var j = moment(selectedDate);
+        j.add(0, 'days'); 
+        console.log(j.format('LL'));
+
         const currentDate = selectedDate || date;
         setShow(Platform.OS === 'ios');
         setDate(currentDate);
+        setBasicInfo({
+            ...basicInfo,
+            dob: j
+        })
     };
 
     const showMode = (currentMode) => {
@@ -186,15 +188,20 @@ const BasicInfoScreen = (props) => {
     };
 
     const showDatepicker = () => {
-
-        console.log('-----')
-        showMode('date');
+        console.log(show)
+        if(show != false){
+            setShow(false)
+        }
+        else{
+            showMode('date');
+        }
+        
     };
 
     const showTimepicker = () => {
         showMode('time');
     };
-    console.log('----->', basicInfo.manglik)
+    // console.log('----->', basicInfo.manglik)
     return (
         <SafeAreaView style={styles.safeContainer}>
             <Loader loading={loading} />
@@ -217,11 +224,6 @@ const BasicInfoScreen = (props) => {
                                 <Text style={styles.textred}>{"*"}</Text>
                             </View>
                             <View style={styles.borderBox}>
-                                {/* <FlatList
-                                        data={profileoption}
-                                        renderItem={({ item }) => (<Text>{item.title}</Text>)}
-                                        keyExtractor={(item, index) => String(index)}
-                                    /> */}
                                 <Picker
                                     selectedValue={basicInfo.profileCreatedFor}
                                     style={{ height: 40, width: 200 }}
@@ -272,7 +274,7 @@ const BasicInfoScreen = (props) => {
                                     value={moment(basicInfo.dob).format("DD/MM/YYYY")}
                                 />
                                 <View style={{ height: 40, width: 200, }}>
-                                    <TouchableOpacity onPress={showDatePicker}>
+                                    <TouchableOpacity onPress={showDatepicker}>
                                         <Image
                                             source={calendar}
                                             style={{
@@ -404,8 +406,19 @@ const BasicInfoScreen = (props) => {
                             </TouchableOpacity>
                         </View>
                     </View>
+                 
                 </ScrollView>
             </KeyboardAwareScrollView>
+            {show && (
+                        <DateTimePicker
+                            testID="dateTimePicker"
+                            value={date}
+                            mode={'date'}
+                            is24Hour={false}
+                            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                            onChange={onChange}
+                        />
+                    )}
         </SafeAreaView>
 
 

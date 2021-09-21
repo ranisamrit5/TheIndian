@@ -25,27 +25,25 @@ const SplashScreen =  (props) => {
   const network = async () => {
     checkConnected()
     .then((state => {
-     console.log('Network Check----::',state)
+     console.log('Network Check----::===>',state)
+     if(!state){
+      setAnimating(false)
+      props.navigation.navigate('NetworkScreen');
+     }
      setConnected(state)
    }))
-    // if (!state.isConnected)
-    //   props.navigation.navigate('NetworkScreen')
-  }; 
-  
-  network();
-  
-  useEffect(() => {
 
-    
-    // console.log('===',state)
+  }; 
+  network();
+
+  useEffect(() => {
     Auth.currentAuthenticatedUser()
     .then((data) => {
-      console.log('user----::',data)
-      // if (connected)
+      // console.log('SplashScreen',data)
         props.navigation.navigate('TabNavigation');
     }).catch((error)=>{
       props.navigation.navigate('LoginScreen');
-      console.log('error----::',error)
+      // console.log('SplashScreen',error)
     })
 
   }, []);

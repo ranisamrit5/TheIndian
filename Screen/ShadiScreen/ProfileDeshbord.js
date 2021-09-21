@@ -54,11 +54,12 @@ const ProfileDashboard = props => {
         setLoading(true)
         Auth.currentAuthenticatedUser()
             .then((data) => {
-                // console.log('user----::',data)
+                console.log('ProfileDashboard----::',data.username)
                 setId(data.username)
                 // props.id=data.username
                 getData(data.username)
             });
+            setLoading(false)
     }, []
     )
     const chooseFile = () => {
@@ -87,13 +88,17 @@ const ProfileDashboard = props => {
       };
 
     const getData = async (user) => {
+        console.log('getting user data')
         const { data } = await props.client.query({
             query: Getdata,
             fetchPolicy: "network-only",
             variables: {
                 id: `${user}`,
             },
-        });
+        }).catch((error)=>{
+            console.log(error);
+            setLoading(false);
+        })
         if (data) {
             let userData = data.getUser
             setValidity(moment(parseInt(userData.validity)).format("MMM Do YYYY"))
@@ -230,19 +235,21 @@ const ProfileDashboard = props => {
 //     }
 //     render() {
         return (
-            <View style={{ backgroundColor: '#FF5733',flex:1 }}>
+            <View style={{ backgroundColor: '#e5e5e5',flex:1 }}>
                 <Loader loading={loading} />
                 <SafeAreaView style={{flex:1}} >
                     <Text style={{ color: 'white', fontSize: 18, fontWeight: '700', alignSelf: 'center', justifyContent: 'center', marginBottom: 10, marginTop: 10 }}>My Shaadi</Text>
                     <ScrollView style={{flex:1}}>
-                        <View style={{ backgroundColor: '#d3d3d3' ,flex:1}}>
+                        <View style={{ backgroundColor: '#e5e5e5' ,flex:1}}>
                             <ImageBackground style={{ width: '100%', height: 200, flexDirection: 'row', alignItems: 'center' }} blurRadius={25} resizeMode='stretch'
                                 source={
-                                   { uri : details.profilePic ? details.profilePic:
-                                    details.gender == 'MALE' || details.gender == 'Male' ? 
-                                    require('../../Imagess/male.jpg'):require('../../Imagess/female.jpeg')
+                                    !details.profilePic ?
+                                    details.gender == 'Male' || details.gender == 'MALE' ?
+                                            require('../../Imagess/male.jpg') :
+                                            require('../../Imagess/female.jpeg') :
+                                        { uri: details.profilePic }
                                 }
-                                }
+                                
                                 >
                                 <View style={{ marginLeft: 40, }}>
                                     {details.profilePic?
@@ -281,7 +288,7 @@ const ProfileDashboard = props => {
                             </ImageBackground>
                             <Text style={{marginLeft:20,fontSize:16,fontWeight:'600',marginTop:10}}>complete Your Profile</Text>
                             <View style={{alignSelf:'center',width:'100%',backgroundColor:'white',marginTop:10}}>
-                                <TouchableOpacity style={{flexDirection:'row',borderBottomWidth:0.5,alignItems:'center',padding:5,width:'90%',alignSelf:'center'}}>
+                                <TouchableOpacity style={{flexDirection:'row',borderBottomWidth:2,alignItems:'center',padding:5,width:'90%',alignSelf:'center',borderColor:"#0000001A"}}>
                                     <Image style={{width:25,height:25}}
                                         source={require('../../Imagess/Shield_VectorIcone.png')} />
                                     <View style={{flexDirection:'row',marginLeft:20,justifyContent:'space-between',width:'90%'}}>
@@ -295,7 +302,7 @@ const ProfileDashboard = props => {
 
                                 </TouchableOpacity>
 
-                                <TouchableOpacity style={{flexDirection:'row',borderBottomWidth:0.5,alignItems:'center',padding:5,width:'90%',alignSelf:'center'}}>
+                                <TouchableOpacity style={{flexDirection:'row',alignItems:'center',padding:5,width:'90%',alignSelf:'center'}}>
                                     <Image style={{width:25,height:25,tintColor:'grey'}}
                                         source={require('../../Imagess/Astrology_Vector.png')} />
                                     <View style={{flexDirection:'row',marginLeft:20,justifyContent:'space-between',width:'90%'}}>
@@ -316,9 +323,10 @@ const ProfileDashboard = props => {
                                 <View style={{marginLeft:10}}>
                                     <FlatList horizontal={true}
                                         data={data}
+                                        keyExtractor={(item, index) => index.toString()} 
                                         showsHorizontalScrollIndicator={false}
                                         renderItem={({item})=>
-                                        <View style={{marginRight:10,borderWidth:1,width:180}}>
+                                        <View style={{marginRight:10,borderWidth:1,width:180,borderColor:"#0000001A",elevation:10}}>
                                             <ImageBackground style={{width:180,height:140,justifyContent:'flex-end'}}
                                                 source={require('../../Imagess/HeroImage.jpeg')} 
                                                  >
@@ -349,9 +357,10 @@ const ProfileDashboard = props => {
                                 <View style={{marginLeft:10}}>
                                     <FlatList horizontal={true}
                                         data={data}
+                                        keyExtractor={(item, index) => index.toString()} 
                                         showsHorizontalScrollIndicator={false}
                                         renderItem={({item})=>
-                                        <View style={{marginRight:10,borderWidth:1,width:180}}>
+                                        <View style={{marginRight:10,borderWidth:1,width:180,borderColor:"#0000001A"}}>
                                             <ImageBackground style={{width:180,height:140,justifyContent:'flex-end'}}
                                                 source={require('../../Imagess/HeroImage.jpeg')}  >
                                                 <View  blurRadius={20}>
@@ -383,9 +392,10 @@ const ProfileDashboard = props => {
                                 <View style={{marginLeft:10}}>
                                     <FlatList horizontal={true}
                                         data={data}
+                                        keyExtractor={(item, index) => index.toString()} 
                                         showsHorizontalScrollIndicator={false}
                                         renderItem={({item})=>
-                                        <View style={{marginRight:10,borderWidth:1,width:180}}>
+                                        <View style={{marginRight:10,borderWidth:1,width:180,borderColor:"#0000001A"}}>
                                             <ImageBackground style={{width:180,height:140,justifyContent:'flex-end'}}
                                                 source={require('../../Imagess/HeroImage.jpeg')}  >
                                                 <View  blurRadius={20}>
@@ -413,7 +423,7 @@ const ProfileDashboard = props => {
                         {/* ============ Options & Settings ============*/}
                         <Text style={{fontSize:14,fontWeight:'bold',marginTop:15,marginLeft:10}}>Options & Settings</Text>
                         <View style={{backgroundColor:'white',marginTop:5}}>
-                            <TouchableOpacity style={{flexDirection:'row',height:40,marginBottom:5,alignItems:'center',justifyContent:'center',width:'90%',borderBottomWidth:0.5,alignSelf:'center'}}
+                            <TouchableOpacity style={{flexDirection:'row',height:40,marginBottom:5,alignItems:'center',justifyContent:'center',width:'90%',borderBottomWidth:1,alignSelf:'center',borderColor:"#0000001A"}}
                                 onPress={()=>props.navigation.navigate('Partner_Preferences')} >
                                 <Image style={{width:20,height:20}}
                                     source={require('../../Imagess/Matches.png')} />
@@ -424,7 +434,7 @@ const ProfileDashboard = props => {
                                </View>
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={{flexDirection:'row',height:40,marginBottom:5,alignItems:'center',justifyContent:'center',width:'90%',borderBottomWidth:0.5,alignSelf:'center'}}>
+                            <TouchableOpacity style={{flexDirection:'row',height:40,marginBottom:5,alignItems:'center',justifyContent:'center',width:'90%',borderBottomWidth:1,alignSelf:'center',borderColor:"#0000001A"}}>
                                
                                 <Image style={{width:20,height:20}}
                                     source={require('../../Imagess/FilterImage.png')} />
@@ -435,7 +445,7 @@ const ProfileDashboard = props => {
                                </View>
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={{flexDirection:'row',height:40,marginBottom:5,alignItems:'center',justifyContent:'center',width:'90%',borderBottomWidth:0.5,alignSelf:'center'}}
+                            <TouchableOpacity style={{flexDirection:'row',height:40,marginBottom:5,alignItems:'center',justifyContent:'center',width:'90%',borderBottomWidth:1,alignSelf:'center',borderColor:"#0000001A"}}
                                onPress={()=>props.navigation.navigate('AccountSettings')}>
                                 <Image style={{width:20,height:20}}
                                     source={require('../../Imagess/SettingVector.png')} />
@@ -446,7 +456,7 @@ const ProfileDashboard = props => {
                                </View>
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={{flexDirection:'row',height:40,marginBottom:5,alignItems:'center',justifyContent:'center',width:'90%',borderBottomWidth:0.5,alignSelf:'center'}}>
+                            <TouchableOpacity style={{flexDirection:'row',height:40,marginBottom:5,alignItems:'center',justifyContent:'center',width:'90%',borderBottomWidth:1,alignSelf:'center',borderColor:"#0000001A"}}>
                                 <Image style={{width:20,height:20}}
                                     source={require('../../Imagess/help_Icon.png')} />
                                <View style={{flexDirection:'row',alignItems:'center',marginLeft:15,width:'90%',justifyContent:'space-between'}}>
@@ -456,7 +466,7 @@ const ProfileDashboard = props => {
                                </View>
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={{flexDirection:'row',height:40,marginBottom:5,alignItems:'center',justifyContent:'center',width:'90%',borderBottomWidth:0.5,alignSelf:'center'}}
+                            <TouchableOpacity style={{flexDirection:'row',height:40,marginBottom:5,alignItems:'center',justifyContent:'center',width:'90%',borderBottomWidth:1,alignSelf:'center',borderColor:"#0000001A"}}
                                 onPress={()=>props.navigation.navigate('Notification')}  >
                                 <Image style={{width:20,height:20}}
                                     source={require('../../Imagess/NotificationIcon.png')} />
@@ -467,7 +477,7 @@ const ProfileDashboard = props => {
                                </View>
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={{flexDirection:'row',height:40,marginBottom:5,alignItems:'center',justifyContent:'center',width:'90%',borderBottomWidth:0.5,alignSelf:'center'}}
+                            <TouchableOpacity style={{flexDirection:'row',height:40,marginBottom:5,alignItems:'center',justifyContent:'center',width:'90%',borderBottomWidth:1,alignSelf:'center',borderColor:"#0000001A"}}
                                 onPress={()=>props.navigation.navigate('RatingStar')} >
                                 <Image style={{width:20,height:20}}
                                     source={require('../../Imagess/Star_Reting.png')} />

@@ -245,15 +245,15 @@ export const userDataMapper = JM.makeConverter({
     },
     maritalStatus: function (i) {
         if (i && i.data && i.data.maritalStatus !== 'undefined' && i.data.maritalStatus !== null) {
-            return statusoption.find((x) => x.value === i.data.maritalStatus).title;
+            return  i.data.maritalStatus;
         }
-        return 'NOT_SPECIFIED';
+        return 'Not Specified';
     },
     maritalStatus_: function (i) {
         if (i && i.data && i.data.maritalStatus !== 'undefined'&& i.data.maritalStatus !== null) {
             return i.data.maritalStatus
         }
-        return 'NOT_SPECIFIED';
+        return 'Not Specified';
     },
     colg_institute: function (i) {
         if (i && i.data && i.data.education && i.data.education.colg_institute !== 'undefined') {
@@ -271,7 +271,7 @@ export const userDataMapper = JM.makeConverter({
         if (i && i.data && i.data.education && i.data.education.employedIn !== 'undefined') {
             return i.data.education.employedIn;
         }
-        return 'NOT_SPECIFIED';
+        return 'Not Specified';
     },
     highestEducation: function (i) {
         console.log('highestEducation',i.data.education.highestEducation)
@@ -314,7 +314,9 @@ export const userDataMapper = JM.makeConverter({
         if (i && i.data && i.data.dob !== 'undefined') {
             console.log(i.data.dob)
             console.log('AGE',getAge(i.data.dob))
-            return getAge(moment(i.data.dob).utc().format('YYYY-MM-DD'));
+            return getAge(moment(i.data.dob).utc().format('YYYY-MM-DD')) == NaN || 
+            getAge(moment(i.data.dob).utc().format('YYYY-MM-DD')) == 0 ? 'Age Not Specified'
+            : getAge(moment(i.data.dob).utc().format('YYYY-MM-DD'))
         }
         return 'Not Specified';
     },
@@ -394,7 +396,7 @@ export const userDataMapper = JM.makeConverter({
         if (i && i.data && i.data.partnerConnectStatus !== 'undefined') {
             return i.data.partnerConnectStatus;
         }
-        return 'Not Specified';
+        return null;
     },
     partnerPreference: function (i) {
         if (i && i.data && i.data.partnerPreference !== 'undefined') {

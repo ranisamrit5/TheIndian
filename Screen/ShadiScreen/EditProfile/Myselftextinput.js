@@ -14,13 +14,47 @@ import {
     Pressable,
     Button, Platform
 } from 'react-native';
+import { Auth } from "aws-amplify";
+import { graphql, withApollo } from "react-apollo";
+import compose from "lodash.flowright";
+import Getdata from "../../../AppSync/query/Auth/getData";
+import updateUser from "../../../AppSync/mutation/User/updateData";
 import Loader from '../../../Screen/Componentone/Loader';
-
 const Myselftextinput = (props) => {
-    const [text, setText] = useState('')
+    // console.log('Myselftextinput',props['route']['params'])
+    const [text, setText] = useState(props['route']['params'].aboutMe)
     const [height, setHeight] = useState(100)
-    const [details, setDetails] = useState([])
+    const [details, setDetails] = useState(props['route']['params'])
     let [loading, setLoading] = useState(false);
+    const [id, setId] = useState()
+    useEffect(() => {
+        setLoading(true)
+        Auth.currentAuthenticatedUser()
+            .then((data) => {
+                // console.log('user----::',data)
+                setId(data.username)
+                // props.id=data.username
+                // getData(data.username)
+            });
+            setLoading(false)
+    }, []
+    )
+
+    const handleSubmit = async (e) => {
+        setLoading(true)
+        try {
+
+            let data_ = {}
+            data_.id=details.id
+            data_.aboutMe=text
+            const savedData = await props.updateUser({ variables: { input: data_ } })
+            console.log(savedData)
+
+        } catch (err) {
+            console.log('error creating todo:', err)
+        }
+        setLoading(false)
+    }
     return (
 
 
@@ -44,14 +78,16 @@ const Myselftextinput = (props) => {
                             style={styles.inputText}
                             {...props}
                             multiline={true}
-                            onChangeText={(text) => {
-                                setText(text)
+                            onChangeText={(text_) => {
+                                if (text.length <= 496)
+                                    setText(text_)
                             }}
                             onContentSizeChange={(event) => {
                                 setHeight(event.nativeEvent.contentSize.height)
                             }}
                             style={[styles.default, { height: Math.max(35, height) }]}
-                            value={details.aboutMe}
+
+                            value={text}
                         />
 
                     </View>
@@ -78,8 +114,11 @@ const Myselftextinput = (props) => {
     );
 }
 
-
-export default Myselftextinput;
+const profile = compose(
+    withApollo,
+    graphql(updateUser, { name: "updateUser" })
+)(Myselftextinput);
+export default profile;
 export const styles = StyleSheet.create({
     container: {
         flex: 1,

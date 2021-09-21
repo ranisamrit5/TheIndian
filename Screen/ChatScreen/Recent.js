@@ -21,6 +21,7 @@ const Recent = props => {
                 <Text style={{fontSize:18,fontWeight:"800",padding:15,}}>My Matches</Text>
                 <FlatList style={{ height:150,alignSelf:"center",borderRadius:5,backgroundColor:"#fff"}} horizontal={true}
                         data={data1}
+                        keyExtractor={(item, index) => index.toString()} 
                         showsHorizontalScrollIndicator={true}
                         renderItem={({item})=>
                         <View style={{marginTop:30,alignSelf:'center',height:"120%",marginLeft:5,alignItems:"center",}}>
@@ -49,6 +50,7 @@ const Recent = props => {
                        
                    <FlatList  style={{backgroundColor:"#fff",marginTop:10}} 
                         data={data}
+                        keyExtractor={(item, index) => index.toString()} 
                         showsVerticalScrollIndicator={false}
                         renderItem={({item})=>
                         <View style={{marginTop:30,width:'90%',alignSelf:'center',}}>

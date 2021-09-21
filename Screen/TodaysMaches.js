@@ -49,7 +49,6 @@ export default class app extends Component {
                                 </TouchableOpacity>
                             </View>
                             <View style={{ alignItems: 'center', flexDirection: 'row', marginLeft: 30, marginTop: 200 }}>
-
                                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                                     <Text style={{ fontSize: 16, color: 'white', fontWeight: '700' }}>Shubham B</Text>
                                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginLeft: 10 }}>
