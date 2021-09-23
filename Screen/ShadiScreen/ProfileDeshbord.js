@@ -238,7 +238,14 @@ const ProfileDashboard = props => {
             <View style={{ backgroundColor: '#e5e5e5',flex:1 }}>
                 <Loader loading={loading} />
                 <SafeAreaView style={{flex:1}} >
-                    <Text style={{ color: 'white', fontSize: 18, fontWeight: '700', alignSelf: 'center', justifyContent: 'center', marginBottom: 10, marginTop: 10 }}>My Shaadi</Text>
+                <View style={styles.haderView}>
+                    <TouchableOpacity onPress={() => props.navigation.navigate('MainTab')}>
+                        <Image style={styles.backArrow}
+                            source={require('../../Imagess/ErrorVector.png')} />
+                    </TouchableOpacity>
+                    <Text style={styles.hadertext}>{"My Profile"}</Text>
+                </View>  
+              
                     <ScrollView style={{flex:1}}>
                         <View style={{ backgroundColor: '#e5e5e5' ,flex:1}}>
                             <ImageBackground style={{ width: '100%', height: 200, flexDirection: 'row', alignItems: 'center' }} blurRadius={25} resizeMode='stretch'
@@ -286,8 +293,8 @@ const ProfileDashboard = props => {
                                     <Text style={{fontSize:14,fontWeight:'500',marginTop:5,color:'white'}}>Expiry : {validity}</Text>
                                 </View>
                             </ImageBackground>
-                            <Text style={{marginLeft:20,fontSize:16,fontWeight:'600',marginTop:10}}>complete Your Profile</Text>
-                            <View style={{alignSelf:'center',width:'100%',backgroundColor:'white',marginTop:10}}>
+                            <Text style={{marginLeft:20,fontSize:16,fontWeight:'600',marginTop:10,paddingBottom:10}}>complete Your Profile</Text>
+                            <View style={{alignSelf:'center',width:'100%',backgroundColor:'white',padding:10}}>
                                 <TouchableOpacity style={{flexDirection:'row',borderBottomWidth:2,alignItems:'center',padding:5,width:'90%',alignSelf:'center',borderColor:"#0000001A"}}>
                                     <Image style={{width:25,height:25}}
                                         source={require('../../Imagess/Shield_VectorIcone.png')} />
@@ -515,6 +522,29 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         padding: 20,
       },
+      haderView: {
+        flexDirection:"row",
+        backgroundColor: '#FF5733',
+        height: 50,
+        alignItems: 'center',
+    },
+    backArrow: {
+        transform: [{ rotate: '180deg' }],
+        marginLeft: 22,
+        marginRight: 10,
+        height: 25,
+        width: 25,
+        alignItems: 'flex-start',
+        resizeMode: 'contain',
+        tintColor: "#fff"
+    },
+    hadertext: {
+        marginLeft: 8,
+        marginRight: 20,
+        fontSize: 18,
+        color: "#fff",
+        fontWeight: "bold"
+    },
       buttonStyle: {
         backgroundColor: '#307ecc',
         borderWidth: 0,
