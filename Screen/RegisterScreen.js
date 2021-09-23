@@ -17,18 +17,43 @@ import {
   Keyboard,
   TouchableOpacity,
   ScrollView,
+  TouchableHighlight
 } from 'react-native';
-import  { Auth } from 'aws-amplify';
+import { Auth } from 'aws-amplify';
+import { RadioButton } from 'react-native-paper';
 import Loader from '../Screen/Componentone/Loader';
 
 const RegisterScreen = (props) => {
+  var [ colorId, setColorId ] = React.useState(0);
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
-  const [userAge, setUserAge] = useState('');
-  const [userAddress, setUserAddress] = useState('');
   const [mob, setMob] = useState('');
+  const [userAddress, setUserAddress] = useState('');
+  const [pass, setPass] = useState('');
+  const [rePass, setRePass] = useState('');
   const [loading, setLoading] = useState(false);
   const [errortext, setErrortext] = useState('');
+  const [gender, setGender] = useState();
+
+  const onPress = (id) => {
+
+    setColorId(id);
+    switch (id) {
+      case 1: {
+        console.log(id)
+        setGender('MALE')
+      }
+      case 2: {
+        console.log(id)
+        setGender('FEMALE')
+      }
+      case 3: {
+        console.log(id)
+        setGender('OTHER')
+      }
+    }
+  }; 
+
   const [
     isRegistraionSuccess,
     setIsRegistraionSuccess
@@ -39,8 +64,8 @@ const RegisterScreen = (props) => {
   const ageInputRef = createRef();
   const addressInputRef = createRef();
 
-  const handleSubmitButton =async () => {
-
+  const handleSubmitButton = async () => {
+    // console.log('gender',gender)
     setErrortext('');
     if (!userName) {
       alert('Please fill Name');
@@ -50,60 +75,63 @@ const RegisterScreen = (props) => {
       alert('Please fill Email');
       return;
     }
-    if (!userAge) {
-      alert('Please fill Age');
+    if (!mob) {
+      alert('Please fill Mobile No.');
       return;
     }
-    if (!userAddress) {
-      alert('Please fill Address');
+    if (!pass && !rePass && (pass != rePass)) {
+      alert('Please fill password correctly');
       return;
     }
     //Show Loader
-    setLoading(true);
+    // setLoading(true);
     var mailFormat = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
     var phoneRegex = /^(\+91-|\+91|0)?\d{10}$/;
     let phone_number = ''
     let email = ''
-   const { username,input, password,family_name,name,gender } = this.state;
-    var dataToSend = {
-      user_name: userName,
-      user_email: userEmail,
-      user_age: userAge,
-      user_address: userAddress,
-    };
+console.log(userName,userEmail,mob,pass,rePass,gender)
+// return;
+
     try {
-      const { user } = await Auth.signUp({
-        username,
-        password,
+      await Auth.signUp({
+        username:userEmail,
+        password:pass,
         attributes: {
-          email,          // optional
-          phone_number,
-          family_name,
+          email:userEmail,          // optional
+          phone_number:mob,
+          family_name:'',
           // middle_name,
-          name,
-          gender,
-      
+          name:userName,
+          gender:gender,
+
         }
-      });
-      console.log("user successfully signed Up!", user);
-        
-      } catch (error) {
-        setLoading(false);
-        alert("Error");
-        console.log('error signing in', error);
+      }).then((user)=>{
+        console.log("user successfully signed Up!", user);
+        props.navigation.navigate('OTP',{params:user});
+      })
+      
+
+    } catch (error) {
+      setLoading(false);
+      if(error.code == 'UsernameExistsException'){
+         alert("User Name Already Exist");
       }
+     
+      console.log('error signing in', error);
+    }
   };
 
-  const onTextChanged=(e)=>{
+  const onTextChanged = (e) => {
     console.log(e)
     return;
-    if (/^\d+$/.test(e.toString())) { 
+    if (/^\d+$/.test(e.toString())) {
       setUserAge(e)
     }
   }
 
   if (isRegistraionSuccess) {
     return (
+
       <View
         style={{
           flex: 1,
@@ -130,8 +158,18 @@ const RegisterScreen = (props) => {
       </View>
     );
   }
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+      <View style={{ flexDirection: 'row', width: '100%', alignItems: 'center', backgroundColor: '#FF5733', height: 50 }}>
+        <TouchableOpacity style={{ marginLeft: 20 }} onPress={() => props.navigation.pop()}>
+          <Image style={{ width: 20, height: 20, tintColor: 'white', transform: [{ rotate: '180deg' }] }}
+            source={require('../Imagess/ErrorVector.png')} />
+        </TouchableOpacity>
+        <View style={{ width: '20%' }}>
+          <Text style={{ alignSelf: 'center', fontSize: 18, fontWeight: "bold", color: 'white' }}>Back</Text>
+        </View>
+      </View>
       <Loader loading={loading} />
       <ScrollView
         keyboardShouldPersistTaps="handled"
@@ -146,7 +184,7 @@ const RegisterScreen = (props) => {
               width: '60%',
               height: 100,
               resizeMode: 'contain',
-              margin: 30,
+              margin: 10,
             }}
           />
         </View>
@@ -209,12 +247,12 @@ const RegisterScreen = (props) => {
             <TextInput
               style={styles.inputStyle}
               onChangeText={
-                (UserAge) => onTextChanged(UserAge)
+                (data) => setPass(data)
               }
               underlineColorAndroid="#f000"
-              placeholder="Enter Age"
+              placeholder="Enter Password"
               placeholderTextColor="#8b9cb5"
-              keyboardType="numeric"
+
               ref={ageInputRef}
               returnKeyType="next"
               onSubmitEditing={() =>
@@ -224,14 +262,15 @@ const RegisterScreen = (props) => {
               blurOnSubmit={false}
             />
           </View>
+
           <View style={styles.SectionStyle}>
             <TextInput
               style={styles.inputStyle}
               onChangeText={
-                (UserAddress) => setUserAddress(UserAddress)
+                (data) => setRePass(data)
               }
               underlineColorAndroid="#f000"
-              placeholder="Enter Address"
+              placeholder="Re-enter Password"
               placeholderTextColor="#8b9cb5"
               autoCapitalize="sentences"
               ref={addressInputRef}
@@ -245,10 +284,52 @@ const RegisterScreen = (props) => {
               {errortext}
             </Text>
           ) : null}
+
+          <View style={{ flexDirection: "row", justifyContent: "space-between", width: "65%" }}>
+            <Text style={styles.text1}>Gender</Text>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", width: "70%", alignSelf: "center", padding: 20, }}>
+              <TouchableHighlight
+                style={colorId === 1 ? styles.red : styles.button}
+                onPress={() => {
+                  onPress(1)
+                  setGender('MALE')
+                }}>
+                <Text>Male</Text>
+
+
+              </TouchableHighlight>
+
+              <TouchableHighlight
+                style={colorId === 2 ? styles.red : styles.button}
+                onPress={() => {
+                  onPress(2)
+                  setGender('FEMALE')
+                }}>
+
+                <Text>Female</Text>
+
+
+              </TouchableHighlight>
+
+              <TouchableHighlight style={colorId === 3 ? styles.red : styles.button}
+                onPress={() => {
+                  onPress(3)
+                  setGender('OTHER')
+                }} >
+                <Text>Other</Text>
+
+
+              </TouchableHighlight>
+            </View>
+
+          </View>
+
+
+
           <TouchableOpacity
             style={styles.buttonStyle}
             activeOpacity={0.5}
-            onPress={()=>handleSubmitButton}>
+            onPress={() => handleSubmitButton()}>
             <Text style={styles.buttonTextStyle}>
               REGISTER
             </Text>
@@ -276,7 +357,7 @@ const styles = StyleSheet.create({
     borderColor: '#7DE24E',
     height: 40,
     alignItems: 'center',
-    borderRadius: 30,
+    borderRadius: 10,
     marginLeft: 35,
     marginRight: 35,
     marginTop: 20,
@@ -293,7 +374,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 15,
     borderWidth: 1,
-    borderRadius: 30,
+    borderRadius: 10,
     borderColor: '#a9a9a9',
   },
   errorTextStyle: {
@@ -306,5 +387,37 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 18,
     padding: 30,
+  },
+  text1: {
+    fontSize: 16,
+    // fontWeight: "bold",
+    color: "#666666",
+    left: 35,
+    // marginTop:10,
+    alignSelf: "center"
+  },
+  red: {
+    backgroundColor: '#ffa07a',
+    alignItems: 'center',
+    borderColor: '#7DE24E',
+    padding: 10,
+    borderWidth: 0.5,
+    justifyContent: 'center',
+    width: 70,
+   
+    marginLeft: 5,
+    marginRight: 5,
+    borderRadius: 5
+  },
+  button: {
+    alignItems: 'center',
+    padding: 10,
+    borderWidth: 0.5,
+    justifyContent: 'center',
+    width: 70,
+   
+    marginLeft: 5,
+    marginRight: 5,
+    borderRadius: 5
   },
 });

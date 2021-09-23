@@ -22,20 +22,70 @@ import  { Auth } from 'aws-amplify';
 const LoginScreen = props => {
   let [userEmail, setUserEmail] = useState('');
   let [userPassword, setUserPassword] = useState('');
+  let [rePassword, setRePassword] = useState('');
   let [loading, setLoading] = useState(false);
   let [errortext, setErrortext] = useState('');
+  let [userState, setUserState] = useState(false);
+  const [userData, setUserData] = useState({
+  });
+  const [username, setUsername] = useState();
+  const [name, setName] = useState('');
+  const [familyName, setFamilyName] = useState('');
+  const [gender, setGender] = useState('');
 
   useEffect(() => {
     Auth.currentAuthenticatedUser().then((data) => {
-      console.log('user----::',data.username)
+      console.log('user----::',data)
       props.navigation.navigate('TabNavigation');
-      // PlanList();
-      // setId(data.username);
-      // getData(data.username);
     });
   }, []); 
 
-
+  const handelNewPasswordRequired = async() => {
+    setErrortext('');
+    if (!rePassword) {
+      alert('Re-enter Password');
+      return;
+    }
+    if (!userPassword) {
+      alert('Please fill Password');
+      return;
+    }
+    if(rePassword != userPassword){
+      alert('Password does not match');
+      return;
+    }
+    console.log(username, userPassword,userData)
+    // return
+    setLoading(true);
+    Auth.signIn(username, userPassword)
+    .then(user => {
+        if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
+            const { requiredAttributes } = user.challengeParam; // the array of required attributes, e.g ['email', 'phone_number']
+            Auth.completeNewPassword(
+                user,               // the Cognito User Object
+                userPassword,       // the new password
+                // OPTIONAL, the required attributes
+                {
+                  email: userData.email,
+                  phone_number: userData.phone_number,
+                  name:'Tushar',
+                  family_name:'Samrit',
+                  gender:'MALE'
+                }
+            ).then(user => {
+                // at this time the user is logged in if no MFA required
+                console.log(user);
+                props.navigation.navigate('TabNavigation');
+            }).catch(e => {
+              console.log(e);
+            });
+        } else {
+            // other situations
+        }
+    }).catch(e => {
+        console.log(e);
+    });
+  };
 
   const handleSubmitPress = async() => {
     setErrortext('');
@@ -51,68 +101,32 @@ const LoginScreen = props => {
     try {
     const user = await Auth.signIn(userEmail, userPassword)
     .then((res) => {
-      console.log("SignIn======>",res.username)
+      // console.log("SignIn======>",res)
+      if (res.challengeName === 'NEW_PASSWORD_REQUIRED') {
+        // props.navigation.navigate('OTP')
+        setUserState(true)
+        setUserData(res.challengeParam['userAttributes'])
+        setUsername(res.username)
+        console.log("SignIn======>",res.username)
+      }else{
+        props.navigation.navigate('TabNavigation');
+      }
       setLoading(false);
-      props.navigation.navigate('TabNavigation');
+      // props.navigation.navigate('TabNavigation');
     })
-    // console.log("SignIn======>",user)
-    //     if (user) {
-    //       alert("Login In Success");
-    //       // this.getdata(user.username);
-    //     } else {
-    //       setLoading(false);
-    //       alert("Please Enter valid Username & Password");
-    //     }
-      
     } catch (error) {
       setLoading(false);
       alert("Error");
       console.log('error signing in', error);
     }
-
-    // var dataToSend = { user_email: userEmail, user_password: userPassword };
-    // var formBody = [];
-    // for (var key in dataToSend) {
-    //   var encodedKey = encodeURIComponent(key);
-    //   var encodedValue = encodeURIComponent(dataToSend[key]);
-    //   formBody.push(encodedKey + '=' + encodedValue);
-    // }
-    // formBody = formBody.join('&');
-
-    // fetch('https://aboutreact.herokuapp.com/login.php', {
-    //   method: 'POST',
-    //   body: formBody,
-    //   headers: {
-    //     //Header Defination
-    //     'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-    //   },
-    // }).then(response => response.json())
-    //   .then(responseJson => {
-    //     //Hide Loader
-    //     setLoading(false);
-    //     console.log(responseJson);
-    //     // If server response message same as Data Matched
-    //     if (responseJson.status == 1) {
-    //       // AsyncStorage.setItem('user_id', responseJson.data[0].user_id);
-    //       console.log(responseJson.data[0].user_id);
-    //       props.navigation.navigate('DrawerNavigationRoutes');
-    //     } else {
-    //       setErrortext('Please check your email id or password');
-    //       console.log('Please check your email id or password');
-    //     }
-    //   })
-    //   .catch(error => {
-    //     //Hide Loader
-    //     setLoading(false);
-    //     console.error(error);
-    //   });
   };
 
   return (
     <View style={styles.mainBody}>
       <StatusBar backgroundColor='#ffa07a' barStyle="light-content" />
       <Loader loading={loading} />
-      <ScrollView keyboardShouldPersistTaps="handled">
+      {userState == true ?
+        <ScrollView keyboardShouldPersistTaps="handled">
         <View style={{ marginTop: 100 }}>
           <KeyboardAvoidingView enabled>
             <View style={{ alignItems: 'center' }}>
@@ -127,36 +141,63 @@ const LoginScreen = props => {
                 }}
               />
             </View>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", width: "65%" }}>
+            <Text style={styles.text1}>Gender</Text>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", width: "70%", alignSelf: "center", padding: 20, }}>
+              <TouchableHighlight
+                style={colorId === 1 ? styles.red : styles.button}
+                onPress={() => {
+                  onPress(1)
+                  setGender('MALE')
+                }}>
+                <Text>Male</Text>
+
+
+              </TouchableHighlight>
+
+              <TouchableHighlight
+                style={colorId === 2 ? styles.red : styles.button}
+                onPress={() => {
+                  onPress(2)
+                  setGender('FEMALE')
+                }}>
+
+                <Text>Female</Text>
+
+
+              </TouchableHighlight>
+
+              <TouchableHighlight style={colorId === 3 ? styles.red : styles.button}
+                onPress={() => {
+                  onPress(3)
+                  setGender('OTHER')
+                }} >
+                <Text>Other</Text>
+
+
+              </TouchableHighlight>
+            </View>
+
+          </View>
             <View style={styles.SectionStyle}>
-              <TextInput
+            <TextInput
                 style={styles.inputStyle}
-                onChangeText={UserEmail => setUserEmail(UserEmail)}
-                // underlineColorAndroid="#FFFFFF"
-                placeholder="Metrimony ID/Mobile No./Email ID" //dummy@abc.com
+                onChangeText={pass => setUserPassword(pass)}
+                placeholder="Enter Password" //12345
                 placeholderTextColor="#000"
-                autoCapitalize="none"
-                keyboardType="email-address"
-                // ref={ref => {
-                //   this._emailinput = ref;
-                // }}
-                returnKeyType="next"
-                onSubmitEditing={() =>
-                  this._passwordinput && this._passwordinput.focus()
-                }
+                keyboardType="default"
+                onSubmitEditing={Keyboard.dismiss}
                 blurOnSubmit={false}
+                secureTextEntry={true}
               />
             </View>
             <View style={styles.SectionStyle}>
               <TextInput
                 style={styles.inputStyle}
-                onChangeText={UserPassword => setUserPassword(UserPassword)}
-                // underlineColorAndroid="#FFFFFF"
-                placeholder="Enter Password" //12345
+                onChangeText={repass => setRePassword(repass)}
+                placeholder="Re Enter Password" //12345
                 placeholderTextColor="#000"
                 keyboardType="default"
-                // ref={ref => {
-                //   this._passwordinput = ref;
-                // }}
                 onSubmitEditing={Keyboard.dismiss}
                 blurOnSubmit={false}
                 secureTextEntry={true}
@@ -168,36 +209,103 @@ const LoginScreen = props => {
             <TouchableOpacity
               style={styles.buttonStyle}
               activeOpacity={0.5}
-              onPress={handleSubmitPress}>
+              onPress={handelNewPasswordRequired}>
               <Text style={styles.buttonTextStyle}>LOGIN</Text>
-            </TouchableOpacity>
-
-
-            <TouchableOpacity onPress={() => props.navigation.navigate('OTP')}>
-              <Text
-                style={styles.registerTextStyle1}>
-
-                Login via OTP
-            </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.buttonStyle}
-              activeOpacity={0.5}
-              onPress={() => props.navigation.navigate('RegisterScreen')}>
-              <Text style={styles.buttonTextStyle}>New User? Register free</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => props.navigation.navigate('ForgotPassword')}>
-              <Text
-                style={styles.registerTextStyle}>
-
-                Forgot Password?
-            </Text>
             </TouchableOpacity>
           </KeyboardAvoidingView>
         </View>
       </ScrollView>
-    </View>
+ : 
+ 
+ <ScrollView keyboardShouldPersistTaps="handled">
+ <View style={{ marginTop: 100 }}>
+   <KeyboardAvoidingView enabled>
+     <View style={{ alignItems: 'center' }}>
+       <Image
+         source={Logo}
+         style={{
+           width: '60%',
+           height: 100,
+           resizeMode: 'contain',
+           margin: 30,
+           bottom: 50
+         }}
+       />
+     </View>
+     <View style={styles.SectionStyle}>
+       <TextInput
+         style={styles.inputStyle}
+      
+         // underlineColorAndroid="#FFFFFF"
+         placeholder="Mobile No./Email ID" //dummy@abc.com
+         placeholderTextColor="#000"
+         autoCapitalize="none"
+         keyboardType="email-address"
+         onChangeText={email => setUserEmail(email)}
+         // ref={ref => {
+         //   this._emailinput = ref;
+         // }}
+         returnKeyType="next"
+         onSubmitEditing={() =>
+           this._passwordinput && this._passwordinput.focus()
+         }
+         blurOnSubmit={false}
+       />
+     </View>
+     <View style={styles.SectionStyle}>
+       <TextInput
+         style={styles.inputStyle}
+         onChangeText={UserPassword => setUserPassword(UserPassword)}
+         // underlineColorAndroid="#FFFFFF"
+         placeholder="Enter Password" //12345
+         placeholderTextColor="#000"
+         keyboardType="default"
+         // ref={ref => {
+         //   this._passwordinput = ref;
+         // }}
+         onSubmitEditing={Keyboard.dismiss}
+         blurOnSubmit={false}
+         secureTextEntry={true}
+       />
+     </View>
+     {errortext != '' ? (
+       <Text style={styles.errorTextStyle}> {errortext} </Text>
+     ) : null}
+     <TouchableOpacity
+       style={styles.buttonStyle}
+       activeOpacity={0.5}
+       onPress={handleSubmitPress}>
+       <Text style={styles.buttonTextStyle}>LOGIN</Text>
+     </TouchableOpacity>
+
+
+     <TouchableOpacity onPress={() => props.navigation.navigate('OTP')}>
+       <Text
+         style={styles.registerTextStyle1}>
+
+         Login via OTP
+     </Text>
+     </TouchableOpacity>
+     <TouchableOpacity
+       style={styles.buttonStyle}
+       activeOpacity={0.5}
+       onPress={() => props.navigation.navigate('RegisterScreen')}>
+       <Text style={styles.buttonTextStyle}>New User? Register free</Text>
+     </TouchableOpacity>
+
+     <TouchableOpacity onPress={() => props.navigation.navigate('ForgotPassword')}>
+       <Text
+         style={styles.registerTextStyle}>
+
+         Forgot Password?
+     </Text>
+     </TouchableOpacity>
+   </KeyboardAvoidingView>
+ </View>
+</ScrollView>
+
+    }
+       </View>
   );
 };
 export default LoginScreen;
@@ -224,7 +332,7 @@ const styles = StyleSheet.create({
     borderColor: '#7DE24E',
     height: 40,
     alignItems: 'center',
-    borderRadius: 30,
+    borderRadius: 10,
     marginLeft: 50,
     marginRight: 50,
     marginTop: 20,
@@ -242,7 +350,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 15,
     borderWidth: 1,
-    borderRadius: 30,
+    borderRadius: 10,
     borderColor: '#a9a9a9',
   },
   registerTextStyle: {

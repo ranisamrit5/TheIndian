@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -11,7 +11,7 @@ import {
     ImageBackground
 } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
+import {RNS3} from 'react-native-s3-upload';
 import {
     Header,
     LearnMoreLinks,
@@ -19,22 +19,210 @@ import {
     DebugInstructions,
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import { Auth } from "aws-amplify";
+import { graphql, withApollo } from "react-apollo";
+import compose from "lodash.flowright";
+import Getdata from "../../AppSync/query/Auth/getData";
+import updateUser from "../../AppSync/mutation/User/updateData";
+import Loader from '../../Screen/Componentone/Loader';
+import { userDataMapper } from '../Mappers/mapper'
+import female from "../../Imagess/female.jpeg";
+import male from "../../Imagess/male.jpg";
 // import BasicInfoScreen from './EditProfile/BasicInfoScreen';
-import ImagePicker from 'react-native-image-crop-picker';
-
+import awsexport from "../../aws-export";
+import moment from "moment"
+import {s3Upload} from "../libs/awsLib";
+import {launchImageLibrary} from 'react-native-image-picker';
+import { Storage } from "aws-amplify";
 // const [premiumMatches, setPremiumMatches] = useState([1, 2, 3, 4, 5]);
-const ProfileDeshbord = props => {
+const ProfileDashboard = props => {
 
 
     // const [premiumMatches, setPremiumMatches] = useState([1, 2, 3, 4, 5]);
     let [data, setData] = useState([1, 2, 3, 4, 5]);
-
-   const pickMultiple =()=> {
-        ImagePicker.openPicker({
-            multiple: true
-        }).then(images => {
-            console.log(images);
+    const [id, setId] = useState()
+    const [filePath_, setFilePath] = useState({});
+    const [uploadSuccessMessage, setUploadSuccessMessage] = useState('');
+    const [details, setDetails] = useState([])
+    const [validity, setValidity] = useState();
+    const [basicInfo, setBasicInfo] = useState({
+        id: '',
+       profilePic:""
+    })
+    let [loading, setLoading] = useState(true);
+    useEffect(() => {
+        setLoading(true)
+        Auth.currentAuthenticatedUser()
+            .then((data) => {
+                console.log('ProfileDashboard----::',data.username)
+                setId(data.username)
+                // props.id=data.username
+                getData(data.username)
+            });
+            setLoading(false)
+    }, []
+    )
+    const chooseFile = () => {
+        let options = {
+          mediaType: 'photo',
+        };
+        launchImageLibrary(options, (response) => {
+        //   console.log('Response = ', response.assets[0]);
+          setUploadSuccessMessage('');
+          if (response.didCancel) {
+            alert('User cancelled camera picker');
+            return;
+          } else if (response.errorCode == 'camera_unavailable') {
+            alert('Camera not available on device');
+            return;
+          } else if (response.errorCode == 'permission') {
+            alert('Permission not satisfied');
+            return;
+          } else if (response.errorCode == 'others') {
+            alert(response.errorMessage);
+            return;
+          }
+          setFilePath(response.assets[0]);
+          uploadFile(response.assets[0]);
         });
+      };
+
+    const getData = async (user) => {
+        console.log('getting user data')
+        const { data } = await props.client.query({
+            query: Getdata,
+            fetchPolicy: "network-only",
+            variables: {
+                id: `${user}`,
+            },
+        }).catch((error)=>{
+            console.log(error);
+            setLoading(false);
+        })
+        if (data) {
+            let userData = data.getUser
+            setValidity(moment(parseInt(userData.validity)).format("MMM Do YYYY"))
+            console.log('user----in DS', userData.plan)
+            
+            let all = {}
+            all.data = data.getUser
+            let pDetails = userDataMapper(all)
+            setDetails(pDetails)
+            console.log('user----in profilePic', pDetails.profilePic)
+            const { noOfChildren, maritalStatus_, eatingHabit, smokingHabit, drinkingHabit, manglik, subcaste,
+                religion,profilePic, caste, familyDetails, gotram, motherTongue, dob, aboutMe, fname, profileCreatedFor,gender_,height_,physicalStatus_
+            } = pDetails
+            // setData(familyDetails)
+            // console.log('IN===>',profilePic);
+            // // setMaterial()
+            // // setGender(gender)
+            // // setFathersOccupation(familyDetails.fathersOccupation)
+            setBasicInfo({
+                ...basicInfo,
+                id: user,
+            //     profileCreatedFor: profileCreatedFor,
+            //     maritalStatus:  maritalStatus_,
+            //     noOfChildren:  noOfChildren,
+                profilePic:profilePic,
+            //     eatingHabit: eatingHabit,
+            //     smokingHabit: smokingHabit,
+            //     drinkingHabit: drinkingHabit,
+            //     manglik: manglik,
+            //     physicalStatus: physicalStatus_,
+            //     religion: religion,
+            //     caste: caste,
+            //     subcaste: subcaste,
+            //     gotram:gotram,
+            //     height: height_,
+            //     motherTongue: motherTongue,
+            //     dob: dob,
+            //     aboutMe: aboutMe,
+            //     fname: fname,
+            //     gender:gender_,
+            //     familyDetails:familyDetails
+
+            });
+        }
+        setLoading(false)
+    }
+    const uploadFile = async (filePath) => {
+        if (Object.keys(filePath).length == 0) {
+          alert('Please select image first');
+          return;
+        }
+        console.log(filePath);
+        setLoading(true)
+        let response =await RNS3.put(
+          {
+            uri: filePath.uri,
+            name: filePath.fileName,
+            type: filePath.type,
+          },
+          {
+            keyPrefix: `public/${id}/`, // Ex. myuploads/
+            bucket: awsexport.s3Bucket, // Ex. aboutreact
+            region: awsexport.aws_cognito_region, // Ex. ap-south-1
+            accessKey: awsexport.aws_access_key_id,
+            secretKey: awsexport.aws_secret_access_key,
+            successActionStatus: 201,
+          },
+        )
+          .progress((progress) =>
+            setUploadSuccessMessage(
+              `Uploading: ${progress.loaded / progress.total} (${
+                progress.percent
+              }%)`,
+            ),
+          )
+        //   .then((response) => {
+            if (response.status !== 201)
+              alert('Failed to upload image to S3',response);
+
+            console.log(response);
+            setFilePath('');
+            let {
+              bucket,
+              etag,
+              key,
+              location
+            } = response.body.postResponse;
+            setUploadSuccessMessage(
+              `Uploaded Successfully: 
+              \n1. bucket => ${bucket}
+              \n2. etag => ${etag}
+              \n3. key => ${key}
+              \n4. location => ${location}`,
+            );
+            let fileKey=`https://${awsexport.s3Bucket}.s3.${awsexport.aws_cognito_region}.amazonaws.com/public/${id}/${filePath.fileName}`
+          
+        //   }).then(()=>{
+            await handleSubmit(fileKey);
+        //   })
+      };
+      const handleSubmit = async (fileKey) => {
+        // setLoading(true)
+    
+        console.log('fileKey====>',fileKey)
+        let data =basicInfo
+        data.profilePic=fileKey
+        try {
+            const savedData = await props.updateUser({ variables: { input: data } })
+            console.log('savedData====>',savedData)
+            setBasicInfo({ ...basicInfo, profilePic: fileKey })
+            setDetails({ ...details, profilePic: fileKey })
+
+        } catch (err) {
+            console.log('error creating todo:', err)
+        }
+        setLoading(false)
+    }
+   const pickMultiple =()=> {
+       console.log('Clicked')
+        // ImagePicker.openPicker({
+        //     multiple: true
+        // }).then(images => {
+        //     console.log(images);
+        // });
     }
 // export default class app extends Component {
 //     constructor(props) {
@@ -47,41 +235,67 @@ const ProfileDeshbord = props => {
 //     }
 //     render() {
         return (
-            <View style={{ backgroundColor: '#FF5733',flex:1 }}>
+            <View style={{ backgroundColor: '#e5e5e5',flex:1 }}>
+                <Loader loading={loading} />
                 <SafeAreaView style={{flex:1}} >
-                    <Text style={{ color: 'white', fontSize: 18, fontWeight: '700', alignSelf: 'center', justifyContent: 'center', marginBottom: 10, marginTop: 10 }}>My Shaadi</Text>
+                <View style={styles.haderView}>
+                    <TouchableOpacity onPress={() => props.navigation.navigate('MainTab')}>
+                        <Image style={styles.backArrow}
+                            source={require('../../Imagess/ErrorVector.png')} />
+                    </TouchableOpacity>
+                    <Text style={styles.hadertext}>{"My Profile"}</Text>
+                </View>  
+              
                     <ScrollView style={{flex:1}}>
-                        <View style={{ backgroundColor: '#d3d3d3' ,flex:1}}>
+                        <View style={{ backgroundColor: '#e5e5e5' ,flex:1}}>
                             <ImageBackground style={{ width: '100%', height: 200, flexDirection: 'row', alignItems: 'center' }} blurRadius={25} resizeMode='stretch'
-                                source={require('../../Imagess/AllImage.jpg')}   >
+                                source={
+                                    !details.profilePic ?
+                                    details.gender == 'Male' || details.gender == 'MALE' ?
+                                            require('../../Imagess/male.jpg') :
+                                            require('../../Imagess/female.jpeg') :
+                                        { uri: details.profilePic }
+                                }
+                                
+                                >
                                 <View style={{ marginLeft: 40, }}>
+                                    {details.profilePic?
                                     <ImageBackground style={{ width: 55, height: 55, overflow: 'hidden',
                                      borderRadius: 25,alignItems:'center',justifyContent:'flex-end',marginTop:10 }}
-                                        source={require('../../Imagess/AllImage.jpg')} >
-                                        <TouchableOpacity onPress={() => pickMultiple()}
+                                     source={{uri:details.profilePic}} >
+                                    <TouchableOpacity onPress={() => chooseFile()}
                                         style={{ borderWidth: 0.3,  alignItems: 'center',justifyContent:'center', 
                                          borderRadius: 10, backgroundColor: 'green', width: 20, height: 20, }}>
-                                            
                                             <Text style={{ fontSize: 15, color: 'white', }}>+</Text>
                                         </TouchableOpacity>
                                     </ImageBackground>
-                                    
+                                    :
+                                    <ImageBackground style={{ width: 55, height: 55, overflow: 'hidden',
+                                    borderRadius: 25,alignItems:'center',justifyContent:'flex-end',marginTop:10 }}
+                                    source={details.gender == 'MALE' || details.gender == 'Male' ? require('../../Imagess/male.jpg'):require('../../Imagess/female.jpeg')} > 
+                                       <TouchableOpacity onPress={() => chooseFile()}
+                                       style={{ borderWidth: 0.3,  alignItems: 'center',justifyContent:'center', 
+                                        borderRadius: 10, backgroundColor: 'green', width: 20, height: 20, }}>
+                                           <Text style={{ fontSize: 15, color: 'white', }}>+</Text>
+                                       </TouchableOpacity>
+                                   </ImageBackground>
+}
                                 </View>
                                 <View style={{ marginLeft: 20 }}>
-                                    <Text style={{fontSize:14,fontWeight:'500',color:'white'}}>Rani Samrit</Text>
+                                    <Text style={{fontSize:14,fontWeight:'500',color:'white'}}>{details.fname} {details.lname}</Text>
                                     <View style={{ flexDirection: 'row',marginTop:10 }}>
-                                        <Text style={{fontSize:14,fontWeight:'500',color:'white'}}>SH69951946</Text>
+                                        <Text style={{fontSize:14,fontWeight:'500',color:'white'}}>{details.username}</Text>
                                         <TouchableOpacity  onPress={()=>props.navigation.navigate('EditProfileScreen')} >
                                             <Text style={{marginLeft:10,color:'green',fontSize:16}}>Edit Profile</Text>
                                         </TouchableOpacity>
                                     </View>
-                                    <Text style={{fontSize:14,fontWeight:'500',marginTop:5,color:'white'}}>Account Diamond</Text>
-                                    <Text style={{fontSize:14,fontWeight:'500',marginTop:5,color:'white'}}>Expiry -23-may-21</Text>
+                                    <Text style={{fontSize:14,fontWeight:'500',marginTop:5,color:'white'}}>Account {details.plan}</Text>
+                                    <Text style={{fontSize:14,fontWeight:'500',marginTop:5,color:'white'}}>Expiry : {validity}</Text>
                                 </View>
                             </ImageBackground>
-                            <Text style={{marginLeft:20,fontSize:16,fontWeight:'600',marginTop:10}}>complete Your Profile</Text>
-                            <View style={{alignSelf:'center',width:'100%',backgroundColor:'white',marginTop:10}}>
-                                <TouchableOpacity style={{flexDirection:'row',borderBottomWidth:0.5,alignItems:'center',padding:5,width:'90%',alignSelf:'center'}}>
+                            <Text style={{marginLeft:20,fontSize:16,fontWeight:'600',marginTop:10,paddingBottom:10}}>complete Your Profile</Text>
+                            <View style={{alignSelf:'center',width:'100%',backgroundColor:'white',padding:10}}>
+                                <TouchableOpacity style={{flexDirection:'row',borderBottomWidth:2,alignItems:'center',padding:5,width:'90%',alignSelf:'center',borderColor:"#0000001A"}}>
                                     <Image style={{width:25,height:25}}
                                         source={require('../../Imagess/Shield_VectorIcone.png')} />
                                     <View style={{flexDirection:'row',marginLeft:20,justifyContent:'space-between',width:'90%'}}>
@@ -95,7 +309,7 @@ const ProfileDeshbord = props => {
 
                                 </TouchableOpacity>
 
-                                <TouchableOpacity style={{flexDirection:'row',borderBottomWidth:0.5,alignItems:'center',padding:5,width:'90%',alignSelf:'center'}}>
+                                <TouchableOpacity style={{flexDirection:'row',alignItems:'center',padding:5,width:'90%',alignSelf:'center'}}>
                                     <Image style={{width:25,height:25,tintColor:'grey'}}
                                         source={require('../../Imagess/Astrology_Vector.png')} />
                                     <View style={{flexDirection:'row',marginLeft:20,justifyContent:'space-between',width:'90%'}}>
@@ -108,7 +322,6 @@ const ProfileDeshbord = props => {
                                     </View>
 
                                 </TouchableOpacity>
-                                
                             </View>
                             {/* ================= Premium Matches =============== */}
                             <View style={{marginTop:10,backgroundColor:'white'}}>
@@ -117,9 +330,10 @@ const ProfileDeshbord = props => {
                                 <View style={{marginLeft:10}}>
                                     <FlatList horizontal={true}
                                         data={data}
+                                        keyExtractor={(item, index) => index.toString()} 
                                         showsHorizontalScrollIndicator={false}
                                         renderItem={({item})=>
-                                        <View style={{marginRight:10,borderWidth:1,width:180}}>
+                                        <View style={{marginRight:10,borderWidth:1,width:180,borderColor:"#0000001A",elevation:10}}>
                                             <ImageBackground style={{width:180,height:140,justifyContent:'flex-end'}}
                                                 source={require('../../Imagess/HeroImage.jpeg')} 
                                                  >
@@ -150,9 +364,10 @@ const ProfileDeshbord = props => {
                                 <View style={{marginLeft:10}}>
                                     <FlatList horizontal={true}
                                         data={data}
+                                        keyExtractor={(item, index) => index.toString()} 
                                         showsHorizontalScrollIndicator={false}
                                         renderItem={({item})=>
-                                        <View style={{marginRight:10,borderWidth:1,width:180}}>
+                                        <View style={{marginRight:10,borderWidth:1,width:180,borderColor:"#0000001A"}}>
                                             <ImageBackground style={{width:180,height:140,justifyContent:'flex-end'}}
                                                 source={require('../../Imagess/HeroImage.jpeg')}  >
                                                 <View  blurRadius={20}>
@@ -184,9 +399,10 @@ const ProfileDeshbord = props => {
                                 <View style={{marginLeft:10}}>
                                     <FlatList horizontal={true}
                                         data={data}
+                                        keyExtractor={(item, index) => index.toString()} 
                                         showsHorizontalScrollIndicator={false}
                                         renderItem={({item})=>
-                                        <View style={{marginRight:10,borderWidth:1,width:180}}>
+                                        <View style={{marginRight:10,borderWidth:1,width:180,borderColor:"#0000001A"}}>
                                             <ImageBackground style={{width:180,height:140,justifyContent:'flex-end'}}
                                                 source={require('../../Imagess/HeroImage.jpeg')}  >
                                                 <View  blurRadius={20}>
@@ -214,7 +430,7 @@ const ProfileDeshbord = props => {
                         {/* ============ Options & Settings ============*/}
                         <Text style={{fontSize:14,fontWeight:'bold',marginTop:15,marginLeft:10}}>Options & Settings</Text>
                         <View style={{backgroundColor:'white',marginTop:5}}>
-                            <TouchableOpacity style={{flexDirection:'row',height:40,marginBottom:5,alignItems:'center',justifyContent:'center',width:'90%',borderBottomWidth:0.5,alignSelf:'center'}}
+                            <TouchableOpacity style={{flexDirection:'row',height:40,marginBottom:5,alignItems:'center',justifyContent:'center',width:'90%',borderBottomWidth:1,alignSelf:'center',borderColor:"#0000001A"}}
                                 onPress={()=>props.navigation.navigate('Partner_Preferences')} >
                                 <Image style={{width:20,height:20}}
                                     source={require('../../Imagess/Matches.png')} />
@@ -225,7 +441,7 @@ const ProfileDeshbord = props => {
                                </View>
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={{flexDirection:'row',height:40,marginBottom:5,alignItems:'center',justifyContent:'center',width:'90%',borderBottomWidth:0.5,alignSelf:'center'}}>
+                            <TouchableOpacity style={{flexDirection:'row',height:40,marginBottom:5,alignItems:'center',justifyContent:'center',width:'90%',borderBottomWidth:1,alignSelf:'center',borderColor:"#0000001A"}}>
                                
                                 <Image style={{width:20,height:20}}
                                     source={require('../../Imagess/FilterImage.png')} />
@@ -236,7 +452,7 @@ const ProfileDeshbord = props => {
                                </View>
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={{flexDirection:'row',height:40,marginBottom:5,alignItems:'center',justifyContent:'center',width:'90%',borderBottomWidth:0.5,alignSelf:'center'}}
+                            <TouchableOpacity style={{flexDirection:'row',height:40,marginBottom:5,alignItems:'center',justifyContent:'center',width:'90%',borderBottomWidth:1,alignSelf:'center',borderColor:"#0000001A"}}
                                onPress={()=>props.navigation.navigate('AccountSettings')}>
                                 <Image style={{width:20,height:20}}
                                     source={require('../../Imagess/SettingVector.png')} />
@@ -247,7 +463,7 @@ const ProfileDeshbord = props => {
                                </View>
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={{flexDirection:'row',height:40,marginBottom:5,alignItems:'center',justifyContent:'center',width:'90%',borderBottomWidth:0.5,alignSelf:'center'}}>
+                            <TouchableOpacity style={{flexDirection:'row',height:40,marginBottom:5,alignItems:'center',justifyContent:'center',width:'90%',borderBottomWidth:1,alignSelf:'center',borderColor:"#0000001A"}}>
                                 <Image style={{width:20,height:20}}
                                     source={require('../../Imagess/help_Icon.png')} />
                                <View style={{flexDirection:'row',alignItems:'center',marginLeft:15,width:'90%',justifyContent:'space-between'}}>
@@ -257,7 +473,7 @@ const ProfileDeshbord = props => {
                                </View>
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={{flexDirection:'row',height:40,marginBottom:5,alignItems:'center',justifyContent:'center',width:'90%',borderBottomWidth:0.5,alignSelf:'center'}}
+                            <TouchableOpacity style={{flexDirection:'row',height:40,marginBottom:5,alignItems:'center',justifyContent:'center',width:'90%',borderBottomWidth:1,alignSelf:'center',borderColor:"#0000001A"}}
                                 onPress={()=>props.navigation.navigate('Notification')}  >
                                 <Image style={{width:20,height:20}}
                                     source={require('../../Imagess/NotificationIcon.png')} />
@@ -268,7 +484,7 @@ const ProfileDeshbord = props => {
                                </View>
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={{flexDirection:'row',height:40,marginBottom:5,alignItems:'center',justifyContent:'center',width:'90%',borderBottomWidth:0.5,alignSelf:'center'}}
+                            <TouchableOpacity style={{flexDirection:'row',height:40,marginBottom:5,alignItems:'center',justifyContent:'center',width:'90%',borderBottomWidth:1,alignSelf:'center',borderColor:"#0000001A"}}
                                 onPress={()=>props.navigation.navigate('RatingStar')} >
                                 <Image style={{width:20,height:20}}
                                     source={require('../../Imagess/Star_Reting.png')} />
@@ -291,7 +507,12 @@ const ProfileDeshbord = props => {
 // }
 );
 };
-export default ProfileDeshbord;
+const profile = compose(
+    withApollo,
+    graphql(updateUser, { name: "updateUser" })
+)(ProfileDashboard);
+export default profile;
+// export default ProfileDeshbord;
 const styles = StyleSheet.create({
     HeaderText: {
         fontSize: 16
@@ -301,6 +522,29 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         padding: 20,
       },
+      haderView: {
+        flexDirection:"row",
+        backgroundColor: '#FF5733',
+        height: 50,
+        alignItems: 'center',
+    },
+    backArrow: {
+        transform: [{ rotate: '180deg' }],
+        marginLeft: 22,
+        marginRight: 10,
+        height: 25,
+        width: 25,
+        alignItems: 'flex-start',
+        resizeMode: 'contain',
+        tintColor: "#fff"
+    },
+    hadertext: {
+        marginLeft: 8,
+        marginRight: 20,
+        fontSize: 18,
+        color: "#fff",
+        fontWeight: "bold"
+    },
       buttonStyle: {
         backgroundColor: '#307ecc',
         borderWidth: 0,

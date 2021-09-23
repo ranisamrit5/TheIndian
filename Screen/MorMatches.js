@@ -36,6 +36,7 @@ export default class app extends Component {
                         <Text style={{ marginLeft: 10, fontSize: 13 }}>Members who visited your Profile</Text>
                         <View style={{ borderBottomWidth: 0.5, backgroundColor: 'white', marginBottom: 20 }}>
                             <FlatList horizontal={true}
+                            keyExtractor={(item, index) => index.toString()} 
                                 showsHorizontalScrollIndicator={false}
                                 data={this.state.LikeMembersData}
                                 renderItem={({ item }) =>
@@ -66,6 +67,7 @@ export default class app extends Component {
                             <Text style={{ marginLeft: 10, fontSize: 13 }}>other profiles you might like</Text>
                             <View style={{ borderBottomWidth: 0.5, backgroundColor: 'white', marginBottom: 20 }}>
                                 <FlatList horizontal={true}
+                                keyExtractor={(item, index) => index.toString()} 
                                     showsHorizontalScrollIndicator={false}
                                     data={this.state.LikeMembersData}
                                     renderItem={({ item }) =>
@@ -97,6 +99,7 @@ export default class app extends Component {
                             <Text style={{ marginLeft: 10, fontSize: 13 }}>other profiles you might like</Text>
                             <View style={{ borderBottomWidth: 0.5, backgroundColor: 'white', marginBottom: 20 }}>
                                 <FlatList horizontal={true}
+                                keyExtractor={(item, index) => index.toString()} 
                                     showsHorizontalScrollIndicator={false}
                                     data={this.state.LikeMembersData}
                                     renderItem={({ item }) =>

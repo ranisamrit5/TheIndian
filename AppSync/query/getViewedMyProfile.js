@@ -1,0 +1,46 @@
+import gql from 'graphql-tag';
+export default gql`query ListProfileViewedMembers($id:String!){
+    listProfileViewedMembers(id:$id){
+      items{
+        id
+        tablename
+        user{
+          id
+          fname
+          profilePic
+          dob
+          gender
+          motherTongue
+          location{
+            city
+            country
+            state
+          }
+          partnerConnectStatus{
+            id
+            tablename
+            status
+    }
+        connectStatusForMe{
+                id
+                tablename
+                status
+        }
+        interest{
+          id
+                tablename
+                status
+        }
+       request {  id
+                tablename
+                status
+                }
+                chatId{
+                  id
+                tablename
+                chatId
+                }
+        }
+      }
+    }
+  }`

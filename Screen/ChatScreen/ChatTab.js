@@ -102,6 +102,7 @@ export const ChatTab = props => {
                 
                          <FlatList style={{ marginBottom: 10 }} horizontal={true}
                              data={TabData}
+                             keyExtractor={(item, index) => index.toString()} 
                              showsHorizontalScrollIndicator={false}
                              renderItem={({ item }) =>
                                  <TouchableHighlight

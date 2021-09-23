@@ -57,7 +57,7 @@ export default class app extends Component {
             <SafeAreaView >
                 <ScrollView>
                     <View style={{ width: '90%', flex: 1, alignSelf: 'center' }}>
-                       
+                       <Text>gkjngjdrk</Text>
                     </View>
 
                 </ScrollView>

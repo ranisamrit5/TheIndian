@@ -5,236 +5,168 @@ import {
     Text,
     TextInput,
     SafeAreaView,
-    Switch,
-    TouchableWithoutFeedback,
     StyleSheet,
     TouchableOpacity,
     Image,
     ImageBackground
 } from 'react-native';
-
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import Loader from '../../../Screen/Componentone/Loader';
+import { Auth } from "aws-amplify";
+import { withApollo } from "react-apollo";
+import compose from "lodash.flowright";
+import Getdata from "../../../AppSync/query/Auth/getData";
+import { userDataMapper } from '../../Mappers/mapper'
+import { partnerDataMapper } from '../../Mappers/partnerMapper'
 const EditProfileScreen = (props) => {
-    const [text, setText] = useState('dcdsdsvdvdgvkjjnvdndvjnjvjnjknmvkvmdkvmdvkmvkdmvkdmckvmvkmvkdvmkvmkmkmv')
+    const [text, setText] = useState('')
     const [height, setHeight] = useState(100)
+    const [id, setId] = useState()
+    const [details, setDetails] = useState([])
+    const [partner, setPartner] = useState([])
+    let [basicInfo, setBasicInfo] = useState({
+        id: '',
+        fname: '',
+        lname: '',
+        dob: '',
+        maritalStatus: 'SINGLE',
+        noOfChildren: 0,
+        height: '',
+        physicalStatus: '',
+        religion: 'Hindu',
+        caste: '',
+        subcaste: '',
+        profileCreatedFor: 'Self',
+        motherTongue: '',
+        languagesKnown: '',
+        gotram: '',
+        star: '',
+        manglik: '',
+        eatingHabit: '',
+        smokingHabit: '',
+        drinkingHabit: '',
+        aboutMe: ''
+    })
+    let [loading, setLoading] = useState(false);
 
-    console.log('PROPS::', props)
+    useEffect(() => {
+        setLoading(true);
+        Auth.currentAuthenticatedUser()
+            .then((data) => {
+                // console.log('user----::',data)
+                setId(data.username)
+                // props.id=data.username
+                getData(data.username)
+            });
+    }, []
+    )
+
+    const getData = async (user) => {
+        // console.log('user---->>',props)
+        setLoading(true)
+        await props.client.query({
+            query: Getdata,
+            fetchPolicy: "network-only",
+            variables: {
+                id: `${user}`,
+            },
+        }).then(async ({ data }) => {
+            let all = {}
+            all.data = data.getUser
+            let pDetails = userDataMapper(all)
+
+            let partnerData = partnerDataMapper(data.getUser.partnerPreference)
+            setPartner(partnerData)
+            console.log('partnerData===>', data.getUser.partnerPreference['motherTongue'])
+            console.log('partnerData===>', partnerData)
+            setDetails(pDetails)
+        }).catch((error)=>{
+            setLoading(false);
+        })
+        setLoading(false);
+    }
+
+    // console.log('loading::', loading)
+    // console.log('loading::', details)
+
     // const { bio, job_title, company, university, sex } = state;
 
     return (
-
-        <ScrollView>
-
-          
-
-            <SafeAreaView style={styles.mainBody}>
-
-            <View style={{flexDirection:'row',width:'100%',alignItems:'center',backgroundColor:'#FF5733',height:50}}>
-                        <TouchableOpacity style={{marginLeft:20}} onPress={()=>props.navigation.pop()}>
-                            <Image style={{width:20,height:20,tintColor:'white',transform: [{ rotate: '180deg'}]}}
-                                source={require('../../../Imagess/ErrorVector.png')} />
-                        </TouchableOpacity>
-                       <View style={{width:'80%'}}>
-                            <Text style={{alignSelf:'center',fontSize:18,fontWeight:"bold",color:'white'}}>My Profile</Text>
-                       </View>
+    <SafeAreaView style={styles.mainBody} >
+            <Loader loading={loading} />
+            {/* {!loading ? */}
+            <ScrollView>
+                <View style={styles.haderView}>
+                    <TouchableOpacity onPress={() => props.navigation.navigate('ProfileDeshbord')}>
+                        <Image style={styles.backArrow}
+                            source={require('../../../Imagess/ErrorVector.png')} />
+                    </TouchableOpacity>
+                    <Text style={styles.hadertext}>{"My Profile"}</Text>
                 </View>
 
-                <View style={{ width: '95%', height: 220, alignItems: 'center',backgroundColor:'#fff',marginTop:10,alignSelf:"center" }} 
-                                source={require('../../../Imagess/AllImage.jpg')}   >
-                                <View style={{  }}>
-                                    <ImageBackground style={{ width: 100, height: 150, overflow: 'hidden',alignItems:'center',marginTop:10 }}
-                                        source={require('../../../Imagess/AllImage.jpg')} >
-                                      
-                                    </ImageBackground>
-                                    
-                                </View>
-                                <View style={{ marginTop:10 }}>
-                                    <Text style={{fontSize:14,fontWeight:"bold",color:'#000',alignSelf:"center"}}>Rani S (SH69951946)</Text>
-                                    <View style={{ marginTop:5 }}>
-                                        <Text style={{fontSize:14,fontWeight:'500',color:'#000',alignSelf:"center"}}>Last Online:ToDay</Text>
-                                      
-                                    </View>
-                                </View>
-                            </View>
+                <View style={styles.imageView}
+                    source={details.profilePic}   >
+                    <View style={{}}>
+                        <ImageBackground style={{ width: 100, height: 150, overflow: 'hidden', alignItems: 'center', marginTop: 10 }}
+                            source={{ uri: details.profilePic }} >
 
-                <View style={{
-                    justifyContent: "space-between",
-                    flexDirection: "row", padding: 13,
-                }}>
-                    <Text style={{
-                        color: "#cc2b5e", fontSize: 16,
-                        fontWeight: "bold", alignSelf: "center"
-                    }}>Basic Info</Text>
+                        </ImageBackground>
 
+                    </View>
+                    <View style={{ marginTop: 10 }}>
+                        <Text style={{ fontSize: 14, fontWeight: "bold", color: '#000', alignSelf: "center" }}>{details.fname} ({details.username})</Text>
+                        <View style={{ marginTop: 5 }}>
+                            <Text style={{ fontSize: 14, fontWeight: '500', color: '#000', alignSelf: "center" }}>Last Online: {details.lastActive}</Text>
 
+                        </View>
+                    </View>
+                </View>
+
+                <View style={styles.haderRow}>
+                    <Text style={styles.title}>{"Basic Info"}</Text>
                     <TouchableOpacity onPress={() => props.navigation.navigate('BasicInfoScreen')}>
-                    <Image style={{width:20,height:20,tintColor:"#000"}}
-                                        source={require('../../../Imagess/pencil.png')} />
+                        <Image style={styles.ImageStyle}
+                            source={require('../../../Imagess/pencil.png')} />
                     </TouchableOpacity>
                 </View>
-                <View style={{ flexDirection: "column", padding: 10, }}>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Posted by</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold",
-                        }}>: Sibling</Text>
-
-
-                        <View style={{ height: 10, }}></View>
-
+                <View style={styles.boxView}>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Posted by"}</Text>
+                        <Text style={styles.textblack}>: {basicInfo.profileCreatedFor}</Text>
                     </View>
-
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Age</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginLeft: 10
-                        }}>: 25</Text>
-
-                        <View style={{ height: 10 }}></View>
-
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Age"}</Text>
+                        <Text style={styles.textblack}>: {details.age}</Text>
                     </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Marital Status</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginLeft: 20
-                        }}>: Never Married</Text>
-
-                        <View style={{ height: 10 }}></View>
-
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Marital Status"}</Text>
+                        <Text style={styles.textblack}>: {details.maritalStatus}</Text>
                     </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Height</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginLeft: 55
-                        }}>: 6'0"(182cm)</Text>
-
-                        <View style={{ height: 10 }}></View>
-
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Height"}</Text>
+                        <Text style={styles.textblack}>: {details.height}</Text>
                     </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Any Disability?</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginRight: 44
-                        }}>: None</Text>
-
-                        <View style={{ height: 5 }}></View>
-
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Any Disability?"}</Text>
+                        <Text style={styles.textblack}>: {details.physicalStatus}</Text>
                     </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Body Weight</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginLeft: 30
-                        }}>: Not Specified</Text>
-
-                        <View style={{ height: 10 }}></View>
-
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Body Weight"}</Text>
+                        <Text style={styles.textblack}>{": Not Specified"}</Text>
                     </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Health Information</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginRight: 10
-                        }}>: Not Specified</Text>
-
-                        <View style={{ height: 10 }}></View>
-
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Health Information"}</Text>
+                        <Text style={styles.textblack}>{": Not Specified"}</Text>
                     </View>
                 </View>
-                <View style={{
-                    justifyContent: "space-between",
-                    flexDirection: "row", padding: 13,
-                }}>
-                    <Text style={{
-                        color: "#cc2b5e", fontSize: 16,
-                        fontWeight: "bold", alignSelf: "center"
-                    }}>More about Myself,Partner and Family</Text>
-
-
-                    <TouchableOpacity onPress={() => alert('Log out')}>
-                    <Image style={{width:20,height:20,tintColor:"#000"}}
-                                        source={require('../../../Imagess/pencil.png')} />
+                <View style={styles.haderRow}>
+                    <Text style={styles.title}>{"More about Myself,Partner and Family"}</Text>
+                    <TouchableOpacity onPress={() => props.navigation.navigate('Myselftextinput',details)}>
+                        <Image style={styles.ImageStyle}
+                            source={require('../../../Imagess/pencil.png')} />
                     </TouchableOpacity>
                 </View>
-                <View style={{ flexDirection: "column", padding: 10, }}>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-
-                        }}>
+                <View style={styles.boxView}>
+                    <View style={styles.rowView}>
                         <TextInput
                             {...props}
                             multiline={true}
@@ -245,1208 +177,403 @@ const EditProfileScreen = (props) => {
                                 setHeight(event.nativeEvent.contentSize.height)
                             }}
                             style={[styles.default, { height: Math.max(35, height) }]}
-                            value={text}
+                            value={details.aboutMe}
                         />
 
                     </View>
                 </View>
-                <View style={{
-                    justifyContent: "space-between",
-                    flexDirection: "row", padding: 13,
-                }}>
-                    <Text style={{
-                        color: "#cc2b5e", fontSize: 16,
-                        fontWeight: "bold", alignSelf: "center"
-                    }}>Religious Background</Text>
-
-
+                <View style={styles.haderRow}>
+                    <Text style={styles.title}>{"Religious Background"}</Text>
                     <TouchableOpacity onPress={() => props.navigation.navigate('ReligiousScreen')}>
-                    <Image style={{width:20,height:20,tintColor:"#000"}}
-                                        source={require('../../../Imagess/pencil.png')} />
+                        <Image style={styles.ImageStyle}
+                            source={require('../../../Imagess/pencil.png')} />
                     </TouchableOpacity>
                 </View>
-                <View style={{ flexDirection: "column", padding: 10, }}>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Religion</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold",
-                        }}>: Hindu</Text>
-
-
-                        <View style={{ height: 10, }}></View>
-
+                <View style={styles.boxView}>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Religion"}</Text>
+                        <Text style={styles.textblack}>: {details.religion}</Text>
                     </View>
-
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Mother Tongue</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginRight: 30
-                        }}>: Marathi</Text>
-
-                        <View style={{ height: 10 }}></View>
-
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Mother Tongue"}</Text>
+                        <Text style={styles.textblack}>: {details.motherTongue}</Text>
                     </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Community</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginRight: 28
-                        }}>: Teli</Text>
-
-                        <View style={{ height: 10 }}></View>
-
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Community"}</Text>
+                        <Text style={styles.textblack}>: {details.caste}</Text>
                     </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Sub Community</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginLeft: 10
-                        }}>: Not Specified</Text>
-
-                        <View style={{ height: 10 }}></View>
-
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Sub Community"}</Text>
+                        <Text style={styles.textblack}>: {details.subcaste}</Text>
                     </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Cast No Bar</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginLeft: 35,
-                        }}>: Not Specified</Text>
-
-                        <View style={{ height: 5 }}></View>
-
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Cast No Bar"}</Text>
+                        <Text style={styles.textblack}>{": Not Specified"}</Text>
                     </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Gothra/Gothram</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", flexDirection: "row",
-                        }}>: Not Specified</Text>
-
-                        <View style={{ height: 10 }}></View>
-
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Gothra/Gothram"}</Text>
+                        <Text style={styles.textblack}>: {details.gotram ? details.gotram : 'Not Specified'}</Text>
                     </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Health Information</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginRight: 10, flexDirection: "row",
-                        }}>: Not Specified</Text>
-
-                        <View style={{ height: 10 }}></View>
-
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Health Information"}</Text>
+                        <Text style={styles.textblack}>{": Not Specified"}</Text>
                     </View>
                 </View>
-                <View style={{
-                    justifyContent: "space-between",
-                    flexDirection: "row", padding: 13,
-                }}>
-                    <Text style={{
-                        color: "#cc2b5e", fontSize: 16,
-                        fontWeight: "bold", alignSelf: "center"
-                    }}>Family</Text>
-
-
+                <View style={styles.haderRow}>
+                    <Text style={styles.title}>{"Family"}</Text>
                     <TouchableOpacity onPress={() => props.navigation.navigate('FamilyScreen')}>
-                    <Image style={{width:20,height:20,tintColor:"#000"}}
-                                        source={require('../../../Imagess/pencil.png')} />
+                        <Image style={styles.ImageStyle}
+                            source={require('../../../Imagess/pencil.png')} />
                     </TouchableOpacity>
                 </View>
-                <View style={{ flexDirection: "column", padding: 10, }}>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Father's Status</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold",
-                        }}>: Enter Now</Text>
-
-
-                        <View style={{ height: 10, }}></View>
-
+                <View style={styles.boxView}>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Father's Status"}</Text>
+                        <Text style={styles.textblack}>: {details.fathersOccupation}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Mother's Status"}</Text>
+                        <Text style={styles.textblack}>: {details.mothersOccupation}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Native Place"}</Text>
+                        <Text style={styles.textblack}>: {details.nativePlace}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"No. of Brothers"}</Text>
+                        <Text style={styles.textblack}>: {details.noOfBrothers_}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"No. fo Sisters"}</Text>
+                        <Text style={styles.textblack}>: {details.noOfSisters_}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Family Values"}</Text>
+                        <Text style={styles.textblack}>: {details.familyValue}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Family Affluence"}</Text>
+                        <Text style={styles.textblack}>: {details.familyStatus}</Text>
                     </View>
 
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Mother's Status</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginRight: 10
-                        }}>: Enter Now</Text>
 
-                        <View style={{ height: 10 }}></View>
-
-                    </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Native Place</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginLeft: 30
-                        }}>: Not Specified</Text>
-
-                        <View style={{ height: 10 }}></View>
-
-                    </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>No. of Brothers</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginRight: 70
-                        }}>: 0</Text>
-
-                        <View style={{ height: 10 }}></View>
-
-                    </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>No. fo Sisters</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginRight: 60
-                        }}>: 0</Text>
-
-                        <View style={{ height: 5 }}></View>
-
-                    </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Family Values</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", flexDirection: "row", marginLeft: 20
-                        }}>: Not Specified</Text>
-
-                        <View style={{ height: 10 }}></View>
-
-                    </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Family Affluence</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginRight: 20, flexDirection: "row",
-                        }}>: Enter Now</Text>
-
-                        <View style={{ height: 10 }}></View>
-
-                    </View>
                 </View>
-                <View style={{
-                    justifyContent: "space-between",
-                    flexDirection: "row", padding: 13,
-                }}>
-                    <Text style={{
-                        color: "#cc2b5e", fontSize: 16,
-                        fontWeight: "bold", alignSelf: "center"
-                    }}>Astro Details</Text>
-
-
-                 <TouchableOpacity onPress={() => props.navigation.navigate('Astro')}>
-                 <Image style={{width:20,height:20,tintColor:"#000"}}
-                                        source={require('../../../Imagess/pencil.png')} />
+                <View style={styles.haderRow}>
+                    <Text style={styles.title}>{"Location,Education & Career"}</Text>
+                    <TouchableOpacity onPress={() => props.navigation.navigate('Location')}>
+                        <Image style={styles.ImageStyle}
+                            source={require('../../../Imagess/pencil.png')} />
                     </TouchableOpacity>
                 </View>
-                <View style={{ flexDirection: "column", padding: 10, }}>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-
-
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Manglik/Chevvai dosham</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginRight: 30
-                        }}>: Dont'Know</Text>
-
-
-                        <View style={{ height: 10, }}></View>
-
+                <View style={styles.boxView}>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Country Living in"}</Text>
+                        <Text style={styles.textblack}>: {details.country}</Text>
                     </View>
-
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold",
-                        }}>Nakshatra</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginLeft: 90
-                        }}>: Not Specified</Text>
-
-                        <View style={{ height: 10 }}></View>
-
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"State Living in"}</Text>
+                        <Text style={styles.textblack}>: {details.state}</Text>
                     </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Rashi/Moon Sign</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginLeft: 40
-                        }}>: Not Specified</Text>
-
-                        <View style={{ height: 10 }}></View>
-
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"City Living in"}</Text>
+                        <Text style={styles.textblack}>: {details.city}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Residency Status"}</Text>
+                        <Text style={styles.textblack}>: {details.citizenship}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Zip/Pin code"}</Text>
+                        <Text style={styles.textblack}>{": Not Specified"}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Grew Up in"}</Text>
+                        <Text style={styles.textblack}>{": India"}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Highest Qualification"}</Text>
+                        <Text style={styles.textblack}>: {details.highestEducation}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"College(s) Attended"}</Text>
+                        <Text style={styles.textblack}>: {details.colg_institute}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Working With"}</Text>
+                        <Text style={styles.textblack}>: {details.employedIn}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Working As"}</Text>
+                        <Text style={styles.textblack}>: { }</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Annual Income"}</Text>
+                        <Text style={styles.textblack}>: {details.annualIncome}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Employer Name"}</Text>
+                        <Text style={styles.textblack}>{": React Native Developer"}</Text>
                     </View>
                 </View>
-                <View style={{
-                    justifyContent: "space-between",
-                    flexDirection: "row", padding: 13,
-                }}>
-                    <Text style={{
-                        color: "#cc2b5e", fontSize: 16,
-                        fontWeight: "bold", alignSelf: "center"
-                    }}>Location,Education & Career</Text>
 
-
-             <TouchableOpacity onPress={() => props.navigation.navigate('Location')}>
-             <Image style={{width:20,height:20,tintColor:"#000"}}
-                                        source={require('../../../Imagess/pencil.png')} />
+                <View style={styles.haderRow}>
+                    <Text style={styles.title}>{"Lifestyle"}</Text>
+                    <TouchableOpacity onPress={() => props.navigation.navigate('Lifestyles')}>
+                        <Image style={styles.ImageStyle}
+                            source={require('../../../Imagess/pencil.png')} />
                     </TouchableOpacity>
                 </View>
-                <View style={{ flexDirection: "column", padding: 10, }}>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Country Living in</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginRight: 40
-                        }}>: India</Text>
-
-
-                        <View style={{ height: 10, }}></View>
-
-                    </View>
-
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>State Living in</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginLeft: 30
-                        }}>: Maharashtra</Text>
-
-                        <View style={{ height: 10 }}></View>
-
-                    </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>City Living in</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginLeft: 10
-                        }}>: Nagpur</Text>
-
-                        <View style={{ height: 10 }}></View>
-
-                    </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Residency Status</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginRight: 30
-                        }}>: Citizen</Text>
-
-                        <View style={{ height: 10 }}></View>
-
-                    </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Zip/Pin code</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginLeft: 45
-                        }}>: Not Specified</Text>
-
-                        <View style={{ height: 5 }}></View>
-
-                    </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Grew Up in</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", flexDirection: "row", marginLeft: 5
-                        }}>: India</Text>
-
-                        <View style={{ height: 10 }}></View>
-
-                    </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Highest Qualification</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginRight: 100, flexDirection: "row",
-                        }}>: </Text>
-
-                        <View style={{ height: 10 }}></View>
-
-                    </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>College(s) Attended</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginRight: 1, flexDirection: "row",
-                        }}>: College Name</Text>
-
-                        <View style={{ height: 10 }}></View>
-
-                    </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Working With</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginLeft: 60, flexDirection: "row",
-                        }}>: Private company</Text>
-
-                        <View style={{ height: 10 }}></View>
-
-                    </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Working As</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginLeft: 95, flexDirection: "row",
-                        }}>: Software Developer/Programmer</Text>
-
-                        <View style={{ height: 10 }}></View>
-
-                    </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Annual Income</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginLeft: 70, flexDirection: "row",
-                        }}>: INR 2 Lakh to 4 Lakh</Text>
-
-                        <View style={{ height: 10 }}></View>
-
-                    </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Employer Name</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginLeft: 65, flexDirection: "row",
-                        }}>: Rect Native Developer</Text>
-
-                        <View style={{ height: 10 }}></View>
+                <View style={styles.boxView}>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Diet"}</Text>
+                        <Text style={styles.textblack}>: {details.eatingHabit}</Text>
                     </View>
                 </View>
+                <View style={styles.haderRow}>
+                    <Text style={styles.title}>{"Partner Basic Info"}</Text>
+                    <TouchableOpacity onPress={() => props.navigation.navigate('PartnerBasicinfo')}>
+                        <Image style={styles.ImageStyle}
+                            source={require('../../../Imagess/pencil.png')} />
+                    </TouchableOpacity>
+                </View>
 
-
-                <View style={{
-                    justifyContent: "space-between",
-                    flexDirection: "row", padding: 13,
-                }}>
-                    <Text style={{
-                        color: "#cc2b5e", fontSize: 16,
-                        fontWeight: "bold", alignSelf: "center"
-                    }}>Lifestyle</Text>
-
-
+                <View style={styles.boxView}>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Age"}</Text>
+                        <Text style={styles.textblack}>: {partner.ageRange}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Height"}</Text>
+                        <Text style={styles.textblack}>: {partner.heightRange}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Marital Status"}</Text>
+                        <Text style={styles.textblack}>: {partner.maritalStatus}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Religion/Community"}</Text>
+                        <Text style={styles.textblack}>: {partner.partnerReligion}/{partner.caste}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Mother Tongue"}</Text>
+                        <Text style={styles.textblack}>: {partner.motherTongue}</Text>
+                    </View>
+                </View>
+                <View style={styles.haderRow}>
+                    <Text style={styles.title}>{"Partner Location Details"}</Text>
                     <TouchableOpacity onPress={() => alert('Log out')}>
-                    <Image style={{width:20,height:20,tintColor:"#000"}}
-                                        source={require('../../../Imagess/pencil.png')} />
+                        <Image style={styles.ImageStyle}
+                            source={require('../../../Imagess/pencil.png')} />
                     </TouchableOpacity>
                 </View>
-                <View style={{ flexDirection: "column", padding: 10, }}>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
 
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Diet</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginLeft: 50
-                        }}>: Veg</Text>
-
-
-                        <View style={{ height: 10, }}></View>
-
+                <View style={styles.boxView}>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Country living in"}</Text>
+                        <Text style={styles.textblack}>{": India"}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"State living in"}</Text>
+                        <Text style={styles.textblack}>{":"}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"City/District"}</Text>
+                        <Text style={styles.textblack}>{":"}</Text>
                     </View>
                 </View>
-                <View style={{
-                    justifyContent: "space-between",
-                    flexDirection: "row", padding: 13,
-                }}>
-                    <Text style={{
-                        color: "#cc2b5e", fontSize: 16,
-                        fontWeight: "bold", alignSelf: "center"
-                    }}>Partner Basic Info</Text>
-
-
+                <View style={styles.haderRow}>
+                    <Text style={styles.title}>{"Partner,Education & Career"}</Text>
+                    <TouchableOpacity onPress={() => props.navigation.navigate('Partner_Preferences')}>
+                        <Image style={styles.ImageStyle}
+                            source={require('../../../Imagess/pencil.png')} />
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.boxView}>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Country living in"}</Text>
+                        <Text style={styles.textblack}>{": India"}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"State living in"}</Text>
+                        <Text style={styles.textblack}>{": Maharashtra"}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"City living in"}</Text>
+                        <Text style={styles.textblack}>{": Nagpur"}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Residency Status"}</Text>
+                        <Text style={styles.textblack}>{": Citizen"}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Zip/Pin code"}</Text>
+                        <Text style={styles.textblack}>{": Not Specified"}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Grew Up in"}</Text>
+                        <Text style={styles.textblack}>{": India"}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Highest Qualification"}</Text>
+                        <Text style={styles.textblack}>{": "}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"College(s) Attended"}</Text>
+                        <Text style={styles.textblack}>{": College Name"}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Working With"}</Text>
+                        <Text style={styles.textblack}>{": Private company"}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Working As"}</Text>
+                        <Text style={styles.textblack}>{": Software Developer/Programmer"}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Annual Income"}</Text>
+                        <Text style={styles.textblack}>{": INR 2 Lakh to 4 Lakh"}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Employer Name"}</Text>
+                        <Text style={styles.textblack}>{":React Native Developer"}</Text>
+                    </View>
+                </View>
+                <View style={styles.haderRow}>
+                    <Text style={styles.title}>{"Partner Other Details"}</Text>
                     <TouchableOpacity onPress={() => alert('Log out')}>
-                    <Image style={{width:20,height:20,tintColor:"#000"}}
-                                        source={require('../../../Imagess/pencil.png')} />
+                        <Image style={styles.ImageStyle}
+                            source={require('../../../Imagess/pencil.png')} />
                     </TouchableOpacity>
                 </View>
-                <View style={{ flexDirection: "column", padding: 10, }}>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Age</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginLeft: 70
-                        }}>: 20 to 25</Text>
-
-
-                        <View style={{ height: 10, }}></View>
-
+                <View style={styles.boxView}>
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Profile created by"}</Text>
+                        <Text style={styles.textblack}>{":"}</Text>
                     </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Height</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginLeft: 120
-                        }}>: 5'3"(160cm) to 6'0"</Text>
-
-
-                        <View style={{ height: 10, }}></View>
-
-                    </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Marital Status</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginLeft: 40
-                        }}>: Naver Married</Text>
-
-
-                        <View style={{ height: 10, }}></View>
-
-                    </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Religion/Community</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginRight: 30
-                        }}>: Hindu:Teli</Text>
-
-
-                        <View style={{ height: 10, }}></View>
-
-                    </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Mother Tongue</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold",
-                        }}>: Marathi</Text>
-
-
-                        <View style={{ height: 10, }}></View>
-
+                    <View style={styles.rowView}>
+                        <Text style={styles.textRow}>{"Diet"}</Text>
+                        <Text style={styles.textblack}>{":"}</Text>
                     </View>
                 </View>
-                <View style={{
-                    justifyContent: "space-between",
-                    flexDirection: "row", padding: 13,
-                }}>
-                    <Text style={{
-                        color: "#cc2b5e", fontSize: 16,
-                        fontWeight: "bold", alignSelf: "center"
-                    }}>Partner Location Details</Text>
+            </ScrollView>
+            {/* : null} */}
+        </SafeAreaView>
 
 
-                    <TouchableOpacity onPress={() => alert('Log out')}>
-                    <Image style={{width:20,height:20,tintColor:"#000"}}
-                                        source={require('../../../Imagess/pencil.png')} />
-                    </TouchableOpacity>
-                </View>
-                <View style={{ flexDirection: "column", padding: 10, }}>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Country living in</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold",
-                        }}>: India</Text>
-
-
-                        <View style={{ height: 10, }}></View>
-
-                    </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>State living in</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginRight: 15
-                        }}>: </Text>
-
-
-                        <View style={{ height: 10, }}></View>
-
-                    </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>City/District</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold",
-                        }}>: </Text>
-
-
-                        <View style={{ height: 10, }}></View>
-
-                    </View>
-
-                </View>
-                <View style={{
-                    justifyContent: "space-between",
-                    flexDirection: "row", padding: 13,
-                }}>
-                    <Text style={{
-                        color: "#cc2b5e", fontSize: 16,
-                        fontWeight: "bold", alignSelf: "center"
-                    }}>Partner,Education & Career</Text>
-
-
-                    <TouchableOpacity onPress={() => alert('Log out')}>
-                    <Image style={{width:20,height:20,tintColor:"#000"}}
-                                        source={require('../../../Imagess/pencil.png')} />
-                    </TouchableOpacity>
-                </View>
-                <View style={{ flexDirection: "column", padding: 10, }}>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Country Living in</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginRight: 40
-                        }}>: India</Text>
-
-
-                        <View style={{ height: 10, }}></View>
-
-                    </View>
-
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>State Living in</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginLeft: 30
-                        }}>: Maharashtra</Text>
-
-                        <View style={{ height: 10 }}></View>
-
-                    </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>City Living in</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginLeft: 10
-                        }}>: Nagpur</Text>
-
-                        <View style={{ height: 10 }}></View>
-
-                    </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Residency Status</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginRight: 30
-                        }}>: Citizen</Text>
-
-                        <View style={{ height: 10 }}></View>
-
-                    </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Zip/Pin code</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginLeft: 45
-                        }}>: Not Specified</Text>
-
-                        <View style={{ height: 5 }}></View>
-
-                    </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Grew Up in</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", flexDirection: "row", marginLeft: 5
-                        }}>: India</Text>
-
-                        <View style={{ height: 10 }}></View>
-
-                    </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Highest Qualification</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginRight: 100, flexDirection: "row",
-                        }}>: </Text>
-
-                        <View style={{ height: 10 }}></View>
-
-                    </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>College(s) Attended</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginRight: 1, flexDirection: "row",
-                        }}>: College Name</Text>
-
-                        <View style={{ height: 10 }}></View>
-
-                    </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Working With</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginLeft: 60, flexDirection: "row",
-                        }}>: Private company</Text>
-
-                        <View style={{ height: 10 }}></View>
-
-                    </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Working As</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginLeft: 95, flexDirection: "row",
-                        }}>: Software Developer/Programmer</Text>
-
-                        <View style={{ height: 10 }}></View>
-
-                    </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Annual Income</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginLeft: 70, flexDirection: "row",
-                        }}>: INR 2 Lakh to 4 Lakh</Text>
-
-                        <View style={{ height: 10 }}></View>
-
-                    </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Employer Name</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginLeft: 65, flexDirection: "row",
-                        }}>: Rect Native Developer</Text>
-
-                        <View style={{ height: 10 }}></View>
-                    </View>
-                </View>
-                <View style={{
-                    justifyContent: "space-between",
-                    flexDirection: "row", padding: 13,
-                }}>
-                    <Text style={{
-                        color: "#cc2b5e", fontSize: 16,
-                        fontWeight: "bold", alignSelf: "center"
-                    }}>Partner Other Details</Text>
-
-
-                    <TouchableOpacity onPress={() => alert('Log out')}>
-                    <Image style={{width:20,height:20,tintColor:"#000"}}
-                                        source={require('../../../Imagess/pencil.png')} />
-                    </TouchableOpacity>
-                </View>
-                <View style={{ flexDirection: "column", padding: 10, }}>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Profile created by</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginRight: 60
-                        }}>: </Text>
-
-
-                        <View style={{ height: 10, }}></View>
-
-                    </View>
-                    <View
-                        style={{
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                            backgroundColor: '#ffffff',
-                            padding: 16,
-
-                        }}>
-                        <Text style={{
-                            color: "gray", fontSize: 15,
-                            fontWeight: "bold"
-                        }}>Diet</Text>
-                        <Text style={{
-                            color: "#454F63", fontSize: 15,
-                            fontWeight: "bold", marginLeft: 30
-                        }}>: </Text>
-
-
-                        <View style={{ height: 10, }}></View>
-
-                    </View>
-
-                </View>
-
-            </SafeAreaView>
-        </ScrollView >
 
     );
 }
 
+const Login = compose(
+    withApollo,
+    // graphql(UpdateTalentDelphiii, {name: 'UpdateTalentDelphiii'}),
+)(EditProfileScreen);
+export default Login;
 
-export default EditProfileScreen;
+// export default EditProfileScreen;
 
 export const styles = StyleSheet.create({
     mainBody: {
         flex: 1,
-        backgroundColor: "#ECECEC"
+        backgroundColor: "#EFEFEF",
 
     },
+    haderView: {
+        flexDirection: 'row',
+        backgroundColor: '#FF5733',
+        height: 50,
+        alignItems: 'center',
+    },
+    backArrow: {
+        transform: [{ rotate: '180deg' }],
+        marginLeft: 22,
+        marginRight: 10,
+        height: 25,
+        width: 25,
+        alignItems: 'flex-start',
+        resizeMode: 'contain',
+        tintColor: "#fff"
+    },
+    hadertext: {
+        marginLeft: 8,
+        marginRight: 20,
+        fontSize: 18,
+        color: "#fff",
+        fontWeight: "bold"
+    },
+    imageView: {
+        width: '95%',
+        height: 220,
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        marginTop: 10,
+        alignSelf: "center",
+        elevation: 5
+    },
+    backgroundImg: {
+        width: 100,
+        height: 150,
+        overflow: 'hidden',
+        alignItems: 'center',
+        marginTop: 10
+    },
+    imagetext: {
+        fontSize: 14,
+        fontWeight: "bold",
+        color: '#000',
+        alignSelf: "center"
+    },
+    imagesmalltext: {
+        fontSize: 14,
+        fontWeight: '500',
+        color: '#000',
+        alignSelf: "center"
+    },
+    haderRow: {
+        justifyContent: "space-between",
+        flexDirection: "row",
+        padding: 13,
+    },
+    title: {
+        color: "#cc2b5e",
+        fontSize: 16,
+        fontWeight: "bold",
+        alignSelf: "center"
+    },
+    ImageStyle: {
+        width: 15,
+        height: 15,
+        tintColor: "#000",
+        resizeMode: "contain"
+    },
+    rowView: {
+        justifyContent: "space-between",
+        flexDirection: "row",
+        backgroundColor: '#ffffff',
+        padding: 16,
+        elevation: 5
+    },
+    textRow: {
+        color: "gray",
+        fontSize: 15,
+        fontWeight: "bold",
+        flex: 1,
+        flexWrap: "wrap"
+    },
+    textblack: {
+        color: "#454F63",
+        fontSize: 15,
+        fontWeight: "bold",
+        flex: 1,
+        flexWrap: "wrap"
+
+    },
+    boxView: {
+        flexDirection: "column",
+        marginLeft: 10,
+        marginRight: 10,
+        paddingBottom: 8,
+    }
 
 
 });

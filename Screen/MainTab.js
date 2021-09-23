@@ -42,26 +42,27 @@ export default class app extends Component {
             Search: false,
             New: false,
             TodaysMatches: false,
-            MyMatches: false,
+            MyMatches: true,
             NearMe: false,
             MoreMatches: false,
             RecentlyViewed: false,
             SerchBar: false,
-            SearchOpt: false,
+            SearchOpt: true,
             ProfileIDSearch: false
         }
     }
 
 
 
-    TopTabFunction(Value) {
-        console.log('valuess', Value)
+    TopTabFunction(Value,index) {
+        console.log('valuess', Value,index)
+        this.flatList_Ref.scrollToIndex({animated: true,index:index,viewPosition: 0.5});
         switch (Value.title) {
             case 'Search': {
                 this.setState({ TodaysMatches: false })
                 this.setState({ MoreMatches: false })
                 this.setState({ MyMatches: false })
-                this.setState({ SerchBar: true })
+                this.setState({ SerchBar: true ,SearchOpt: true})
                 break;
             }
             case 'New': {
@@ -111,7 +112,13 @@ export default class app extends Component {
             }
         }
     }
+    goIndex = () => {
+
+        this.flatList_Ref.scrollToIndex({animated: true,index:5});
+       
+       };
     render() {
+        console.log('-------------------------------------------')
         if (this.state.SerchBar == false) {
             //this.setState({ SearchOpt: false })
             //this.setState({ ProfileIDSearch: false })
@@ -129,32 +136,32 @@ export default class app extends Component {
                 notification: ''
             },
             {
-                id: '58694a0f-3da1-471f-bd96-145571e29d72',
+                id: '58694a0f-3da1-471f-bd96-145571e29d721',
                 title: 'Todays Matches',
                 notification: ''
             },
             {
-                id: '58694a0f-3da1-471f-bd96-145571e29d72',
+                id: '58694a0f-3da1-471f-bd96-145571e29d722',
                 title: 'My Matches',
                 notification: ''
             },
             {
-                id: '58694a0f-3da1-471f-bd96-145571e29d72',
+                id: '58694a0f-3da1-471f-bd96-145571e29d723',
                 title: 'Near Me',
                 notification: ''
             },
             {
-                id: '58694a0f-3da1-471f-bd96-145571e29d72',
+                id: '58694a0f-3da1-471f-bd96-145571e29d724',
                 title: 'More Matches',
                 notification: ''
             },
             {
-                id: '58694a0f-3da1-471f-bd96-145571e29d72',
+                id: '58694a0f-3da1-471f-bd96-145571e29d725',
                 title: 'Shortlisted',
                 notification: ''
             },
             {
-                id: '58694a0f-3da1-471f-bd96-145571e29d72',
+                id: '58694a0f-3da1-471f-bd96-145571e29d726',
                 title: 'Recently Viewed',
                 notification: ''
             },
@@ -164,11 +171,16 @@ export default class app extends Component {
                 <View style={{ marginTop: 10, height: '100%' }}>
                     <View>
                         <FlatList style={{ marginBottom: 10 }} horizontal={true}
+                        keyExtractor={(item, index) => index.toString()} 
+                        ref={ref => {
+                            this.flatList_Ref = ref;  // <------ ADD Ref for the Flatlist 
+                            console.log(ref); //
+                          }}
                             data={TabData}
                             showsHorizontalScrollIndicator={false}
-                            renderItem={({ item }) =>
+                            renderItem={({ item ,index}) =>
                                 <TouchableOpacity style={{ borderWidth: 1, alignItems: 'center', justifyContent: 'center', width: 150, height: 40, marginLeft: 5, marginRight: 10, borderRadius: 5 }}
-                                    onPress={() => this.TopTabFunction(item)} >
+                                    onPress={() => this.TopTabFunction(item,index)} >
                                     {item.Ima == null ?
                                         <Text style={{ fontSize: 17, alignSelf: 'center' }}>{item.title}</Text> : null}
                                     {item.title == 'Search' ?
@@ -189,7 +201,7 @@ export default class app extends Component {
                             </TouchableOpacity>
                         </View> : null}
 
-                    {this.state.MyMatches ? <MyMatches /> : null}
+                    {this.state.MyMatches ? <MyMatches {...this.props}/> : null}
                     {this.state.MoreMatches ? <MorMatches /> : null}
                     {this.state.TodaysMatches ? <TodaysMaches /> : null}
                     {/* <TodaysMaches /> */}

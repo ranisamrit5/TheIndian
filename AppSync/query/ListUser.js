@@ -1,0 +1,52 @@
+import gql from 'graphql-tag';
+export default gql`query ListUser($nextToken:String $limit:Int $type:String!  $id:String! ){
+    listUser(id:$id nextToken:$nextToken  limit: $limit type:$type ){
+        items{
+            tablename
+            id
+            fname
+            gender
+            profilePic
+            age
+            height
+            caste
+            availability
+            religion
+            mob
+            email
+            profileCreatedFor
+            motherTongue
+            aboutMe
+            location
+            {
+            state
+            country
+            city
+          }
+          familyDetails
+          {
+            parentContact
+          }
+          education
+          {
+            colg_institute
+            annualIncome
+            employedIn
+            occuDetails
+            occupation
+            highestEducation
+          }
+          partnerConnectStatus
+          {
+            created_at
+          }
+            interest{
+            status
+            tablename
+            id
+          }
+      
+      }
+  }
+  }`
+  ;
