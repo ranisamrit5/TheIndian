@@ -76,8 +76,7 @@ const PartnerPreference = (props) => {
                 id: `${user}`,
             },
         });
-        if (data) {
-            
+        if (data && data.getPartnerPreference) {
             let userData = data.getPartnerPreference
             console.log('getPartnerPreference',userData)
             setAgeTo(userData.ageRange.to)
@@ -93,7 +92,6 @@ const PartnerPreference = (props) => {
             console.log('userPD', userData)
             let all = {}
             all.data = data.getUser
-            // let pDetails = userDataMapper(all)
             setBasicInfo({
                 ...basicInfo,
                 id: user,

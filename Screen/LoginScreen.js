@@ -1,5 +1,5 @@
 import React, { useState ,useEffect} from 'react';
-
+//ranisamrit5@gmail.com
 //Import all required component
 import {
   StyleSheet,
@@ -11,6 +11,7 @@ import {
   Keyboard,
   TouchableOpacity,
   KeyboardAvoidingView,
+  TouchableHighlight,
   StatusBar
 } from 'react-native';
 // import AsyncStorage from '@react-native-community/async-storage';
@@ -20,6 +21,7 @@ import  { Auth } from 'aws-amplify';
 
 
 const LoginScreen = props => {
+  var [ colorId, setColorId ] = React.useState(0);
   let [userEmail, setUserEmail] = useState('');
   let [userPassword, setUserPassword] = useState('');
   let [rePassword, setRePassword] = useState('');
@@ -39,7 +41,19 @@ const LoginScreen = props => {
       props.navigation.navigate('TabNavigation');
     });
   }, []); 
+  const onPress = (id) => {
 
+    setColorId(id);
+    switch (id) {
+      case 1:
+        setGender('MALE')
+      case 2:
+        setGender('FEMALE')
+      case 3: 
+        setGender('OTHER')
+      
+    }
+  }; 
   const handelNewPasswordRequired = async() => {
     setErrortext('');
     if (!rePassword) {
@@ -64,13 +78,12 @@ const LoginScreen = props => {
             Auth.completeNewPassword(
                 user,               // the Cognito User Object
                 userPassword,       // the new password
-                // OPTIONAL, the required attributes
                 {
                   email: userData.email,
                   phone_number: userData.phone_number,
-                  name:'Tushar',
-                  family_name:'Samrit',
-                  gender:'MALE'
+                  name:name,
+                  family_name:familyName,
+                  gender:gender
                 }
             ).then(user => {
                 // at this time the user is logged in if no MFA required
@@ -101,13 +114,12 @@ const LoginScreen = props => {
     try {
     const user = await Auth.signIn(userEmail, userPassword)
     .then((res) => {
-      // console.log("SignIn======>",res)
       if (res.challengeName === 'NEW_PASSWORD_REQUIRED') {
-        // props.navigation.navigate('OTP')
         setUserState(true)
+        setUserEmail('')
+        setUserPassword('')
         setUserData(res.challengeParam['userAttributes'])
         setUsername(res.username)
-        console.log("SignIn======>",res.username)
       }else{
         props.navigation.navigate('TabNavigation');
       }
@@ -125,187 +137,223 @@ const LoginScreen = props => {
     <View style={styles.mainBody}>
       <StatusBar backgroundColor='#ffa07a' barStyle="light-content" />
       <Loader loading={loading} />
-      {userState == true ?
+      {userState ?
+
         <ScrollView keyboardShouldPersistTaps="handled">
-        <View style={{ marginTop: 100 }}>
-          <KeyboardAvoidingView enabled>
-            <View style={{ alignItems: 'center' }}>
-              <Image
-                source={Logo}
-                style={{
-                  width: '60%',
-                  height: 100,
-                  resizeMode: 'contain',
-                  margin: 30,
-                  bottom: 50
-                }}
-              />
-            </View>
-            <View style={{ flexDirection: "row", justifyContent: "space-between", width: "65%" }}>
-            <Text style={styles.text1}>Gender</Text>
-            <View style={{ flexDirection: "row", justifyContent: "space-between", width: "70%", alignSelf: "center", padding: 20, }}>
-              <TouchableHighlight
-                style={colorId === 1 ? styles.red : styles.button}
-                onPress={() => {
-                  onPress(1)
-                  setGender('MALE')
-                }}>
-                <Text>Male</Text>
+
+          <View style={{ marginTop: 100 }}>
+            <KeyboardAvoidingView enabled>
+              <View style={{ alignItems: 'center' }}>
+                <Image
+                  source={Logo}
+                  style={{
+                    width: '60%',
+                    height: 100,
+                    resizeMode: 'contain',
+                    margin: 30,
+                    bottom: 50
+                  }}
+                />
+              </View>
+              <View style={styles.SectionStyle}>
+                <TextInput
+                  style={styles.inputStyle}
+                  value={name}
+                  // underlineColorAndroid="#FFFFFF"
+                  placeholder="Name" //dummy@abc.com
+                  placeholderTextColor="#000"
+                  autoCapitalize="none"
+                  //  keyboardType="email-address"
+                  onChangeText={text => setName(text)}
+                  returnKeyType="next"
+                  onSubmitEditing={() =>
+                    this._passwordinput && this._passwordinput.focus()
+                  }
+                  blurOnSubmit={false}
+                />
+              </View>
+              <View style={styles.SectionStyle}>
+                <TextInput
+                  style={styles.inputStyle}
+                  value={familyName}
+                  // underlineColorAndroid="#FFFFFF"
+                  placeholder="Last Name" //dummy@abc.com
+                  placeholderTextColor="#000"
+                  autoCapitalize="none"
+                  //  keyboardType="email-address"
+                  onChangeText={text => setFamilyName(text)}
+                  returnKeyType="next"
+                  onSubmitEditing={() =>
+                    this._passwordinput && this._passwordinput.focus()
+                  }
+                  blurOnSubmit={false}
+                />
+              </View>
+              <View style={{ flexDirection: "row", justifyContent: "space-between", width: "65%" }}>
+                <Text style={styles.text1}>Gender</Text>
+                <View style={{ flexDirection: "row", justifyContent: "space-between", width: "70%", alignSelf: "center", padding: 20, }}>
+                  <TouchableHighlight
+                    style={colorId === 1 ? styles.red : styles.button}
+                    onPress={() => {
+                      onPress(1)
+                      setGender('MALE')
+                    }}>
+                    <Text>Male</Text>
 
 
-              </TouchableHighlight>
+                  </TouchableHighlight>
 
-              <TouchableHighlight
-                style={colorId === 2 ? styles.red : styles.button}
-                onPress={() => {
-                  onPress(2)
-                  setGender('FEMALE')
-                }}>
+                  <TouchableHighlight
+                    style={colorId === 2 ? styles.red : styles.button}
+                    onPress={() => {
+                      onPress(2)
+                      setGender('FEMALE')
+                    }}>
 
-                <Text>Female</Text>
-
-
-              </TouchableHighlight>
-
-              <TouchableHighlight style={colorId === 3 ? styles.red : styles.button}
-                onPress={() => {
-                  onPress(3)
-                  setGender('OTHER')
-                }} >
-                <Text>Other</Text>
+                    <Text>Female</Text>
 
 
-              </TouchableHighlight>
-            </View>
+                  </TouchableHighlight>
 
+                  <TouchableHighlight style={colorId === 3 ? styles.red : styles.button}
+                    onPress={() => {
+                      onPress(3)
+                      setGender('OTHER')
+                    }} >
+                    <Text>Other</Text>
+
+
+                  </TouchableHighlight>
+                </View>
+
+              </View>
+              <View style={styles.SectionStyle}>
+                <TextInput
+                  style={styles.inputStyle}
+                  onChangeText={pass => setUserPassword(pass)}
+                  placeholder="Enter Password" //12345
+                  placeholderTextColor="#000"
+                  keyboardType="default"
+                  onSubmitEditing={Keyboard.dismiss}
+                  blurOnSubmit={false}
+                  secureTextEntry={true}
+                />
+              </View>
+              <View style={styles.SectionStyle}>
+                <TextInput
+                  style={styles.inputStyle}
+                  onChangeText={repass => setRePassword(repass)}
+                  placeholder="Re Enter Password" //12345
+                  placeholderTextColor="#000"
+                  keyboardType="default"
+                  onSubmitEditing={Keyboard.dismiss}
+                  blurOnSubmit={false}
+                  secureTextEntry={true}
+                />
+              </View>
+              {errortext != '' ? (
+                <Text style={styles.errorTextStyle}> {errortext} </Text>
+              ) : null}
+              <TouchableOpacity
+                style={styles.buttonStyle}
+                activeOpacity={0.5}
+                onPress={handelNewPasswordRequired}>
+                <Text style={styles.buttonTextStyle}>LOGIN</Text>
+              </TouchableOpacity>
+            </KeyboardAvoidingView>
           </View>
-            <View style={styles.SectionStyle}>
-            <TextInput
-                style={styles.inputStyle}
-                onChangeText={pass => setUserPassword(pass)}
-                placeholder="Enter Password" //12345
-                placeholderTextColor="#000"
-                keyboardType="default"
-                onSubmitEditing={Keyboard.dismiss}
-                blurOnSubmit={false}
-                secureTextEntry={true}
-              />
-            </View>
-            <View style={styles.SectionStyle}>
-              <TextInput
-                style={styles.inputStyle}
-                onChangeText={repass => setRePassword(repass)}
-                placeholder="Re Enter Password" //12345
-                placeholderTextColor="#000"
-                keyboardType="default"
-                onSubmitEditing={Keyboard.dismiss}
-                blurOnSubmit={false}
-                secureTextEntry={true}
-              />
-            </View>
-            {errortext != '' ? (
-              <Text style={styles.errorTextStyle}> {errortext} </Text>
-            ) : null}
-            <TouchableOpacity
-              style={styles.buttonStyle}
-              activeOpacity={0.5}
-              onPress={handelNewPasswordRequired}>
-              <Text style={styles.buttonTextStyle}>LOGIN</Text>
-            </TouchableOpacity>
-          </KeyboardAvoidingView>
-        </View>
-      </ScrollView>
- : 
- 
- <ScrollView keyboardShouldPersistTaps="handled">
- <View style={{ marginTop: 100 }}>
-   <KeyboardAvoidingView enabled>
-     <View style={{ alignItems: 'center' }}>
-       <Image
-         source={Logo}
-         style={{
-           width: '60%',
-           height: 100,
-           resizeMode: 'contain',
-           margin: 30,
-           bottom: 50
-         }}
-       />
-     </View>
-     <View style={styles.SectionStyle}>
-       <TextInput
-         style={styles.inputStyle}
-      
-         // underlineColorAndroid="#FFFFFF"
-         placeholder="Mobile No./Email ID" //dummy@abc.com
-         placeholderTextColor="#000"
-         autoCapitalize="none"
-         keyboardType="email-address"
-         onChangeText={email => setUserEmail(email)}
-         // ref={ref => {
-         //   this._emailinput = ref;
-         // }}
-         returnKeyType="next"
-         onSubmitEditing={() =>
-           this._passwordinput && this._passwordinput.focus()
-         }
-         blurOnSubmit={false}
-       />
-     </View>
-     <View style={styles.SectionStyle}>
-       <TextInput
-         style={styles.inputStyle}
-         onChangeText={UserPassword => setUserPassword(UserPassword)}
-         // underlineColorAndroid="#FFFFFF"
-         placeholder="Enter Password" //12345
-         placeholderTextColor="#000"
-         keyboardType="default"
-         // ref={ref => {
-         //   this._passwordinput = ref;
-         // }}
-         onSubmitEditing={Keyboard.dismiss}
-         blurOnSubmit={false}
-         secureTextEntry={true}
-       />
-     </View>
-     {errortext != '' ? (
-       <Text style={styles.errorTextStyle}> {errortext} </Text>
-     ) : null}
-     <TouchableOpacity
-       style={styles.buttonStyle}
-       activeOpacity={0.5}
-       onPress={handleSubmitPress}>
-       <Text style={styles.buttonTextStyle}>LOGIN</Text>
-     </TouchableOpacity>
+        </ScrollView>
+        :
+
+        <ScrollView keyboardShouldPersistTaps="handled">
+          <View style={{ marginTop: 100 }}>
+            <KeyboardAvoidingView enabled>
+              <View style={{ alignItems: 'center' }}>
+                <Image
+                  source={Logo}
+                  style={{
+                    width: '60%',
+                    height: 100,
+                    resizeMode: 'contain',
+                    margin: 30,
+                    bottom: 50
+                  }}
+                />
+              </View>
+              <View style={styles.SectionStyle}>
+                <TextInput
+                  style={styles.inputStyle}
+
+                  // underlineColorAndroid="#FFFFFF"
+                  placeholder="Mobile No./Email ID" //dummy@abc.com
+                  placeholderTextColor="#000"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  onChangeText={text => setUserEmail(text)}
+                  // ref={ref => {
+                  //   this._emailinput = ref;
+                  // }}
+                  returnKeyType="next"
+                  onSubmitEditing={() =>
+                    this._passwordinput && this._passwordinput.focus()
+                  }
+                  blurOnSubmit={false}
+                />
+              </View>
+              <View style={styles.SectionStyle}>
+                <TextInput
+                  style={styles.inputStyle}
+                  onChangeText={text => setUserPassword(text)}
+                  // underlineColorAndroid="#FFFFFF"
+                  placeholder="Enter Password" //12345
+                  placeholderTextColor="#000"
+                  keyboardType="default"
+                  // ref={ref => {
+                  //   this._passwordinput = ref;
+                  // }}
+                  onSubmitEditing={Keyboard.dismiss}
+                  blurOnSubmit={false}
+                  secureTextEntry={true}
+                />
+              </View>
+              {errortext != '' ? (
+                <Text style={styles.errorTextStyle}> {errortext} </Text>
+              ) : null}
+              <TouchableOpacity
+                style={styles.buttonStyle}
+                activeOpacity={0.5}
+                onPress={handleSubmitPress}>
+                <Text style={styles.buttonTextStyle}>LOGIN</Text>
+              </TouchableOpacity>
 
 
-     <TouchableOpacity onPress={() => props.navigation.navigate('OTP')}>
-       <Text
-         style={styles.registerTextStyle1}>
+              <TouchableOpacity onPress={() => props.navigation.navigate('OTP')}>
+                <Text
+                  style={styles.registerTextStyle1}>
 
-         Login via OTP
-     </Text>
-     </TouchableOpacity>
-     <TouchableOpacity
-       style={styles.buttonStyle}
-       activeOpacity={0.5}
-       onPress={() => props.navigation.navigate('RegisterScreen')}>
-       <Text style={styles.buttonTextStyle}>New User? Register free</Text>
-     </TouchableOpacity>
+                  Login via OTP
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.buttonStyle}
+                activeOpacity={0.5}
+                onPress={() => props.navigation.navigate('RegisterScreen')}>
+                <Text style={styles.buttonTextStyle}>New User? Register free</Text>
+              </TouchableOpacity>
 
-     <TouchableOpacity onPress={() => props.navigation.navigate('ForgotPassword')}>
-       <Text
-         style={styles.registerTextStyle}>
+              <TouchableOpacity onPress={() => props.navigation.navigate('ForgotPassword')}>
+                <Text
+                  style={styles.registerTextStyle}>
 
-         Forgot Password?
-     </Text>
-     </TouchableOpacity>
-   </KeyboardAvoidingView>
- </View>
-</ScrollView>
+                  Forgot Password?
+                </Text>
+              </TouchableOpacity>
+            </KeyboardAvoidingView>
+          </View>
+        </ScrollView>
 
-    }
-       </View>
+      }
+    </View>
   );
 };
 export default LoginScreen;
@@ -367,7 +415,38 @@ const styles = StyleSheet.create({
     fontSize: 14,
 
   },
-
+  text1: {
+    fontSize: 16,
+    // fontWeight: "bold",
+    color: "#666666",
+    left: 35,
+    // marginTop:10,
+    alignSelf: "center"
+  },
+  red: {
+    backgroundColor: '#ffa07a',
+    alignItems: 'center',
+    borderColor: '#7DE24E',
+    padding: 10,
+    borderWidth: 0.5,
+    justifyContent: 'center',
+    width: 70,
+   
+    marginLeft: 5,
+    marginRight: 5,
+    borderRadius: 5
+  },
+  button: {
+    alignItems: 'center',
+    padding: 10,
+    borderWidth: 0.5,
+    justifyContent: 'center',
+    width: 70,
+   
+    marginLeft: 5,
+    marginRight: 5,
+    borderRadius: 5
+  },
   errorTextStyle: {
     color: 'red',
     textAlign: 'center',

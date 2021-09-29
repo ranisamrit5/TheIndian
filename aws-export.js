@@ -1,6 +1,6 @@
 const awsmobile = {
-  graphqlEndpoint:"https://qcgj5jltyfarblemz4ouxzrmre.appsync-api.ap-south-1.amazonaws.com/graphql",
-  graphql_api_key: "da2-ii47ipjlhfbc7kkefcemd2wtni",
+  graphqlEndpoint:"https://5ijgbfqc6zfnzisyhhxdbmkvvy.appsync-api.ap-south-1.amazonaws.com/graphql",
+  graphql_api_key: "da2-cxa6xzz7yzhijphav43fbvpsnm",
   aws_project_region: "ap-south-1",
   aws_cognito_identity_pool_id: "ap-south-1:b25bd5d9-260d-4630-b4f0-a409d85500a6",
   aws_cognito_region: "ap-south-1",

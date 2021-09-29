@@ -52,8 +52,6 @@ const Recieved = (props,{ navigation }) => {
             },
         });
         if(data && data.listUser && data.listUser.items){
-            // props.navigation.navigate('InboxMainTab');
-            // setRecieved(list)
             setRecieved(data.listUser.items)
             setLoading(false)
         }else{
@@ -194,7 +192,7 @@ const Recieved = (props,{ navigation }) => {
                         stackSize={3}>
                         <View style={{ alignSelf: 'center', marginBottom: 20, alignItems: 'center', justifyContent: 'center' }}>
                             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                                <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>{images.length} Members are eagerly awaiting your</Text>
+                                <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>{recieved_.length <= 1 ? `${recieved_.length} Member is eagerly awaiting your`:`${recieved_.length} Members are eagerly awaiting your` } </Text>
                                 <TouchableOpacity style={{ marginLeft: 10 }}>
                                     <Text style={{ fontSize: 38, fontWeight: '500', color: 'white', transform: [{ rotate: '45deg' }] }}>+</Text>
                                 </TouchableOpacity>

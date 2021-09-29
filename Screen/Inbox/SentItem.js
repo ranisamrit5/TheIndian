@@ -36,8 +36,8 @@ const Sent = (props, { navigation }) => {
             .then(async(data) => {
                 setId(data.username)
                 let userDetails=await getUserDetails(props,data.username)
-                setUserData(userDetails);
-                getSent(data.username);
+                // setUserData(userDetails);
+                // getSent(data.username);
             });
     }, []
     )

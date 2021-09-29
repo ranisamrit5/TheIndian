@@ -18,6 +18,7 @@ import Getdata from "../../../AppSync/query/Auth/getData";
 import { userDataMapper } from '../../Mappers/mapper'
 import { partnerDataMapper } from '../../Mappers/partnerMapper'
 const EditProfileScreen = (props) => {
+    console.log('EditProfileScreen===>')
     const [text, setText] = useState('')
     const [height, setHeight] = useState(100)
     const [id, setId] = useState()

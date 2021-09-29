@@ -5,13 +5,14 @@ import {
     ScrollView,
     View,
     Text,
-    StatusBar,
+  
     FlatList,
     Image,
     ImageBackground
 } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import {RNS3} from 'react-native-s3-upload';
+import StatusBar from '../../Screen/Componentone/StatusBar';
 import {
     Header,
     LearnMoreLinks,
@@ -102,13 +103,13 @@ const ProfileDashboard = props => {
         if (data) {
             let userData = data.getUser
             setValidity(moment(parseInt(userData.validity)).format("MMM Do YYYY"))
-            console.log('user----in DS', userData.plan)
+            // console.log('user----in DS', userData.plan)
             
             let all = {}
             all.data = data.getUser
             let pDetails = userDataMapper(all)
             setDetails(pDetails)
-            console.log('user----in profilePic', pDetails.profilePic)
+            // console.log('user----in profilePic', pDetails.profilePic)
             const { noOfChildren, maritalStatus_, eatingHabit, smokingHabit, drinkingHabit, manglik, subcaste,
                 religion,profilePic, caste, familyDetails, gotram, motherTongue, dob, aboutMe, fname, profileCreatedFor,gender_,height_,physicalStatus_
             } = pDetails
@@ -237,6 +238,7 @@ const ProfileDashboard = props => {
         return (
             <View style={{ backgroundColor: '#e5e5e5',flex:1 }}>
                 <Loader loading={loading} />
+                <StatusBar/>
                 <SafeAreaView style={{flex:1}} >
                 <View style={styles.haderView}>
                     <TouchableOpacity onPress={() => props.navigation.navigate('MainTab')}>

@@ -41,35 +41,11 @@ const InboxMainTab = (props) => {
                 setId(data.username)
                 let activity = utils.userActivity(data.username,'RECIEVED',props)
                 setRecieved(activity)
-                await getRecieved(data.username);
+                // await getRecieved(data.username);
             });
             setLoading(false)   
     }, []
     )
-    const getRecieved = async (userId) => {
-
-        const { data } = await props.client.query({
-            query: listUser,
-            fetchPolicy: "network-only",
-            variables: {
-                id: `${userId}`,
-                type:'RECIEVED'
-            },
-        });
-        console.log('=====>',data)
-        if(data && data.listUser && data.listUser.items && data.listUser.items > 0){
-            console.log('=====>',data.listUser.items)
-            props.route.params=data.listUser.items
-            setRecieved(data.listUser.items)
-            setLoading(false)
-            setSelectClass("Received")
-        }else{
-            setSelectClass("Accepted")
-            console.log('Else')
-            // setSelectClass('Accepted')
-        }
-        // console.log('getRecieved====>', data.listUser.items)
-    }
    const SelectItemFun=(item,index) =>{
         console.log('itemsss', item,index)
         setSelectClass(item)

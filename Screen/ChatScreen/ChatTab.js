@@ -18,55 +18,52 @@
      Image,
      TouchableOpacity
  } from 'react-native';
- 
- 
- import Recent from './Recent'
 
- import Meet from './Meet'
- 
+import { graphql, withApollo } from "react-apollo";
+import compose from "lodash.flowright";
+import { Auth } from "aws-amplify";
+import Recent from './Recent'
+import Meet from './Meet'
 import Active from './Active';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 export const ChatTab = props => {
-    const [state, setState] = useState('');
+    const [state, setState] = useState('Active');
     const [ isPress, setIsPress ] = useState(false);
     const [data, setData] = useState({
-       
              data: [],
              dataShow: [],
-            
-             Meet: 'false',
-             Recent: 'false',
-          
-             Active: 'false',
-            
+             Meet: false,
+             Recent: false,
+             Active: true,
             });
-   
-            
- 
- 
      const TopTabFunction = (Value) => {
          console.log('valuess', Value)
          switch (Value.title) {
              case 'Recent': {
-                setState({ Meet: false })
-                setState({ Active: false })
-                 setState({ Recent: true })
-               
+                setData({
+                    ...data,
+                    Meet: false,
+                    Active: false,
+                    Recent: true
+                });
                  break;
              }
-            
              case 'Active': {
-                 setState({ Meet: false })
-                 setState({ Recent: true })
-                
-                setState({ Active: true })
+                setData({
+                    ...data,
+                    Meet: false,
+                    Active: true,
+                    Recent: false
+                });
                  break;
              }
              case 'Meet': {
-                setState({ Recent: true })
-                setState({ Active: false })
-                
-                setState({ Meet: true })
+                setData({
+                    ...data,
+                    Meet: false,
+                    Active: false,
+                    Recent: true
+                });
                  break;
              }
             
@@ -75,19 +72,19 @@ export const ChatTab = props => {
    
        const TabData = [
              {
-                id: '58694a0f-3da1-471f-bd96-145571e29d72',
+                id: '58694a0f-3da1-471f-bd96-145571e29d721',
                  title: 'Recent',
                  notification: ''
              },
             
              {
-                 id: '58694a0f-3da1-471f-bd96-145571e29d72',
+                 id: '58694a0f-3da1-471f-bd96-145571e29d722',
                  title: 'Active',
                  notification: ''
              },
             
              {
-                 id: '58694a0f-3da1-471f-bd96-145571e29d72',
+                 id: '58694a0f-3da1-471f-bd96-145571e29d723',
                  title: 'Meet',
                  notification: ''
              },
@@ -114,22 +111,23 @@ export const ChatTab = props => {
                                      onPress={() => TopTabFunction(item)} >
                                      {item.Ima == null ?
                                          <Text style={{ fontSize: 17, alignSelf: 'center' }}>{item.title}</Text> : null}
-                                     
                                  </TouchableHighlight>
                              } />
-                             
-                     </View>
-                     
-                     {state.Recent ? <Recent /> : null}
-                     {state.Active ? <Active /> : null}
-                     {state.Meet ? <Meet /> : null}
-                   
+                     </View>     
+                     {data.Recent ? <Recent {...props} /> : null}
+                     {data.Active ? <Active {...props} /> : null}
+                     {data.Meet ? <Meet {...props} /> : null}
                  </View>
              </SafeAreaView>
       );
 
     }
+    const profile = compose(
+        withApollo,
+        // graphql(updateUser, { name: "updateUser" })
+    )(ChatTab);
+    export default profile;
 
-    export default ChatTab;
+    // export default ChatTab;
  
  

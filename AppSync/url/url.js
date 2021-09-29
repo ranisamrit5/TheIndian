@@ -1,4 +1,4 @@
-export const URL="wss://i5shqqggm8.execute-api.ap-south-1.amazonaws.com/matdev?id=";
+export const URL="wss://4n1lxccp79.execute-api.ap-south-1.amazonaws.com/default?id=";
 
 
 // module.exports.status = {
